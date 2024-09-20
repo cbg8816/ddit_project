@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.room.dao.RoomMapper">
+
+<resultMap type="RoomVO" id="roomMap" autoMapping="true">
+		<association property="broken" javaType="BrokenRoomVO" autoMapping="true" />
+		<association property="roomstatus" javaType="RoomStatusVO" autoMapping="true" />
+		<association property="emp" javaType="EmpVO" autoMapping="true" />
+		<association property="manager" javaType="ManagerVO" autoMapping="true" />
+		<association property="keeping" javaType="HousekeepingVO" autoMapping="true" />
+</resultMap>
+
+
+	<select id="RoomList" resultMap="roomMap">
+SELECT
+    A.ROOM_ID,
+    A.ROOM_FL,
+    A.ROOMTYPE_ID,
+    B.ROOM_ST,
+    CASE
+        WHEN B.ROOM_ST = '5' THEN C.HKB_INFOR
+        ELSE NULL
+    END AS HKB_INFOR,
+    CASE
+        WHEN B.ROOM_ST = '3' OR B.ROOM_ST = '4' THEN E.EMP_NAME
+        ELSE NULL
+    END AS EMP_NAME
+FROM ROOM A
+JOIN ROOMSTATUS B ON A.ROOM_ID = B.ROOM_ID
+LEFT JOIN (
+    SELECT
+        ROOM_ID,
+        HKB_INFOR,
+        ROW_NUMBER() OVER (PARTITION BY ROOM_ID ORDER BY HKB_DAY DESC) AS RN
+    FROM BROKEN_ROOM
+) C ON B.ROOM_ID = C.ROOM_ID AND C.RN = 1
+LEFT JOIN MANAGER D ON A.ROOM_ID = D.ROOM_ID
+LEFT JOIN EMP E ON D.MNG_ID = E.EMP_ID
+ORDER BY TO_NUMBER(SUBSTR(A.ROOM_ID, 3)) ASC
+	</select>
+
+	<select id="selectRoom" resultMap="roomMap">
+	    SELECT
+	        A.ROOM_ID,
+	        A.ROOM_FL,
+	        A.ROOMTYPE_ID,
+	        B.ROOM_ST,
+	        CASE
+	            WHEN B.ROOM_ST = '5' THEN C.HKB_INFOR
+	            ELSE NULL
+	        END AS HKB_INFOR,
+	        CASE
+	            WHEN B.ROOM_ST = '3' OR B.ROOM_ST = '4' THEN E.EMP_NAME
+	            ELSE NULL
+	        END AS EMP_NAME
+	    FROM ROOM A
+	    JOIN ROOMSTATUS B ON A.ROOM_ID = B.ROOM_ID
+	    LEFT JOIN (
+	        SELECT
+	            ROOM_ID,
+	            HKB_INFOR,
+	            ROW_NUMBER() OVER (PARTITION BY ROOM_ID ORDER BY HKB_NO DESC) AS RN
+	        FROM BROKEN_ROOM
+	    ) C ON B.ROOM_ID = C.ROOM_ID AND C.RN = 1
+	    LEFT JOIN MANAGER D ON A.ROOM_ID = D.ROOM_ID
+	    LEFT JOIN EMP E ON D.MNG_ID = E.EMP_ID
+	    WHERE A.ROOM_ID = #{roomId}
+	</select>
+
+	<select id="empList" resultMap="roomMap">
+		SELECT
+			EMP_NAME
+		FROM
+			EMP
+		WHERE
+			DEP_ID = '60'
+	</select>
+
+	<update id="updateRoomSt" parameterType="RoomStatusVO">
+		UPDATE
+			ROOMSTATUS
+		SET
+			ROOM_ST = '3'
+		WHERE
+			ROOM_ID = #{roomId}
+		</update>
+
+
+	<update id="updatemng" parameterType="ManagerVO">
+		UPDATE
+			MANAGER
+		SET
+			ROOM_ID = #{roomId}
+		WHERE
+			MNG_ID= (select emp_id from emp where emp_name = #{emp.empName})
+	</update>
+
+	<insert id="insertkeeping" parameterType="RoomVO">
+	<selectKey order="BEFORE" resultType="int" keyProperty="hkpNo">
+		SELECT HKP_SEQ.NEXTVAL as hkpNo FROM DUAL
+	</selectKey>
+		INSERT INTO
+			HOUSEKEEPING
+				(
+					HKP_NO
+					, MNG_ID
+					, HKP_ROOM
+					, HKP_LOCATION
+					, HKP_STATUS
+					, HKP_MANAGER
+					, HKP_NOTE
+					, HKP_DAY
+				) VALUES (
+					#{hkpNo}
+					, (select emp_id from emp where emp_name = #{emp.empName})
+					, #{roomId}
+					, #{roomFl}
+					, '정비중'
+					, #{emp.empName}
+					, #{broken.hkbInfor}
+					, SYSDATE
+				)
+	</insert>
+
+	<update id="updateST1" parameterType="RoomStatusVO">
+		UPDATE
+			ROOMSTATUS
+		SET
+			ROOM_ST = '6'
+		WHERE
+			ROOM_ID = #{roomId}
+
+	</update>
+
+	<update id="updatebrokenSt" parameterType="RoomStatusVO">
+		UPDATE
+			ROOMSTATUS
+		SET
+			ROOM_ST = '4'
+		WHERE
+			ROOM_ID = #{roomId}
+
+	</update>
+
+	<update id="updatekeepingfin" parameterType="BrokenRoomVO">
+		UPDATE
+			HOUSEKEEPING
+		SET
+			HKP_STATUS = '정비완료'
+		WHERE
+			HKP_ROOM = #{roomId}
+	</update>
+
+	<update id="updatebrokenfin" parameterType="BrokenRoomVO">
+		UPDATE
+			BROKEN_ROOM
+		SET
+			HKB_COMPLE = '수리완료'
+		WHERE
+			ROOM_ID = #{roomId}
+		    AND HKB_NO = (
+		        SELECT MAX(HKB_NO)
+		        FROM BROKEN_ROOM
+		        WHERE ROOM_ID = #{roomId}
+		        )
+	</update>
+
+	<update id="updatebrokenrepair" parameterType="BrokenRoomVO">
+		UPDATE
+    		BROKEN_ROOM
+		SET
+    		HKB_COMPLE = '수리중'
+		WHERE
+		    ROOM_ID = #{roomId}
+		    AND HKB_NO = (
+		        SELECT MAX(HKB_NO)
+		        FROM BROKEN_ROOM
+		        WHERE ROOM_ID = #{roomId}
+    		)
+	</update>
+
+	<update id="updatebrokenemp" parameterType="BrokenRoomVO">
+		UPDATE
+			BROKEN_ROOM
+		SET
+			HKB_EMP = #{emp.empName}
+		WHERE
+			ROOM_ID = #{roomId}
+	</update>
+
+	<update id="updatemng2" parameterType="ManagerVO">
+	 	UPDATE
+			MANAGER
+		SET
+			ROOM_ID = NULL
+		WHERE
+			MNG_ID = (select emp_id from emp where emp_name = #{emp.empName})
+	</update>
+
+</mapper>

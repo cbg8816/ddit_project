@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.extracharges.dao.ExtrachargesDAO">
+
+	<select id="selectExt" parameterType="string" resultType="ExtrachargesVO">
+
+		SELECT
+			EXTCRG_NO
+			, E.ET_ID ET_ID
+			, EXTCRG_QTY
+			, ET_NM
+			, ET_PRICE
+			, EXTCRG_DATE
+			, P.PAY_ID PAY_ID
+			, TREV_ST
+			, EXTCRG_PRICE
+		FROM EXTRACHARGES E
+		INNER JOIN EXTCRG_TYPE EX ON E.ET_ID = EX.ET_ID
+		INNER JOIN PAY P ON P.PAY_ID  = E.PAY_ID
+		INNER JOIN TOTAL_REV T ON T.TREV_ID = P.TREV_ID
+		WHERE P.PAY_ID = #{payId, jdbcType=VARCHAR}
+
+	</select>
+
+	<insert id="insertExt" parameterType="ExtrachargesVO">
+
+		INSERT INTO EXTRACHARGES
+				(
+					EXTCRG_NO
+					, ET_ID
+					, EXTCRG_QTY
+					, PAY_ID
+					, EXTCRG_PRICE
+				)
+				VALUES
+				(
+					'EXT' || EXT_SEQ.NEXTVAL
+					, #{etId, jdbcType=VARCHAR}
+					, #{extcrgQty, jdbcType=INTEGER}
+					, #{payId, jdbcType=VARCHAR}
+					, #{extcrgPrice, jdbcType=INTEGER}
+				)
+
+	</insert>
+
+	<delete id="deleteExt" parameterType="ExtrachargesVO">
+
+		DELETE
+		FROM EXTRACHARGES
+		WHERE EXTCRG_NO = #{extcrgNo, jdbcType=VARCHAR}
+		AND ET_ID = #{etId, jdbcType=VARCHAR}
+		AND PAY_ID = #{payId, jdbcType=VARCHAR}
+
+	</delete>
+
+	<update id="updateExt" parameterType="ExtrachargesVO">
+
+		UPDATE EXTRACHARGES
+		SET EXTCRG_QTY = #{extcrgQty, jdbcType=INTEGER}
+		, EXTCRG_PRICE = #{extcrgPrice, jdbcType=INTEGER}
+		WHERE EXTCRG_NO = #{extcrgNo, jdbcType=VARCHAR}
+		AND ET_ID = #{etId, jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="selectTotal" parameterType="string">
+
+		SELECT NVL(SUM(ET_SUM), 0) ET_TOTAL
+		FROM
+		(
+			SELECT
+				E.EXTCRG_NO EXTCRG_NO
+				, E.ET_ID ET_ID
+				, EXTCRG_QTY
+				, ET_NM
+				, ET_PRICE
+	            , (EXTCRG_QTY  * ET_PRICE) ET_SUM
+			FROM
+			EXTRACHARGES E
+			INNER JOIN EXTCRG_TYPE EX ON E.ET_ID = EX.ET_ID
+			INNER JOIN PAY P ON E.PAY_ID = P.PAY_ID
+	        WHERE P.PAY_ID = #{payId, jdbcType=VARCHAR}
+	        )
+
+	</select>
+
+	<update id="updatePay" parameterType="ExtrachargesVO">
+
+		UPDATE PAY
+		SET PAY_EXT = #{payExt, jdbcType=INTEGER}
+		WHERE PAY_ID = #{payId, jdbcType=VARCHAR}
+
+	</update>
+
+</mapper>

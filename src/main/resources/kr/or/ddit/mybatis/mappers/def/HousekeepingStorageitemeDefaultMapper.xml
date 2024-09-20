@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.HousekeepingStorageitemeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.HousekeepingStorageitemeDefaultVO">
+    <id column="HKS_NO" jdbcType="VARCHAR" property="hksNo" />
+    <id column="HKS_WRITER" jdbcType="VARCHAR" property="hksWriter" />
+    <result column="HKS_DATE" jdbcType="TIMESTAMP" property="hksDate" />
+    <result column="HKS_PLACE" jdbcType="TIMESTAMP" property="hksPlace" />
+    <result column="HKS_ACQUIRER" jdbcType="VARCHAR" property="hksAcquirer" />
+    <result column="HKS_KIND" jdbcType="VARCHAR" property="hksKind" />
+    <result column="HKS_REGI" jdbcType="VARCHAR" property="hksRegi" />
+    <result column="HKS_NOTE" jdbcType="VARCHAR" property="hksNote" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from HOUSEKEEPING_STORAGEITEME
+    where HKS_NO = #{hksNo,jdbcType=VARCHAR}
+      and HKS_WRITER = #{hksWriter,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.HousekeepingStorageitemeDefaultVO">
+    insert into HOUSEKEEPING_STORAGEITEME (HKS_NO, HKS_WRITER, HKS_DATE, 
+      HKS_PLACE, HKS_ACQUIRER, HKS_KIND, 
+      HKS_REGI, HKS_NOTE)
+    values (#{hksNo,jdbcType=VARCHAR}, #{hksWriter,jdbcType=VARCHAR}, #{hksDate,jdbcType=TIMESTAMP}, 
+      #{hksPlace,jdbcType=TIMESTAMP}, #{hksAcquirer,jdbcType=VARCHAR}, #{hksKind,jdbcType=VARCHAR}, 
+      #{hksRegi,jdbcType=VARCHAR}, #{hksNote,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.HousekeepingStorageitemeDefaultVO">
+    update HOUSEKEEPING_STORAGEITEME
+    set HKS_DATE = #{hksDate,jdbcType=TIMESTAMP},
+      HKS_PLACE = #{hksPlace,jdbcType=TIMESTAMP},
+      HKS_ACQUIRER = #{hksAcquirer,jdbcType=VARCHAR},
+      HKS_KIND = #{hksKind,jdbcType=VARCHAR},
+      HKS_REGI = #{hksRegi,jdbcType=VARCHAR},
+      HKS_NOTE = #{hksNote,jdbcType=VARCHAR}
+    where HKS_NO = #{hksNo,jdbcType=VARCHAR}
+      and HKS_WRITER = #{hksWriter,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select HKS_NO, HKS_WRITER, HKS_DATE, HKS_PLACE, HKS_ACQUIRER, HKS_KIND, HKS_REGI, 
+    HKS_NOTE
+    from HOUSEKEEPING_STORAGEITEME
+    where HKS_NO = #{hksNo,jdbcType=VARCHAR}
+      and HKS_WRITER = #{hksWriter,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select HKS_NO, HKS_WRITER, HKS_DATE, HKS_PLACE, HKS_ACQUIRER, HKS_KIND, HKS_REGI, 
+    HKS_NOTE
+    from HOUSEKEEPING_STORAGEITEME
+  </select>
+</mapper>

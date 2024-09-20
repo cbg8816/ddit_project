@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.BrokenRoomDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.BrokenRoomDefaultVO">
+    <id column="HKP_NO" jdbcType="VARCHAR" property="hkpNo" />
+    <result column="ROOM_ID" jdbcType="VARCHAR" property="roomId" />
+    <result column="HKP_LOCATION" jdbcType="VARCHAR" property="hkpLocation" />
+    <result column="HKP_INFOR" jdbcType="VARCHAR" property="hkpInfor" />
+    <result column="HKP_EMP" jdbcType="VARCHAR" property="hkpEmp" />
+    <result column="HKP_COMPLE" jdbcType="CHAR" property="hkpComple" />
+    <result column="ROOMTYPE_ID" jdbcType="VARCHAR" property="roomtypeId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BROKEN_ROOM
+    where HKP_NO = #{hkpNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.BrokenRoomDefaultVO">
+    insert into BROKEN_ROOM (HKP_NO, ROOM_ID, HKP_LOCATION, 
+      HKP_INFOR, HKP_EMP, HKP_COMPLE, 
+      ROOMTYPE_ID)
+    values (#{hkpNo,jdbcType=VARCHAR}, #{roomId,jdbcType=VARCHAR}, #{hkpLocation,jdbcType=VARCHAR}, 
+      #{hkpInfor,jdbcType=VARCHAR}, #{hkpEmp,jdbcType=VARCHAR}, #{hkpComple,jdbcType=CHAR}, 
+      #{roomtypeId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.BrokenRoomDefaultVO">
+    update BROKEN_ROOM
+    set ROOM_ID = #{roomId,jdbcType=VARCHAR},
+      HKP_LOCATION = #{hkpLocation,jdbcType=VARCHAR},
+      HKP_INFOR = #{hkpInfor,jdbcType=VARCHAR},
+      HKP_EMP = #{hkpEmp,jdbcType=VARCHAR},
+      HKP_COMPLE = #{hkpComple,jdbcType=CHAR},
+      ROOMTYPE_ID = #{roomtypeId,jdbcType=VARCHAR}
+    where HKP_NO = #{hkpNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select HKP_NO, ROOM_ID, HKP_LOCATION, HKP_INFOR, HKP_EMP, HKP_COMPLE, ROOMTYPE_ID
+    from BROKEN_ROOM
+    where HKP_NO = #{hkpNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select HKP_NO, ROOM_ID, HKP_LOCATION, HKP_INFOR, HKP_EMP, HKP_COMPLE, ROOMTYPE_ID
+    from BROKEN_ROOM
+  </select>
+</mapper>

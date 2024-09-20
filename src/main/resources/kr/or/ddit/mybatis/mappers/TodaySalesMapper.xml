@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.todaysales.dao.TodaySalesMapper">
+
+	<resultMap type="TodaySalesVO" id="TodaySalesMap" autoMapping="true"></resultMap>
+
+	<sql id="searchFrag">
+	    <where>
+	        <trim prefixOverrides="AND">
+	            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(todayExtCondition.etNm)">
+	                INSTR(ET.ET_NM, #{todayExtCondition.etNm}) > 0
+	            </if>
+	            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(todayExtCondition.roomtypeId)">
+	                AND INSTR(RR.ROOMTYPE_ID, #{todayExtCondition.roomtypeId}) > 0
+	            </if>
+	            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(todayExtCondition.memName)">
+	                AND INSTR(M.MEM_NAME, #{todayExtCondition.memName}) > 0
+	            </if>
+	            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(todayExtCondition.extcrgDate)">
+	                AND TO_CHAR(EX.EXTCRG_DATE, 'YYYY-MM-DD') = #{todayExtCondition.extcrgDate}
+	            </if>
+	            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(todayExtCondition.roomId)">
+	                AND INSTR(RR.ROOM_ID, #{todayExtCondition.roomId}) > 0
+	            </if>
+	        </trim>
+	    </where>
+	</sql>
+
+
+	<select id="selectTodaySalesList" resultMap="TodaySalesMap">
+
+		SELECT
+		    *
+		FROM
+		(
+		SELECT
+		    ROWNUM RNUM
+		    , EXTCRG_NO
+		    , ET_ID
+		    , EXTCRG_QTY
+		    , EXTCRG_DATE
+		    , PAY_ID
+		    , EXTCRG_PRICE
+		    , ET_NM
+		    , ET_TYPE
+		    , PAY_PAYOPT
+		    , TREV_ID
+		    , MEM_ID
+		    , MEM_NAME
+		    , TREV_HEADCNT
+		    , HTREV_CHKIN
+		    , HTREV_CHKOUT
+		    , REVROOM_ID
+		    , ROOM_ID
+		    , ROOMTYPE_ID
+		    , ROOMTYPE_NM
+		    , SUM_EXT_CHARGES
+		    FROM(
+		        SELECT
+		            EX.EXTCRG_NO
+		            , ET.ET_ID
+		            , EX.EXTCRG_QTY
+		            , EX.EXTCRG_DATE
+		            , EX.PAY_ID
+		            , EX.EXTCRG_PRICE
+		            , ET.ET_NM
+		            , ET.ET_TYPE
+		            , P.PAY_PAYOPT
+		            , P.TREV_ID
+		            , TR.MEM_ID
+		            , M.MEM_NAME
+		            , NVL(TREV_ADULT, 0)+NVL(TR.TREV_CHILD, 0) TREV_HEADCNT
+		            , HT.HTREV_CHKIN
+		            , HT.HTREV_CHKOUT
+		            , RR.REVROOM_ID
+		            , RR.ROOM_ID
+		            , RR.ROOMTYPE_ID
+		            , RT.ROOMTYPE_NM
+		            , EX.EXTCRG_QTY*EX.EXTCRG_PRICE SUM_EXT_CHARGES
+		        FROM EXTRACHARGES EX
+		        INNER JOIN EXTCRG_TYPE ET ON EX.ET_ID = ET.ET_ID
+		        INNER JOIN PAY P ON EX.PAY_ID = P.PAY_ID
+		        LEFT OUTER JOIN TOTAL_REV TR ON P.TREV_ID = TR.TREV_ID
+		        INNER JOIN MEMBER M ON TR.MEM_ID = M.MEM_ID
+		        LEFT OUTER JOIN HOTEL_REV HT ON TR.TREV_ID = HT.HTREV_ID
+		        INNER JOIN REV_ROOM RR ON HT.HTREV_ID = RR.HTREV_ID
+		        INNER JOIN ROOMTYPE RT ON RR.ROOMTYPE_ID = RT.ROOMTYPE_ID
+		        <include refid="searchFrag" />
+		        ORDER BY EX.EXTCRG_DATE DESC
+		    )
+		)
+		<![CDATA[
+			WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		]]>
+
+	</select>
+
+	<select id="selectTotalRecord" resultType="int">
+	    SELECT
+	        COUNT(*)
+	    FROM EXTRACHARGES EX
+	    INNER JOIN EXTCRG_TYPE ET ON EX.ET_ID = ET.ET_ID
+	    INNER JOIN PAY P ON EX.PAY_ID = P.PAY_ID
+	    LEFT OUTER JOIN TOTAL_REV TR ON P.TREV_ID = TR.TREV_ID
+	    INNER JOIN MEMBER M ON TR.MEM_ID = M.MEM_ID
+	    LEFT OUTER JOIN HOTEL_REV HT ON TR.TREV_ID = HT.HTREV_ID
+	    INNER JOIN REV_ROOM RR ON HT.HTREV_ID = RR.HTREV_ID
+	    INNER JOIN ROOMTYPE RT ON RR.ROOMTYPE_ID = RT.ROOMTYPE_ID
+	    <include refid="searchFrag" />
+	</select>
+
+</mapper>

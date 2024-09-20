@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.WorkDateDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.WorkDateDefaultVO">
+    <id column="WORK_NO" jdbcType="NUMERIC" property="workNo" />
+    <result column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="WORK_DATE" jdbcType="VARCHAR" property="workDate" />
+    <result column="WORK_START" jdbcType="TIMESTAMP" property="workStart" />
+    <result column="WORK_END" jdbcType="TIMESTAMP" property="workEnd" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from WORK_DATE
+    where WORK_NO = #{workNo,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.WorkDateDefaultVO">
+    insert into WORK_DATE (WORK_NO, EMP_ID, WORK_DATE, 
+      WORK_START, WORK_END)
+    values (#{workNo,jdbcType=NUMERIC}, #{empId,jdbcType=VARCHAR}, #{workDate,jdbcType=VARCHAR}, 
+      #{workStart,jdbcType=TIMESTAMP}, #{workEnd,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.WorkDateDefaultVO">
+    update WORK_DATE
+    set EMP_ID = #{empId,jdbcType=VARCHAR},
+      WORK_DATE = #{workDate,jdbcType=VARCHAR},
+      WORK_START = #{workStart,jdbcType=TIMESTAMP},
+      WORK_END = #{workEnd,jdbcType=TIMESTAMP}
+    where WORK_NO = #{workNo,jdbcType=NUMERIC}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select WORK_NO, EMP_ID, WORK_DATE, WORK_START, WORK_END
+    from WORK_DATE
+    where WORK_NO = #{workNo,jdbcType=NUMERIC}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select WORK_NO, EMP_ID, WORK_DATE, WORK_START, WORK_END
+    from WORK_DATE
+  </select>
+</mapper>

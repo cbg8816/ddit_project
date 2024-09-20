@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.AtchDetailDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.AtchDetailDefaultVO">
+    <id column="ATCH_DETAIL_ID" jdbcType="VARCHAR" property="atchDetailId" />
+    <id column="ATCH_FILE_ID" jdbcType="VARCHAR" property="atchFileId" />
+    <result column="LOGICAL_NAME" jdbcType="VARCHAR" property="logicalName" />
+    <result column="PYSICAL_NAME" jdbcType="VARCHAR" property="pysicalName" />
+    <result column="ATCH_COURS" jdbcType="VARCHAR" property="atchCours" />
+    <result column="FILE_EXTENSION" jdbcType="VARCHAR" property="fileExtension" />
+    <result column="FILE_SIZE" jdbcType="VARCHAR" property="fileSize" />
+    <result column="FILE_REGDATE" jdbcType="TIMESTAMP" property="fileRegdate" />
+    <result column="FILE_DELYN" jdbcType="VARCHAR" property="fileDelyn" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from ATCH_DETAIL
+    where ATCH_DETAIL_ID = #{atchDetailId,jdbcType=VARCHAR}
+      and ATCH_FILE_ID = #{atchFileId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.AtchDetailDefaultVO">
+    insert into ATCH_DETAIL (ATCH_DETAIL_ID, ATCH_FILE_ID, LOGICAL_NAME, 
+      PYSICAL_NAME, ATCH_COURS, FILE_EXTENSION, 
+      FILE_SIZE, FILE_REGDATE, FILE_DELYN
+      )
+    values (#{atchDetailId,jdbcType=VARCHAR}, #{atchFileId,jdbcType=VARCHAR}, #{logicalName,jdbcType=VARCHAR}, 
+      #{pysicalName,jdbcType=VARCHAR}, #{atchCours,jdbcType=VARCHAR}, #{fileExtension,jdbcType=VARCHAR}, 
+      #{fileSize,jdbcType=VARCHAR}, #{fileRegdate,jdbcType=TIMESTAMP}, #{fileDelyn,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.AtchDetailDefaultVO">
+    update ATCH_DETAIL
+    set LOGICAL_NAME = #{logicalName,jdbcType=VARCHAR},
+      PYSICAL_NAME = #{pysicalName,jdbcType=VARCHAR},
+      ATCH_COURS = #{atchCours,jdbcType=VARCHAR},
+      FILE_EXTENSION = #{fileExtension,jdbcType=VARCHAR},
+      FILE_SIZE = #{fileSize,jdbcType=VARCHAR},
+      FILE_REGDATE = #{fileRegdate,jdbcType=TIMESTAMP},
+      FILE_DELYN = #{fileDelyn,jdbcType=VARCHAR}
+    where ATCH_DETAIL_ID = #{atchDetailId,jdbcType=VARCHAR}
+      and ATCH_FILE_ID = #{atchFileId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select ATCH_DETAIL_ID, ATCH_FILE_ID, LOGICAL_NAME, PYSICAL_NAME, ATCH_COURS, FILE_EXTENSION, 
+    FILE_SIZE, FILE_REGDATE, FILE_DELYN
+    from ATCH_DETAIL
+    where ATCH_DETAIL_ID = #{atchDetailId,jdbcType=VARCHAR}
+      and ATCH_FILE_ID = #{atchFileId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ATCH_DETAIL_ID, ATCH_FILE_ID, LOGICAL_NAME, PYSICAL_NAME, ATCH_COURS, FILE_EXTENSION, 
+    FILE_SIZE, FILE_REGDATE, FILE_DELYN
+    from ATCH_DETAIL
+  </select>
+</mapper>

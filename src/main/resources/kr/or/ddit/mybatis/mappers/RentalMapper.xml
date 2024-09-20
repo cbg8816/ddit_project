@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.housekeeping.dao.RentalMapper">
+	<resultMap type="RentalVO" id="rentalMap" autoMapping="true">
+		<id property="hkrNo" column="HKR_NO"/>
+		<association property="renprod" javaType="RentalprodVO" autoMapping="true" />
+	</resultMap>
+
+	<select id="RentalList" resultMap="rentalMap">
+		SELECT A.*
+		FROM(
+		  SELECT
+			HKR_NO
+			, HKR_DATE
+			, HKR_ROOM
+			, HKR_COSTOMER
+			, HKR_CHECKIN
+			, HKR_CHECKOUT
+			, HKR_KIND
+			, HKR_QTY
+			, HKR_HP
+			, HKR_RETURN
+			, ROWNUM RNUM
+		FROM HOUSEKEEPING_RENTALITEM
+		<include refid="searchFrag" />
+		)A
+			<![CDATA[
+		WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+			]]>
+		ORDER BY HKR_NO DESC
+	</select>
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(HKR_NO)
+		FROM HOUSEKEEPING_RENTALITEM
+		<include refid="searchFrag" />
+	</select>
+
+	<!-- 검색 조건 -->
+<sql id="searchFrag">
+    <where>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+            <choose>
+                <when test="simpleCondition.searchType eq 'Costomer'">
+                    INSTR(HKR_COSTOMER, #{simpleCondition.searchWord}) > 0
+                </when>
+                <when test="simpleCondition.searchType eq 'kind'">
+                    INSTR(HKR_KIND, #{simpleCondition.searchWord}) > 0
+                </when>
+                <when test="simpleCondition.searchType eq 'HP'">
+                    INSTR(HKR_HP, #{simpleCondition.searchWord}) > 0
+                </when>
+                <otherwise>
+                    INSTR(HKR_COSTOMER, #{simpleCondition.searchWord}) > 0
+                    OR
+                    INSTR(HKR_KIND, #{simpleCondition.searchWord}) > 0
+                    OR
+                    INSTR(HKR_HP, #{simpleCondition.searchWord}) > 0
+                </otherwise>
+            </choose>
+        </if>
+    </where>
+</sql>
+
+
+	<select id="seletRental">
+		SELECT
+	    	HKR_NO
+			, HKR_DATE
+			, HKR_ROOM
+			, HKR_COSTOMER
+			, HKR_CHECKIN
+			, HKR_CHECKOUT
+			, HKR_KIND
+			, HKR_QTY
+			, HKR_HP
+			, HKR_RETURN
+	    FROM HOUSEKEEPING_RENTALITEM
+		WHERE HKR_NO = #{hkrNo}
+	</select>
+
+
+	<insert id="insertRenal" parameterType="RentalVO">
+	<selectKey order="BEFORE" resultType="int" keyProperty="hkrNo">
+		SELECT HKR_SEQ.NEXTVAL as hkrNo FROM DUAL
+	</selectKey>
+		INSERT INTO
+    HOUSEKEEPING_RENTALITEM
+    (
+    HKR_NO
+    , HKR_DATE
+    , HKR_ROOM
+    , HKR_COSTOMER
+    , HKR_HP
+    , HKR_CHECKIN
+    , HKR_CHECKOUT
+    , HKR_KIND
+    , HKR_QTY
+    , HKR_RETURN
+ ) VALUES (
+    #{hkrNo}
+    , #{hkrDate}
+    , #{hkrRoom}
+    , #{hkrCostomer}
+    , #{hkrHp}
+    , #{hkrCheckin}
+    , #{hkrCheckout}
+    , #{renprod.renprodName}
+    , #{hkrQty}
+    , '대여중'
+    )
+	</insert>
+
+	<update id="updaterentalprod" parameterType="RentalprodVO" >
+		UPDATE
+			RENTALPROD
+		SET
+			RENPROD_QTY = RENPROD_QTY - #{hkrQty}
+		WHERE
+			RENPROD_NAME =  #{renprod.renprodName}
+	</update>
+
+	<update id="updateRental" parameterType="RentalVO">
+		UPDATE
+			HOUSEKEEPING_RENTALITEM
+		SET
+		     HKR_DATE = #{hkrDate}
+		    , HKR_ROOM = #{hkrRoom}
+		    , HKR_COSTOMER = #{hkrCostomer}
+		    , HKR_HP = #{hkrHp}
+		    , HKR_CHECKIN = #{hkrCheckin}
+		    , HKR_CHECKOUT = #{hkrCheckout}
+		    , HKR_KIND = #{hkrKind}
+		    , HKR_QTY = #{hkrQty}
+		WHERE
+			HKR_NO = #{hkrNo}
+
+	</update>
+
+	<update id="updateYn" parameterType="RentalVO" >
+		UPDATE
+			HOUSEKEEPING_RENTALITEM
+		SET
+		     HKR_RETURN = '반납완료'
+		WHERE
+			HKR_NO = #{hkrNo}
+
+	</update>
+
+	<update id="updateprod" parameterType="RentalprodVO">
+		UPDATE
+			RENTALPROD
+		SET
+			RENPROD_QTY = RENPROD_QTY + #{hkrQty}
+		WHERE
+			RENPROD_NAME =  #{hkrKind}
+	</update>
+
+	<select id="seletRetalIncomplete">
+		SELECT *
+		FROM (
+		    SELECT
+				HKR_NO
+				, HKR_DATE
+				, HKR_ROOM
+				, HKR_COSTOMER
+				, HKR_CHECKIN
+				, HKR_CHECKOUT
+				, HKR_KIND
+				, HKR_QTY
+				, HKR_HP
+				, HKR_RETURN
+		        , ROW_NUMBER() OVER (ORDER BY HKR_NO DESC) AS rnum
+		    FROM HOUSEKEEPING_RENTALITEM
+		    WHERE HKR_RETURN = '대여중'
+			)
+		<![CDATA[
+		WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+		]]>
+	</select>
+
+	<select id="seletRetalComplete">
+		SELECT *
+		FROM (
+		    SELECT
+				HKR_NO
+				, HKR_DATE
+				, HKR_ROOM
+				, HKR_COSTOMER
+				, HKR_CHECKIN
+				, HKR_CHECKOUT
+				, HKR_KIND
+				, HKR_QTY
+				, HKR_HP
+				, HKR_RETURN
+		        , ROW_NUMBER() OVER (ORDER BY HKR_NO DESC) AS rnum
+		    FROM HOUSEKEEPING_RENTALITEM
+		    WHERE HKR_RETURN = '반납완료'
+			)
+		<![CDATA[
+		WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+		]]>
+	</select>
+
+
+
+	<select id="seletRentalIncompletecount"  resultType="int">
+		select Count(HKR_RETURN)
+	    FROM HOUSEKEEPING_RENTALITEM
+		WHERE HKR_RETURN = '대여중'
+	</select>
+
+	<select id="seletRentalCompletecount"  resultType="int">
+		select Count(HKR_RETURN)
+	    FROM HOUSEKEEPING_RENTALITEM
+		WHERE HKR_RETURN = '반납완료'
+	</select>
+
+
+</mapper>

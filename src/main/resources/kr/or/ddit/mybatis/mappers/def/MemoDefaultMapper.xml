@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.MemoDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MemoDefaultVO">
+    <result column="MEMO_CN" jdbcType="VARCHAR" property="memoCn" />
+  </resultMap>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.MemoDefaultVO">
+    insert into MEMO (MEMO_CN)
+    values (#{memoCn,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select MEMO_CN
+    from MEMO
+  </select>
+</mapper>

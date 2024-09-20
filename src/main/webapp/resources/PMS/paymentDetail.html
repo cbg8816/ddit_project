@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- date-range-picker css cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.3.0/dist/css/coreui.min.css" rel="stylesheet"
+        integrity="sha384-dw7JkvSY887ST9P6l07YXWD9wHo/t/4udcC8ZXIl0QZNeb7vum2AzYLoBF+4nT0O" crossorigin="anonymous">
+    <!-- google icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="test/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font.css" rel="stylesheet" />
+    <link href="css/commmon.css" rel="stylesheet" />
+    <link href="css/stay.css" rel="stylesheet" />
+    <link href="css/icon.css" rel="stylesheet" />
+    <link href="css/video.css" rel="stylesheet" />
+    <link href="css/color.css" rel="stylesheet" />
+    <link href="css/custom.css" rel="stylesheet" />
+    <link href="css/stayani.css" rel="stylesheet" />
+    <link href="css/play.css" rel="stylesheet" />
+    <!-- <link href="css/bootstrap.css" rel="stylesheet" /> -->
+    <link href="css/swiper.css" rel="stylesheet" />
+
+    <script src="js/scroll.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css?ver=1721785912">
+    <!-- jquery cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- bootstrap js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <!DOCTYPE html>
+    <!-- date-range-picker js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.3.0/dist/js/coreui.bundle.min.js"
+        integrity="sha384-4PYgpInDJBnJOokPuV+iHGQesWl3gGqociope/kxBvo2rVBQAdBVyU0Kr3jbeT5K"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="spinner-wrapper">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+    <header>
+        <div id="hd">
+            <h1 id="hd_h1">루나힐풀빌라</h1>
+            <div id="skip_to_container"><a href="#container">본문 바로가기</a></div>
+
+            <div id="hd_wrapper">
+                <div id="logo">
+                    <a href="stay.html">
+                        <img src="http://nstayimg7.speedgabia.com/lunarhill2/common/logo.png" alt="루나힐풀빌라">
+                    </a>
+                </div>
+                <div id="hd_btn">
+                    <a href="login.html" id="btn_resv">실시간예약</a>
+                    <button type="button" id="gnb_menu_btn" title="전체메뉴">
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                        <span class="sound_only">전체메뉴열기</span>
+                    </button>
+                </div>
+            </div>
+            <nav id="gnb">
+                <h2>메인메뉴</h2>
+                <div class="gnb_wrap">
+                    <ul id="gnb_1dul">
+                        <li class="gnb_btn">
+                            <img src="http://nstayimg7.speedgabia.com/lunarhill2/common/logo.png" alt="루나힐풀빌라">
+                            <button type="button" id="gnb_close_btn">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                                <span class="sound_only">메뉴닫기</span>
+                            </button>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="prolog.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">프롤로그</span>
+                                    <span class="flip-txt">prolog</span>
+                                </div>
+                                <div class="gnb_txt">프롤로그</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="#" class="gnb_2da" data-text="프롤로그">프롤로그</a></li>
+                                    <li class="gnb_2dli"><a href="#" class="gnb_2da" data-text="오시는길">오시는길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="room.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">객실안내</span>
+                                    <span class="flip-txt">Room Info</span>
+                                </div>
+                                <div class="gnb_txt">객실안내</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li><a></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="joy.html" class="gnb_1da h_facil">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">즐길거리</span>
+                                    <span class="flip-txt">Special</span>
+                                </div>
+                                <div class="gnb_txt">즐길거리</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li><a></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="tour.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">여행지</span>
+                                    <span class="flip-txt">Tour</span>
+                                </div>
+                                <div class="gnb_txt">여행지</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="tour.html" class="gnb_2da" data-text="여행지">여행지</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="reservation.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">예약안내</span>
+                                    <span class="flip-txt">Reservation</span>
+                                </div>
+                                <div class="gnb_txt">예약안내</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="#" class="gnb_2da" data-text="예약안내">예약안내</a></li>
+                                    <li class="gnb_2dli"><a href="#" target="_reser" class="gnb_2da"
+                                            data-text="실시간안내">실시간안내</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <script>
+                $(function () {
+                    $(window).scroll(function () {
+                        if ($(this).scrollTop() > 0) {
+                            $("#hd").addClass("sticky");
+                        } else {
+                            $("#hd").removeClass("sticky");
+                        }
+                    });
+
+                    var $gnb = $(".gnb_1dli > a");
+                    $gnb.mouseover(function () {
+                        $("#hd").addClass("hd_over");
+                        $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                        $(this).parent().addClass("gnb_1dli_over gnb_1dli_on");
+                    });
+
+                    $gnb.bind("click", function (e) {
+                        if ($("#gnb .gnb_wrap").hasClass("active")) {
+                            var $li = $(this).closest(".gnb_1dli");
+
+                            if ($li.hasClass("gnb_1dli_over") && $li.find(".gnb_2dul").is(":visible"))
+                                $li.removeClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideUp();
+                            else if (!$li.find(".gnb_2dul").is(":visible")) {
+                                $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideUp();
+                                $li.addClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideDown();
+                            }
+                            return false;
+                        }
+                    });
+
+                    $('#gnb_1dul>li').bind('mouseleave', function () {
+                        submenu_hide();
+                    });
+
+                    $(".gnb_2dli > a").mouseover(function () {
+                        $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                        $(this).closest(".gnb_1dli").addClass("gnb_1dli_over gnb_1dli_on");
+                    });
+
+                    $('.gnb_2dli').bind('mouseleave', function () {
+                        submenu_hide();
+                    });
+
+                    $('#hd').bind('mouseleave', function () {
+                        $(this).removeClass("hd_over");
+                    });
+
+                    $("#gnb_menu_btn").click(function () {
+                        $("#gnb").addClass("gnb_open");
+                        setTimeout(function () {
+                            $("#gnb .gnb_wrap").addClass("active");
+                        }, 1);
+                    });
+
+                    $("#gnb_close_btn").click(function () {
+                        $("#gnb .gnb_wrap").removeClass("active");
+                        setTimeout(function () {
+                            $("#gnb").removeClass("gnb_open");
+                        }, 300);
+                    });
+                });
+
+                function submenu_hide() {
+                    $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                }
+            </script>
+        </div>
+        <script>
+            $(function () {
+                $(".hd_pops_reject").click(function () {
+                    var id = $(this).attr('class').split(' ');
+                    var ck_name = id[1];
+                    var exp_time = parseInt(id[2]);
+                    $("#" + id[1]).css("display", "none");
+                    set_cookie(ck_name, 1, exp_time, g5_cookie_domain);
+                });
+
+                $('.hd_pops_close').click(function () {
+                    var idb = $(this).attr('class').split(' ');
+                    $('#' + idb[1]).css('display', 'none');
+                });
+            });
+        </script>
+    </header>
+
+    <section>
+        <div class="svisual payment">
+            PAYMENT<br>
+            <b>결제</b>
+        </div>
+
+        <div class="container pay-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-title">결제</h3>
+                    <div class="page-progress">
+                        <div class="progress-info">
+                            <div class="progress-circle">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </div>
+                            <p>객실선택</p>
+                        </div>
+                        <div class="progress-next">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                        </div>
+                        <div class="progress-info">
+                            <div class="progress-circle active">
+                                <i class="fa-regular fa-credit-card"></i>
+                            </div>
+                            <p>결제</p>
+                        </div>
+                        <div class="progress-next">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                        </div>
+                        <div class="progress-info">
+                            <div class="progress-circle">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <p>결제완료</p>
+                        </div>
+                    </div>
+                    
+                    <div class="room-detail-des">
+                        <div>
+                            <ul class="room-detail-list">
+                                <li>객실타입 : 스위트룸</li>
+                                <li>객실 설명 : 킹 베드 2개, 2인(최대 3인)</li>
+                                <li>인원수 : 3명</li>
+                            </ul>
+                        </div>
+                        <div class="pay-day">
+                            <div class="pay-res-period start-date">
+                                <p>2024.8.3(토)</p>
+                                <p>15:00</p>
+                            </div>
+                            <div class="period">
+                                <p>1박</p>
+                            </div>
+                            <div class="pay-res-period end-date">
+                                <p>2024.8.4(토)</p>
+                                <p>11:00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-all-pay">
+                        <p>총금액 : <span class="text-red">400,000</span>원</p>
+                    </div>
+                    <div class="total-info">
+                        <div class="pay-res-person">
+                            <div>
+                                <div class="pay-res-info-top">
+                                    <p class="pay-res-title">예약자 정보입력</p>
+                                    <label class="input-container">
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                        <span class="input-text">회원정보 동일</span>
+                                    </label>
+                                </div>
+                                <table class="pay-res-info">
+                                    <colgroup>
+                                        <col width="20%"/>
+                                        <col width="80%" />
+                                    </colgroup>
+                                    <tr>
+                                        <th>예약자명<span class="text-red">*</span></th>
+                                        <td><input class="res-pay-input" type="text"  /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>생년월일<span class="text-red">*</span></th>
+                                        <td><input class="res-pay-input" type="text"  /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>연락처<span class="text-red">*</span></th>
+                                        <td><input class="res-pay-input" type="text"  /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>이메일</th>
+                                        <td><input class="res-pay-input" type="text"  /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>요청사항</th>
+                                        <td><input class="res-pay-input" type="text"  /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+                                <div class="pay-res-info-top">
+                                    <p class="pay-res-title">결제 정보</p>
+                                </div>
+                                <div class="pay-res-info-content">
+                                    <div class="pay-info-select">
+                                        <div class="payment-method">
+                                            <label class="radio-container">
+                                                <input type="radio" name="payment">
+                                                <span class="radio-checkmark"></span>
+                                                <span>카카오 페이</span>
+                                            </label>
+                                            <label class="radio-container">
+                                                <input type="radio" name="payment">
+                                                <span class="radio-checkmark"></span>
+                                                <span>신용카드</span>
+                                            </label>
+                                        </div>
+                                        <div class="total-meny-box">
+                                            <p>총결제 금액 : <span class="text-red">400,000</span>원</p>
+                                        </div>
+                                    </div>
+                                    <div class="pay-res-btn-bottom">
+                                        <button class="pay-res-btn cancel">취소</button>
+                                        <button class="pay-res-btn confirm">결제</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-logo">
+                        <img src="image/footer-logo.jpg" alt="footerLogo" />
+                    </div>
+                    <div class="company">
+                        <div id="information">
+                            <p class="footer-title">INFORMATION</p>
+                            <div class="footer-content">
+                                <div>
+                                    <p>업체이름</p>
+                                    <span class="line-before"></span>
+                                    <p>애메레이트 호텔</p>
+                                </div>
+                                <div>
+                                    <p>대표자</p>
+                                    <span class="line-before"></span>
+                                    <p>대표자</p>
+                                </div>
+                                <div>
+                                    <p>사업자 등록 번호</p>
+                                    <span class="line-before"></span>
+                                    123-12-12345
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tel">
+                            <p class="footer-title">TEL</p>
+                            <div class="footer-content">
+                                <div>
+                                    <p>사업장 전화번호</p>
+                                    <span class="line-before"></span>
+                                    <p>042-123-1234</p>
+                                </div>
+                                <div>
+                                    <p>전화가능 시간</p>
+                                    <span class="line-before"></span>
+                                    <p>09:00 ~ 18:00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="reservation">
+                            <p class="footer-title">RESERVATION</p>
+                            <div class="footer-content">
+                                <a href="#" class="footer-res">예약 바로가기</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copyright">
+                        <p>COPYRIGHT&copy;Emirate hotel. ALL RIGHTS RESERVE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <!-- <script src="js/bootstrap.min.js"></script> -->
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/jquery.magnific-popup.js"></script>
+    <script src="js/validator.min.js"></script>
+    <script src="js/scripts.js"></script>
+
+    <script src="test/bootstrap.min.js"></script>
+</body>
+
+</html>

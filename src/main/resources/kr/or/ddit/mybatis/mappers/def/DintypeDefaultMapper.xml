@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.DintypeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.DintypeDefaultVO">
+    <id column="DINTYPE_ID" jdbcType="VARCHAR" property="dintypeId" />
+    <result column="DINTYPE_NM" jdbcType="VARCHAR" property="dintypeNm" />
+    <result column="DINTYPE_ADPRICE" jdbcType="NUMERIC" property="dintypeAdprice" />
+    <result column="DINTYPE_CHPRICE" jdbcType="NUMERIC" property="dintypeChprice" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from DINTYPE
+    where DINTYPE_ID = #{dintypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.DintypeDefaultVO">
+    insert into DINTYPE (DINTYPE_ID, DINTYPE_NM, DINTYPE_ADPRICE, 
+      DINTYPE_CHPRICE)
+    values (#{dintypeId,jdbcType=VARCHAR}, #{dintypeNm,jdbcType=VARCHAR}, #{dintypeAdprice,jdbcType=NUMERIC}, 
+      #{dintypeChprice,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.DintypeDefaultVO">
+    update DINTYPE
+    set DINTYPE_NM = #{dintypeNm,jdbcType=VARCHAR},
+      DINTYPE_ADPRICE = #{dintypeAdprice,jdbcType=NUMERIC},
+      DINTYPE_CHPRICE = #{dintypeChprice,jdbcType=NUMERIC}
+    where DINTYPE_ID = #{dintypeId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select DINTYPE_ID, DINTYPE_NM, DINTYPE_ADPRICE, DINTYPE_CHPRICE
+    from DINTYPE
+    where DINTYPE_ID = #{dintypeId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select DINTYPE_ID, DINTYPE_NM, DINTYPE_ADPRICE, DINTYPE_CHPRICE
+    from DINTYPE
+  </select>
+</mapper>

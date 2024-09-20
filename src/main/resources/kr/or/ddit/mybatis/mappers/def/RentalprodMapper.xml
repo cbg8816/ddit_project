@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.housekeeping.dao.RentalprodMapper">
+
+
+<select id="rentalProdList">
+		select
+			RENPROD_NAME
+			, RENPROD_QTY
+		FROM
+			RENTALPROD
+</select>
+
+<select id="selectQty">
+		select
+			RENPROD_QTY
+		FROM
+			RENTALPROD
+		WHERE
+			RENPROD_NAME = #{rentalprodName}
+</select>
+
+</mapper>

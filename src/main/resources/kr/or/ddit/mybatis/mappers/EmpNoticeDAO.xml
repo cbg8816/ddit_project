@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.empnotice.dao.EmpNoticeMapper">
+
+	<resultMap type="EmpNoticeVO" id="empnoticeMap" autoMapping="true">
+
+		<id property="empnotiNo" column="EMPNOTI_NO"/>
+
+	</resultMap>
+
+	 <insert id="insertEmpNotice" parameterType="EmpNoticeVO">
+			INSERT INTO EMP_NOTICE (
+			    EMPNOTI_NO
+			    , EMONOTI_WRITER
+			    , EMPNOTI_TITLE
+			    , EMPNOTI_DATE
+			    , EMPNOTI_FILE
+			    , EMPNOTI_CONTENT
+			) VALUES (
+				EMPNOTICE_SEQ.NEXTVAL
+				, #{emonotiWriter,jdbcType=VARCHAR}
+				, #{empnotiTitle,jdbcType=VARCHAR}
+				, SYSDATE
+				, #{empnotiFile,jdbcType=VARCHAR}
+				, #{empnotiContent,jdbcType=CLOB}
+			)
+	  </insert>
+	  <update id="updateEmpNotice" parameterType="EmpNoticeVO">
+		    UPDATE EMP_NOTICE
+		    SET
+		      EMPNOTI_TITLE = #{empnotiTitle,jdbcType=VARCHAR}
+		      , EMPNOTI_FILE = #{empnotiFile,jdbcType=VARCHAR}
+		      , EMPNOTI_CONTENT = #{empnotiContent,jdbcType=CLOB}
+		    WHERE EMPNOTI_NO = #{empnotiNo,jdbcType=NUMERIC}
+	  </update>
+	  <delete id="deleteEmpNotice">
+		  	DELETE FROM EMP_NOTICE
+	    	WHERE EMPNOTI_NO = #{empnotiNo,jdbcType=NUMERIC}
+	  </delete>
+	  <select id="selectEmpNotice" resultType="EmpNoticeVO">
+		    SELECT EMPNOTI_NO, EMONOTI_WRITER, EMPNOTI_TITLE, EMPNOTI_DATE, EMPNOTI_FILE, EMPNOTI_CONTENT
+		    FROM EMP_NOTICE
+		    WHERE EMPNOTI_NO = #{empnotiNo,jdbcType=NUMERIC}
+	  </select>
+
+	       <select id="selectTotalRecord" resultType="int" >
+		      SELECT COUNT(EMPNOTI_NO)
+		      FROM EMP_NOTICE
+		   </select>
+
+	  <select id="selectEmpNoticeList" resultType="EmpNoticeVO">
+<!-- 		    SELECT EMPNOTI_NO, EMONOTI_WRITER, EMPNOTI_TITLE, EMPNOTI_DATE, EMPNOTI_FILE, EMPNOTI_CONTENT -->
+<!-- 		    FROM EMP_NOTICE -->
+
+			SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM,  A.*
+				FROM (
+				    SELECT EMPNOTI_NO
+				           ,EMONOTI_WRITER
+				           , EMPNOTI_TITLE
+				           , EMPNOTI_CONTENT
+				           , EMPNOTI_DATE
+				           , EMPNOTI_FILE
+				    FROM EMP_NOTICE
+				    ORDER BY ROWID DESC
+				) A
+			) B
+			<![CDATA[
+	        WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+	        ]]>
+	  </select>
+
+
+	<select id="empallList" resultType="kr.or.ddit.vo.EmpVO">
+		SELECT * FROM EMP
+			WHERE EMP_ID  = #{empId}
+	</select>
+
+
+
+</mapper>

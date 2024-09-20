@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.lprod.dao.LprodMapper">
+
+	<resultMap type="LprodVO" id="lprodMap" autoMapping="true">
+		<id property="lprodGu" column="LPROD_GU"/>
+		<collection property="buyerList" ofType="BuyerVO" autoMapping="true"/>
+	</resultMap>
+	<select id="selectLprodList" resultMap="lprodMap">
+		SELECT LPROD_GU, LPROD_NM
+			, BUYER_ID, BUYER_NAME
+		FROM LPROD LEFT OUTER JOIN BUYER ON (LPROD_GU = BUYER_LGU)
+	</select>
+</mapper>

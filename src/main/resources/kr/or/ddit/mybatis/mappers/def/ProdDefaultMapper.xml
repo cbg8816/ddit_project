@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.prod.dao.prodMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.ProdVO">
+    <id column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="PROD_NAME" jdbcType="VARCHAR" property="prodName" />
+    <result column="PROD_LGU" jdbcType="CHAR" property="prodLgu" />
+    <result column="PROD_BUYER" jdbcType="CHAR" property="prodBuyer" />
+    <result column="PROD_PRICE" jdbcType="NUMERIC" property="prodPrice" />
+    <result column="PROD_OUTLINE" jdbcType="VARCHAR" property="prodOutline" />
+    <result column="PROD_TOTALSTOCK" jdbcType="NUMERIC" property="prodTotalstock" />
+    <result column="PROD_PROPERSTOCK" jdbcType="NUMERIC" property="prodProperstock" />
+    <result column="PROD_DETAIL" jdbcType="CLOB" property="prodDetail" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PROD
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.ProdVO">
+    insert into PROD (PROD_ID, PROD_NAME, PROD_LGU, 
+      PROD_BUYER, PROD_PRICE, PROD_OUTLINE, 
+      PROD_TOTALSTOCK, PROD_PROPERSTOCK, PROD_DETAIL
+      )
+    values (#{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{prodLgu,jdbcType=CHAR}, 
+      #{prodBuyer,jdbcType=CHAR}, #{prodPrice,jdbcType=NUMERIC}, #{prodOutline,jdbcType=VARCHAR}, 
+      #{prodTotalstock,jdbcType=NUMERIC}, #{prodProperstock,jdbcType=NUMERIC}, #{prodDetail,jdbcType=CLOB}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.ProdVO">
+    update PROD
+    set PROD_NAME = #{prodName,jdbcType=VARCHAR},
+      PROD_LGU = #{prodLgu,jdbcType=CHAR},
+      PROD_BUYER = #{prodBuyer,jdbcType=CHAR},
+      PROD_PRICE = #{prodPrice,jdbcType=NUMERIC},
+      PROD_OUTLINE = #{prodOutline,jdbcType=VARCHAR},
+      PROD_TOTALSTOCK = #{prodTotalstock,jdbcType=NUMERIC},
+      PROD_PROPERSTOCK = #{prodProperstock,jdbcType=NUMERIC},
+      PROD_DETAIL = #{prodDetail,jdbcType=CLOB}
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select PROD_ID, PROD_NAME, PROD_LGU, PROD_BUYER, PROD_PRICE, PROD_OUTLINE, PROD_TOTALSTOCK, 
+    PROD_PROPERSTOCK, PROD_DETAIL
+    from PROD
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select PROD_ID, PROD_NAME, PROD_LGU, PROD_BUYER, PROD_PRICE, PROD_OUTLINE, PROD_TOTALSTOCK, 
+    PROD_PROPERSTOCK, PROD_DETAIL
+    from PROD
+  </select>
+</mapper>

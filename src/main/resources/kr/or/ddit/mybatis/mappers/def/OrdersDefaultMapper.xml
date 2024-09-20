@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.OrdersDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.OrdersDefaultVO">
+    <id column="ORDER_TURN" jdbcType="CHAR" property="orderTurn" />
+    <result column="ORDER_BUYER" jdbcType="CHAR" property="orderBuyer" />
+    <result column="ORDER_DATE" jdbcType="TIMESTAMP" property="orderDate" />
+    <result column="ORDER_STATE" jdbcType="VARCHAR" property="orderState" />
+    <result column="ORDER_PAYMENT" jdbcType="VARCHAR" property="orderPayment" />
+    <result column="ORDER_PAYMENTSTATE" jdbcType="VARCHAR" property="orderPaymentstate" />
+    <result column="ORDER_QTY" jdbcType="NUMERIC" property="orderQty" />
+    <result column="ORDER_PRICE" jdbcType="NUMERIC" property="orderPrice" />
+    <result column="ORDER_LGU" jdbcType="CHAR" property="orderLgu" />
+    <result column="ORDER_PROD" jdbcType="VARCHAR" property="orderProd" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ORDERS
+    where ORDER_TURN = #{orderTurn,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.OrdersDefaultVO">
+    insert into ORDERS (ORDER_TURN, ORDER_BUYER, ORDER_DATE, 
+      ORDER_STATE, ORDER_PAYMENT, ORDER_PAYMENTSTATE, 
+      ORDER_QTY, ORDER_PRICE, ORDER_LGU, 
+      ORDER_PROD)
+    values (#{orderTurn,jdbcType=CHAR}, #{orderBuyer,jdbcType=CHAR}, #{orderDate,jdbcType=TIMESTAMP}, 
+      #{orderState,jdbcType=VARCHAR}, #{orderPayment,jdbcType=VARCHAR}, #{orderPaymentstate,jdbcType=VARCHAR}, 
+      #{orderQty,jdbcType=NUMERIC}, #{orderPrice,jdbcType=NUMERIC}, #{orderLgu,jdbcType=CHAR}, 
+      #{orderProd,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.OrdersDefaultVO">
+    update ORDERS
+    set ORDER_BUYER = #{orderBuyer,jdbcType=CHAR},
+      ORDER_DATE = #{orderDate,jdbcType=TIMESTAMP},
+      ORDER_STATE = #{orderState,jdbcType=VARCHAR},
+      ORDER_PAYMENT = #{orderPayment,jdbcType=VARCHAR},
+      ORDER_PAYMENTSTATE = #{orderPaymentstate,jdbcType=VARCHAR},
+      ORDER_QTY = #{orderQty,jdbcType=NUMERIC},
+      ORDER_PRICE = #{orderPrice,jdbcType=NUMERIC},
+      ORDER_LGU = #{orderLgu,jdbcType=CHAR},
+      ORDER_PROD = #{orderProd,jdbcType=VARCHAR}
+    where ORDER_TURN = #{orderTurn,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ORDER_TURN, ORDER_BUYER, ORDER_DATE, ORDER_STATE, ORDER_PAYMENT, ORDER_PAYMENTSTATE, 
+    ORDER_QTY, ORDER_PRICE, ORDER_LGU, ORDER_PROD
+    from ORDERS
+    where ORDER_TURN = #{orderTurn,jdbcType=CHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ORDER_TURN, ORDER_BUYER, ORDER_DATE, ORDER_STATE, ORDER_PAYMENT, ORDER_PAYMENTSTATE, 
+    ORDER_QTY, ORDER_PRICE, ORDER_LGU, ORDER_PROD
+    from ORDERS
+  </select>
+</mapper>

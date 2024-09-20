@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.EmpDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.EmpDefaultVO">
+    <id column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="POSI_ID" jdbcType="VARCHAR" property="posiId" />
+    <result column="EMP_PW" jdbcType="VARCHAR" property="empPw" />
+    <result column="EMP_HIRDATE" jdbcType="TIMESTAMP" property="empHirdate" />
+    <result column="EMP_NAME" jdbcType="VARCHAR" property="empName" />
+    <result column="EMP_BIR" jdbcType="TIMESTAMP" property="empBir" />
+    <result column="EMP_TEL" jdbcType="VARCHAR" property="empTel" />
+    <result column="EMP_GEN" jdbcType="VARCHAR" property="empGen" />
+    <result column="EMP_SAL" jdbcType="NUMERIC" property="empSal" />
+    <result column="EMP_STA" jdbcType="VARCHAR" property="empSta" />
+    <result column="EMP_RES" jdbcType="TIMESTAMP" property="empRes" />
+    <result column="EMP_FILE" jdbcType="VARCHAR" property="empFile" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from EMP
+    where EMP_ID = #{empId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.EmpDefaultVO">
+    insert into EMP (EMP_ID, POSI_ID, EMP_PW, 
+      EMP_HIRDATE, EMP_NAME, EMP_BIR, 
+      EMP_TEL, EMP_GEN, EMP_SAL, 
+      EMP_STA, EMP_RES, EMP_FILE
+      )
+    values (#{empId,jdbcType=VARCHAR}, #{posiId,jdbcType=VARCHAR}, #{empPw,jdbcType=VARCHAR}, 
+      #{empHirdate,jdbcType=TIMESTAMP}, #{empName,jdbcType=VARCHAR}, #{empBir,jdbcType=TIMESTAMP}, 
+      #{empTel,jdbcType=VARCHAR}, #{empGen,jdbcType=VARCHAR}, #{empSal,jdbcType=NUMERIC}, 
+      #{empSta,jdbcType=VARCHAR}, #{empRes,jdbcType=TIMESTAMP}, #{empFile,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.EmpDefaultVO">
+    update EMP
+    set POSI_ID = #{posiId,jdbcType=VARCHAR},
+      EMP_PW = #{empPw,jdbcType=VARCHAR},
+      EMP_HIRDATE = #{empHirdate,jdbcType=TIMESTAMP},
+      EMP_NAME = #{empName,jdbcType=VARCHAR},
+      EMP_BIR = #{empBir,jdbcType=TIMESTAMP},
+      EMP_TEL = #{empTel,jdbcType=VARCHAR},
+      EMP_GEN = #{empGen,jdbcType=VARCHAR},
+      EMP_SAL = #{empSal,jdbcType=NUMERIC},
+      EMP_STA = #{empSta,jdbcType=VARCHAR},
+      EMP_RES = #{empRes,jdbcType=TIMESTAMP},
+      EMP_FILE = #{empFile,jdbcType=VARCHAR}
+    where EMP_ID = #{empId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EMP_ID, POSI_ID, EMP_PW, EMP_HIRDATE, EMP_NAME, EMP_BIR, EMP_TEL, EMP_GEN, 
+    EMP_SAL, EMP_STA, EMP_RES, EMP_FILE
+    from EMP
+    where EMP_ID = #{empId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EMP_ID, POSI_ID, EMP_PW, EMP_HIRDATE, EMP_NAME, EMP_BIR, EMP_TEL, EMP_GEN, 
+    EMP_SAL, EMP_STA, EMP_RES, EMP_FILE
+    from EMP
+  </select>
+</mapper>

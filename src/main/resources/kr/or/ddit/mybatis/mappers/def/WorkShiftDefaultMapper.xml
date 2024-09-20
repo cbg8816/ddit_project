@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.WorkShiftDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.WorkShiftDefaultVO">
+    <id column="WORK_ID" jdbcType="VARCHAR" property="workId" />
+    <id column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="WORK_TYPE" jdbcType="VARCHAR" property="workType" />
+    <result column="WORK_OFFYN" jdbcType="VARCHAR" property="workOffyn" />
+    <result column="WORK_REMARK" jdbcType="VARCHAR" property="workRemark" />
+    <result column="WORK_DAY" jdbcType="VARCHAR" property="workDay" />
+    <result column="WORK_ORDERID" jdbcType="VARCHAR" property="workOrderid" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from WORK_SHIFT
+    where WORK_ID = #{workId,jdbcType=VARCHAR}
+      and EMP_ID = #{empId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.WorkShiftDefaultVO">
+    insert into WORK_SHIFT (WORK_ID, EMP_ID, WORK_TYPE, 
+      WORK_OFFYN, WORK_REMARK, WORK_DAY, 
+      WORK_ORDERID)
+    values (#{workId,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, #{workType,jdbcType=VARCHAR}, 
+      #{workOffyn,jdbcType=VARCHAR}, #{workRemark,jdbcType=VARCHAR}, #{workDay,jdbcType=VARCHAR}, 
+      #{workOrderid,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.WorkShiftDefaultVO">
+    update WORK_SHIFT
+    set WORK_TYPE = #{workType,jdbcType=VARCHAR},
+      WORK_OFFYN = #{workOffyn,jdbcType=VARCHAR},
+      WORK_REMARK = #{workRemark,jdbcType=VARCHAR},
+      WORK_DAY = #{workDay,jdbcType=VARCHAR},
+      WORK_ORDERID = #{workOrderid,jdbcType=VARCHAR}
+    where WORK_ID = #{workId,jdbcType=VARCHAR}
+      and EMP_ID = #{empId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select WORK_ID, EMP_ID, WORK_TYPE, WORK_OFFYN, WORK_REMARK, WORK_DAY, WORK_ORDERID
+    from WORK_SHIFT
+    where WORK_ID = #{workId,jdbcType=VARCHAR}
+      and EMP_ID = #{empId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select WORK_ID, EMP_ID, WORK_TYPE, WORK_OFFYN, WORK_REMARK, WORK_DAY, WORK_ORDERID
+    from WORK_SHIFT
+  </select>
+</mapper>

@@ -1,0 +1,49 @@
+.indexwork{
+	text-align: right;
+}
+.indextime{
+	padding: 0;
+}
+
+.indexplus{
+	text-align: right;
+}
+
+dt{
+	font-size: 18px;
+}
+dd{
+	font-size: 18px;
+    color: #666;
+    margin-bottom: 0;
+}
+.mypageappro {
+	display: flex;
+	justify-content: space-around;
+}
+.myappro {
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: var(--color-gnb-1);
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.cal-height{
+	height: auto;
+}
+
+.mypage > div .card {
+    margin-bottom: 0;
+}
+.card-my-height {
+    height: calc(866px / 2);
+}
+
+/* .card-my-height{ */
+/* 	height: calc((100vh - 125px) / 2); */
+/* } */

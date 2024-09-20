@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.emp.dao.EmpMapper">
+
+	<update id="updateEmp" parameterType="EmpVO">
+		UPDATE EMP
+		SET
+			POSI_ID = #{posiId,jdbcType=VARCHAR}
+			, DEP_ID = #{depId,jdbcType=VARCHAR}
+			, EMP_PW = #{empPw,jdbcType=VARCHAR}
+			, EMP_HIRDATE = #{empHirdate,jdbcType=TIMESTAMP}
+			, EMP_NAME = #{empName,jdbcType=VARCHAR}
+			, EMP_BIR = #{empBir,jdbcType=TIMESTAMP}
+			, EMP_TEL = #{empTel,jdbcType=VARCHAR}
+			, EMP_SAL = #{empSal,jdbcType=NUMERIC}
+			, EMP_STA =  #{empSta,jdbcType=VARCHAR}
+			, EMP_RES = #{empRes,jdbcType=TIMESTAMP}
+			, EMP_FILE = #{empFile,jdbcType=VARCHAR}
+		WHERE EMP_ID = #{empId,jdbcType=VARCHAR}
+	</update>
+
+
+	<insert id="insertEmp" parameterType="EmpVO">
+		INSERT INTO EMP (
+				EMP_ID
+				, POSI_ID
+				, DEP_ID
+				, EMP_PW
+	      		, EMP_HIRDATE
+	      		, EMP_NAME
+	      		, EMP_BIR
+	      		, EMP_TEL
+	      		, EMP_GEN
+	      		, EMP_SAL
+	      		, EMP_STA
+	      		, EMP_RES
+	      		, EMP_FILE
+	      		, CUR_DATE
+	      ) VALUES (
+	    		#{empId,jdbcType=VARCHAR}|| LPAD(EMP_SEQ.NEXTVAL,3,0)
+	    		, #{posiId,jdbcType=VARCHAR}
+	    		, #{depId,jdbcType=VARCHAR}
+	    		, '0000'
+	      		, #{empHirdate,jdbcType=TIMESTAMP}
+	      		, #{empName,jdbcType=VARCHAR}
+	      		, #{empBir,jdbcType=TIMESTAMP}
+	      		, #{empTel,jdbcType=VARCHAR}
+	      		, #{empGen,jdbcType=VARCHAR}
+	      		, #{empSal,jdbcType=NUMERIC}
+	      		, 'Y'
+	      		, #{empRes,jdbcType=TIMESTAMP}
+	      		, #{empFile,jdbcType=VARCHAR}
+	      		, SYSDATE
+	      )
+	</insert>
+
+	<insert id="insertAttencance" parameterType="EmpVO">
+		INSERT INTO ATTENDANCE (
+		    ATTE_ID
+		    , EMP_ID
+		    , ATTE_ALL_AN_LEAVE
+		    , ATTE_LEFT_AN_LEAVE
+		    , ATTE_USE_AN_LEAVE
+		) VALUES (
+			ATTENDANCE_SEQ.NEXTVAL
+			, (SELECT EMP_ID FROM (
+		         SELECT EMP_ID FROM EMP
+		         ORDER BY CUR_DATE DESC
+		     ) WHERE ROWNUM = 1)
+			, '15'
+			, '15'
+			, '0'
+		)
+	</insert>
+
+	<sql id="searchFrag">
+		<trim prefix="and">
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'name'">
+						INSTR(EMP_NAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'dep'">
+						INSTR(DEP_NM, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'posi'">
+						INSTR(POSI_NM, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(EMP_NAME, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(DEP_NM, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(POSI_NM, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+			</trim>
+	</sql>
+
+	<select id="selectEmp" resultType="EmpVO">
+		SELECT EMP_ID
+				     , EMP_PW
+				     , EMP_HIRDATE
+				     , EMP_NAME
+				     , EMP_BIR
+				     , EMP_TEL
+				     , EMP_GEN
+				     , EMP_SAL
+				     , EMP_STA
+				     , EMP_RES
+				     , EMP_FILE
+				     , EMP.POSI_ID
+				     , EMP.DEP_ID
+                      , POSITION.POSI_ID "position.posiId"
+				     , POSI_NM "position.posiNm"
+				     , DEPARTMENT.DEP_ID "department.deptId"
+				     , DEP_NM "department.depNm"
+				FROM EMP INNER JOIN POSITION ON(EMP.POSI_ID = POSITION.POSI_ID)
+                         INNER JOIN DEPARTMENT ON(EMP.DEP_ID = DEPARTMENT.DEP_ID)
+	    WHERE EMP_ID = #{empId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectTotalRecord" resultType="int" >
+		SELECT COUNT(EMP_ID)
+		FROM EMP INNER JOIN POSITION ON(EMP.POSI_ID = POSITION.POSI_ID)
+				 INNER JOIN DEPARTMENT ON(EMP.DEP_ID = DEPARTMENT.DEP_ID)
+				WHERE EMP_STA = 'Y'
+<!-- 				ORDER BY DEPARTMENT.DEP_ID ASC, POSITION.POSI_ID ASC -->
+		<include refid="searchFrag"></include>
+	</select>
+
+	<select id="selectEmpList" resultType="EmpVO">
+<!-- 		SELECT B.* -->
+<!-- 		FROM ( -->
+<!-- 			SELECT ROWNUM RNUM,  A.* -->
+<!-- 			FROM ( -->
+<!-- 			    SELECT EMP_ID -->
+<!-- 				     , EMP_PW -->
+<!-- 				     , EMP_HIRDATE -->
+<!-- 				     , EMP_NAME -->
+<!-- 				     , EMP_BIR -->
+<!-- 				     , EMP_TEL -->
+<!-- 				     , EMP_GEN -->
+<!-- 				     , EMP_SAL -->
+<!-- 				     , EMP_STA -->
+<!-- 				     , EMP_RES -->
+<!-- 				     , EMP_FILE -->
+<!--                       , POSITION.POSI_ID "position.posiId" -->
+<!-- 				     , POSI_NM "position.posiNm" -->
+<!-- 				     , DEPARTMENT.DEP_ID "department.deptId" -->
+<!-- 				     , DEP_NM "department.depNm" -->
+<!-- 				FROM EMP INNER JOIN POSITION ON(EMP.POSI_ID = POSITION.POSI_ID) -->
+<!--                             INNER JOIN DEPARTMENT ON(EMP.DEP_ID = DEPARTMENT.DEP_ID) -->
+<!--                             WHERE EMP_STA = 'Y' -->
+<!--                <include refid="searchFrag"></include> -->
+<!-- 			) A -->
+<!-- 		) B -->
+		SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM,  A.*
+				FROM (
+				    SELECT EMP_ID
+					     , EMP_PW
+					     , EMP_HIRDATE
+					     , EMP_NAME
+					     , EMP_BIR
+					     , EMP_TEL
+					     , EMP_GEN
+					     , EMP_SAL
+					     , EMP_STA
+					     , EMP_RES
+					     , EMP_FILE
+	                      , POSITION.POSI_ID "position.posiId"
+					     , POSI_NM "position.posiNm"
+					     , DEPARTMENT.DEP_ID "department.deptId"
+					     , DEP_NM "department.depNm"
+					FROM EMP INNER JOIN POSITION ON(EMP.POSI_ID = POSITION.POSI_ID)
+	                            INNER JOIN DEPARTMENT ON(EMP.DEP_ID = DEPARTMENT.DEP_ID)
+	                            WHERE EMP_STA = 'Y'
+	                           <include refid="searchFrag"></include>
+	                           ORDER BY DEPARTMENT.DEP_ID ASC, POSITION.POSI_ID ASC
+			) A
+		) B
+		<![CDATA[
+	        WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		]]>
+	</select>
+
+	<select id="selectEmpExList" resultType="EmpVO">
+		SELECT B.*
+		FROM (
+			SELECT ROWNUM RNUM,  A.*
+			FROM (
+			    SELECT EMP_ID
+				     , EMP_PW
+				     , EMP_HIRDATE
+				     , EMP_NAME
+				     , EMP_BIR
+				     , EMP_TEL
+				     , EMP_GEN
+				     , EMP_SAL
+				     , EMP_STA
+				     , EMP_RES
+				     , EMP_FILE
+                      , POSITION.POSI_ID "position.posiId"
+				     , POSI_NM "position.posiNm"
+				     , DEPARTMENT.DEP_ID "department.deptId"
+				     , DEP_NM "department.depNm"
+				FROM EMP INNER JOIN POSITION ON(EMP.POSI_ID = POSITION.POSI_ID)
+                            INNER JOIN DEPARTMENT ON(EMP.DEP_ID = DEPARTMENT.DEP_ID)
+                            WHERE EMP_STA = 'N'
+			) A
+		) B
+		<![CDATA[
+	        WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		]]>
+	</select>
+
+	<select id="selectEmpListBasic" resultType="EmpVO">
+		SELECT
+		    EMP_ID
+		    , EMP_PW
+		    , EMP_HIRDATE
+		    , EMP_NAME
+		    , EMP_BIR
+		    , EMP_TEL
+		    , EMP_GEN
+		    , EMP_SAL
+		    , EMP_STA
+		    , EMP_RES
+		    , EMP_FILE
+		    , CUR_DATE
+		FROM EMP
+		WHERE EMP_STA = 'Y'
+		ORDER BY  EMP_NAME ASC
+
+	</select>
+
+	<select id="empdepList" resultType="EmpVO">
+		SELECT
+    		EMP_NAME
+    		, EMP_ID
+		FROM
+   			EMP
+		WHERE
+    		DEP_ID = '60'
+	</select>
+
+	<select id="empName" resultType="EmpVO">
+		SELECT EMP_ID
+            FROM EMP
+            WHERE EMP_NAME = #{empName}
+	</select>
+
+
+
+</mapper>

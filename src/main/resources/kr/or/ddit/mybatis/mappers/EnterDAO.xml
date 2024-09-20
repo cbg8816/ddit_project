@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.enter.dao.EnterMapper">
+	<resultMap type="EnterVO" id="enterMap" autoMapping="true">
+		<association property="lprod" javaType="LprodVO"
+			autoMapping="true" />
+		<association property="buyer" javaType="buyerVO"
+			autoMapping="true" />
+	</resultMap>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from ENTER
+		where ORDER_TURN = #{orderTurn,jdbcType=CHAR}
+	</delete>
+	<insert id="insert" parameterType="kr.or.ddit.vo.EnterVO">
+		<selectKey order="BEFORE" resultType="string"
+			keyProperty="enterTurn">
+			SELECT REPLACE(ORDER_APPLY_NO, 'ON', 'EN') 
+				FROM ORDERS_APPLY
+				WHERE ORDER_APPLY_NO = #{enterTurn}
+				GROUP BY ORDER_APPLY_NO
+		</selectKey>
+		INSERT INTO ENTER(
+		ENTER_TURN
+		, ENTER_ORDER
+		, ENTER_LGU
+		, ENTER_BUYER
+		, ENTER_QTY
+		, ENTER_TOTAL
+		, ENTER_DAY
+		, ENTER_WITH
+		)VALUES(
+		#{enterTurn}
+		,#{enterOrder}
+		,#{enterLgu}
+		,#{enterBuyer}
+		,#{enterQty}
+		,#{enterTotal}
+		,#{enterDay}
+		,'출금필요'
+		)
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterType="kr.or.ddit.vo.EnterVO">
+		update ENTER
+		set ENTER_DAY = #{enterDay,jdbcType=TIMESTAMP},
+		ENTER_QTY = #{enterQty,jdbcType=NUMERIC},
+		where ORDER_TURN = #{orderTurn,jdbcType=CHAR}
+	</update>
+	
+	<update id="updateState"
+		parameterType="String">
+		update ENTER
+		set ENTER_WITH = #{param1}
+		where ENTER_TURN = #{param2}
+	</update>
+	
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		<include refid="searchFrag" />
+	</select>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="enterMap">
+		 SELECT
+		ENTER_TURN
+		, ENTER_DAY
+		, ENTER_QTY
+		, ENTER_LGU
+		, ENTER_BUYER
+        , ENTER_ORDER
+        , ENTER_TOTAL
+        , ENTER_WITH
+		, BUYER_NAME
+		, LPROD_NM
+        FROM ENTER 
+        INNER JOIN BUYER ON (ENTER_BUYER =BUYER_ID)
+        INNER JOIN LPROD ON (ENTER_LGU =LPROD_GU)
+		WHERE ENTER_TURN = #{enterTurn}
+	</select>
+	<select id="selectAll" resultMap="enterMap">
+	SELECT B.*
+		FROM (
+		SELECT A.*, ROWNUM RNUM
+		FROM (
+		SELECT
+		ENTER_TURN
+		, ENTER_DAY
+		, ENTER_QTY
+		, ENTER_LGU
+		, ENTER_BUYER
+        , ENTER_ORDER
+        , ENTER_TOTAL
+        , ENTER_WITH
+		, BUYER_NAME
+        , LPROD_NM
+		, (
+		SELECT COUNT(ENTER_TURN) FROM ENTER
+		WHERE
+		ENTER_BUYER = BUYER_ID
+        AND ENTER_LGU = LPROD_GU
+		) ENTER_COUNT
+		<include refid="searchFrag" />
+		ORDER BY ENTER_DAY DESC
+		) A
+		) B
+		WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+	
+	<select id="withdrawalEnterList" resultMap="enterMap">
+	SELECT B.*
+		FROM (
+		SELECT A.*, ROWNUM RNUM
+		FROM (
+		SELECT
+		ENTER_TURN
+		, ENTER_DAY
+		, ENTER_QTY
+		, ENTER_LGU
+		, ENTER_BUYER
+        , ENTER_ORDER
+        , ENTER_TOTAL
+		, BUYER.*
+        , LPROD_NM
+		, (
+		SELECT COUNT(ENTER_TURN) FROM ENTER
+		WHERE
+		ENTER_BUYER = BUYER_ID
+        AND ENTER_LGU = LPROD_GU
+		) ENTER_COUNT
+		<include refid="searchFrag2" />
+		AND ENTER_WITH ='출금필요'
+		ORDER BY ENTER_DAY DESC
+		) A
+		) B
+		WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+	
+<sql id="searchFrag">
+		FROM ENTER
+		INNER JOIN BUYER ON (ENTER_BUYER =BUYER_ID)
+		INNER JOIN LPROD ON (ENTER_LGU =LPROD_GU)
+    <where>
+        <trim prefixOverrides="AND">
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(enterCondition.enterNo)">
+                INSTR(ENTER_TURN, #{enterCondition.enterNo}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(enterCondition.enterLgu)">
+                INSTR(LPROD_NM, #{enterCondition.enterLgu}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(enterCondition.enterBuyer)">
+                AND INSTR(BUYER_NAME, #{enterCondition.enterBuyer}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(enterCondition.enterAppyNo)">
+                AND INSTR(ENTER_ORDER, #{enterCondition.enterAppyNo}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(enterCondition.enterDate)">
+                AND ENTER_DAY = #{enterCondition.enterDate}
+            </if>
+        </trim>
+    </where>
+ </sql>
+ 
+ <sql id="searchFrag2">
+ FROM ENTER
+		INNER JOIN BUYER ON (ENTER_BUYER =BUYER_ID)
+		INNER JOIN LPROD ON (ENTER_LGU =LPROD_GU)
+		<trim prefix=" WHERE ">
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'no'">
+						INSTR(ENTER_TURN, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'buyerName'">
+						INSTR(BUYER_NAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(ENTER_TURN, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(BUYER_NAME, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</trim>
+	</sql>
+ 
+</mapper>

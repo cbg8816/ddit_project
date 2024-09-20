@@ -1,0 +1,14 @@
+#workshift-list-search-table {
+    width: 20%;
+    border-top: 1px solid var(--table-default-border);
+}
+
+.page-body.revDetail > div {
+    width: calc((100% - 40px) / 2);
+}
+
+
+#search-table table tr th, table tr td {
+    padding: 10px 10px;
+    text-align: center;
+}

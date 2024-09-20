@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.TotalRevDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.TotalRevDefaultVO">
+    <id column="TREV_ID" jdbcType="VARCHAR" property="trevId" />
+    <result column="TREV_ADULT" jdbcType="NUMERIC" property="trevAdult" />
+    <result column="TREV_CHILD" jdbcType="NUMERIC" property="trevChild" />
+    <result column="TREV_PAYOPT" jdbcType="VARCHAR" property="trevPayopt" />
+    <result column="TREV_RTYPE" jdbcType="VARCHAR" property="trevRtype" />
+    <result column="TREV_DATE" jdbcType="TIMESTAMP" property="trevDate" />
+    <result column="TREV_CARNO" jdbcType="VARCHAR" property="trevCarno" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TOTAL_REV
+    where TREV_ID = #{trevId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.TotalRevDefaultVO">
+    insert into TOTAL_REV (TREV_ID, MEM_ID, TREV_ADULT, 
+      TREV_CHILD, TREV_PAYOPT, TREV_RTYPE, 
+      TREV_DATE, TREV_CARNO)
+    values (#{trevId,jdbcType=VARCHAR}, #{memId,jdbcType=VARCHAR}, #{trevAdult,jdbcType=NUMERIC}, 
+      #{trevChild,jdbcType=NUMERIC}, #{trevPayopt,jdbcType=VARCHAR}, #{trevRtype,jdbcType=VARCHAR}, 
+      #{trevDate,jdbcType=TIMESTAMP}, #{trevCarno,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.TotalRevDefaultVO">
+    update TOTAL_REV
+    set MEM_ID = #{memId,jdbcType=VARCHAR},
+      TREV_ADULT = #{trevAdult,jdbcType=NUMERIC},
+      TREV_CHILD = #{trevChild,jdbcType=NUMERIC},
+      TREV_PAYOPT = #{trevPayopt,jdbcType=VARCHAR},
+      TREV_RTYPE = #{trevRtype,jdbcType=VARCHAR},
+      TREV_DATE = #{trevDate,jdbcType=TIMESTAMP},
+      TREV_CARNO = #{trevCarno,jdbcType=VARCHAR}
+    where TREV_ID = #{trevId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select TREV_ID, MEM_ID, TREV_ADULT, TREV_CHILD, TREV_PAYOPT, TREV_RTYPE, TREV_DATE, 
+    TREV_CARNO
+    from TOTAL_REV
+    where TREV_ID = #{trevId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select TREV_ID, MEM_ID, TREV_ADULT, TREV_CHILD, TREV_PAYOPT, TREV_RTYPE, TREV_DATE, 
+    TREV_CARNO
+    from TOTAL_REV
+  </select>
+</mapper>

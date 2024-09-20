@@ -1,0 +1,852 @@
+.main-panel>.appsidebar {
+	display: flex;
+}
+
+.asidebar {
+	width: 250px;
+	border-right: 1px solid var(--primary-calendar-cell-range-bg);
+    padding-top: 2rem;
+}
+
+.appro-funtion{
+	justify-content: center;
+}
+
+.appro-txt{
+	padding: 13px;
+    display: inline-block;
+    border: 1px solid #777;
+}
+
+.pbot-4 {
+	padding-bottom: 1rem;
+}
+
+.asidebar .nav-item {
+	width: 100%;
+}
+
+
+.asidebar .nav-collapse{
+	display: block;
+	margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    padding-top: 10px;
+}
+
+.asidebar .nav-collapse li a{
+	margin-bottom: 10px;
+    padding: 10px 25px;
+
+}
+
+.asidebar .nav-collapse li a .sub-item{
+	margin-left: 25px;
+	color: var(--color4);
+	position: relative;
+}
+
+.asidebar .nav>.nav-item a {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	color: var(--font-primary);
+/* 	justify-content: space-between; */
+    position: relative;
+	padding: 5px 35px;
+}
+.asidebar .nav-item>a p{
+	margin-bottom : 0;
+}
+
+.asidebar .nav-item.submenu {
+	background: rgba(0, 0, 0, .03);
+}
+
+.asidebar .nav-item .caret{
+    margin-left: auto;
+    margin-right: 6px;
+    transition: all .5s;
+    color: #8d9498;
+}
+
+.nav>.nav-item a i{
+    color: #8d9498;
+    margin-right: 15px;
+    width: 25px;
+    text-align: center;
+    vertical-align: middle;
+    float: left;
+    font-size: 16px;
+    line-height: 30px;
+}
+.content_tab_wrap {
+    height: 300px;
+    /* border: 0; */
+    overflow: auto;
+    padding: 8px 0;
+     border: 0;
+    border-top: 1px solid #ddd;
+}
+
+.content_tab_wrap li{
+	margin: 10px;
+}
+
+.form-group{
+	padding: 0;
+}
+
+.fa-regular{
+	margin-right: 10px;
+}
+
+
+
+/*approform.jsp  */
+.dashboard_box {
+    min-height: 20px;
+    padding: 12px 24px;
+}
+
+.card_flex .approval_home_card {
+/*     width: 25%; */
+    margin: 0 0 0 0;
+}
+
+.card_flex .card_item {
+    display: table-cell;
+    width: 350px;
+    float: none;
+}
+
+.card_flex .card_item .card_wrapper {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.card_flex .card_item .card_wrapper {
+    margin: 0 16px 0 0;
+}
+
+.card_item .card_wrapper {
+    transition: 0.3s;
+}
+
+.card_item div.card_wrapper header {
+    padding: 12px 16px 0;
+    border-top: 5px solid #fff;
+    border-radius: 6px;
+}
+
+.card_item div.card_wrapper span.state {
+    padding: 4px;
+    margin-right: 5px;
+    width: auto;
+    font-size: 12px;
+}
+
+/* SPAN.STATE.ONGOING { */
+/*     BACKGROUND-COLOR: #A6C76C; */
+/*     BORDER: 1PX SOLID #A6C76C; */
+/* } */
+
+span.state {
+    display: inline-block;
+    padding: 4px;
+    text-align: center;
+    color: #fff;
+    border-radius: 2px;
+    letter-spacing: -1px;
+    line-height: 11px;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.card_item div.card_wrapper .card_subject {
+    padding-bottom: 0;
+}
+
+.card_item div.card_wrapper .card_subject, .card_item div.card_wrapper .card_content {
+    padding: 0 16px 16px 16px;
+}
+
+.card_flex .approval_home_card .card_wrapper .t_card {
+    white-space: normal;
+    height: 28px;
+    max-width: 80%;
+}
+
+.card_item div.card_wrapper span.t_card {
+    display: inline-block;
+}
+
+.card_item div.card_wrapper span.title {
+    display: inline-block;
+    line-height: 1.4;
+    font-size: 19px;
+    color: #484848;
+    letter-spacing: -1px;
+    margin: 6px 0 0;
+    font-weight: bold;
+    font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.approval_home_card .card_content {
+    min-height: 130px
+}
+
+.form {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.form .form_tr {
+    display: table-row;
+}
+
+.card_item .form .form_tr .form_th {
+    width: 60px;
+    padding: 2px 0;
+    font-size: 13px;
+    color: #888;
+}
+
+.form .form_tr .form_th {
+    display: table-cell;
+    vertical-align: top;
+    width: 80px;
+}
+
+.card_item .form .form_tr .form_td {
+    padding: 2px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    font-size: 13px;
+    color: #888;
+}
+
+.form .form_tr .form_td {
+    display: table-cell;
+}
+
+.dashboard_box .card_item .card_action {
+    margin: 0;
+    height: 35px;
+}
+
+.card_action {
+    margin: 50px 10px 0px 10px;
+    text-align: center;
+}
+
+.dashboard_box .card_item .card_action .btn_lead {
+    font-weight: bold;
+    font-weight: 500;
+}
+
+.dashboard_box .card_item .card_action .btn_lead, .gadget_design_wrap .card_item .card_action .btn_lead {
+    width: 100%;
+    padding: 12px 0;
+    border: 0;
+    background: none;
+    color: #333;
+    font-size: 13px;
+    border-top: 1px solid #ebebeb;
+}
+
+span.txt {
+    display: inline-block;
+}
+
+.search_wrap {
+	display : flex;
+    position: relative;
+    border: 1px solid #ddd;
+}
+
+.search_wrap input.btn_search {
+    display: inline-block;
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 31px;
+    padding: 5px 0px;
+    border-radius: 0;
+    font-weight: bold;
+    font-weight: 500;
+}
+
+section.search div.search_wrap input {
+    padding: 0 4px;
+    height: 35px;
+}
+
+
+/* 결재선 버튼라인  */
+.tool_bar {
+    position: relative;
+    min-height: 38px;
+    padding: 0 0 8px 0;
+}
+
+.report_detail .tool_bar .critical {
+    height: 32px;
+}
+
+.tool_bar .critical {
+    float: left;
+    margin: 6px 0 0 24px;
+}
+
+.tool_bar .optional {
+    float: right;
+    margin: 5px 24px 0 0;
+}
+
+.tool_bar>ul {
+    min-height: 30px;
+}
+
+.tool_bar ul.optional li {
+    position: relative;
+}
+
+.tool_bar>ul>li {
+    float: left;
+}
+
+
+.btn_tool {
+    float: left;
+    display: inline-block;
+    height: 30px;
+    line-height: 29px;
+    padding: 0 8px;
+    white-space: nowrap;
+
+}
+
+
+
+
+
+/*기안 입력부분  */
+.anntable {
+	margin: 12px;
+	padding: 10px;
+    border: 5px solid #e8e8e8;
+    padding-bottom: 20px;
+    background-color: white;
+}
+
+.headerline{
+	border-top: 1px solid #ddd;
+}
+
+.cal {
+	 text-align: start;
+}
+
+.cal > input[type='date']{
+  width: 20%;
+}
+
+.halfArea >input{
+	width: 5%;
+}
+
+
+
+
+/*파일부분  */
+.file{
+	padding-top: 50px;
+    width: 80%;
+
+}
+
+table.form_type tbody th {
+    text-align: left;
+    vertical-align: top;
+}
+
+.dd_attach {
+    position: relative;
+    overflow-y: auto;
+    padding: 8px 0;
+    border: 2px dashed #ddd;
+    box-sizing: border-box;
+    max-height: 300px;
+    font-size: 13px;
+}
+.dd_attach .area_txt {
+    padding: 8px 0;
+    text-align: center;
+}
+
+.dd_attach .area_txt .msg .btn_file {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    cursor: pointer;
+    text-align: left;
+    overflow: hidden;
+    vertical-align: middle;
+    margin: -4px 0 0 2px;
+}
+
+.dd_attach .area_txt .msg .btn_file .txt {
+    display: inline-block;
+    color: #666;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.dd_attach .area_txt .msg .btn_file input[type="file"] {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+
+
+/*결재선  */
+.sign_type1_inline {
+    position: relative;
+    display: inline-table;
+/*     border-collapse: separate; */
+    border-spacing: 0;
+    white-space: normal;
+    font-size: 12px;
+    margin: 1px -1px 0 0;
+    padding-left: 26px;
+}
+
+.sign_type1_inline .sign_tit_wrap {
+/*     position: absolute; */
+    top: -1px;
+    left: 0;
+    bottom: 0;
+    vertical-align: middle;
+    border: 1px solid #000;
+    width: 24px;
+    background: #eee;
+    display: table-cell;
+}
+
+.sign_type1_inline .sign_tit_wrap .sign_tit {
+    display: table;
+    padding: 0 2px;
+    text-align: center;
+    word-break: break-all;
+    white-space: normal;
+    height: 100%;
+}
+
+.sign_type1_inline .sign_tit_wrap .sign_tit strong {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.sign_type1_inline .sign_member_wrap {
+    vertical-align: top;
+    background: #fff;
+    display: table-cell;
+/*     float: left; */
+    border: 1px solid #000;
+    border-left: 0;
+/*     margin: -1px 0 0 0; */
+}
+
+
+.sign_type1_inline .sign_member_wrap .sign_member {
+    width: 79px;
+    vertical-align: top;
+    display: table;
+    table-layout: fixed;
+}
+
+.sign_type1_inline .sign_member_wrap .sign_member .sign_rank_wrap, .sign_type1_inline .sign_member_wrap .sign_member .sign_date_wrap {
+    display: table-row;
+}
+
+
+.sign_type1_inline .sign_member_wrap .sign_member .sign_posi {
+    height: 26px;
+}
+
+.sign_type1_inline .sign_member_wrap .sign_member .sign_wrap {
+    height: 75px;
+    border-top: 1px solid #000;
+}
+
+.sign_type1_inline .sign_member_wrap .sign_member .sign_wrap > span {
+    padding: 2px 0;
+    display: block;
+}
+
+.sign_type1_inline .sign_member_wrap .sign_member .sign_date {
+    height: 26px;
+    border-top: 1px solid #000;
+}
+
+.sign_type1_inline .sign_member_wrap .sign_member .sign_posi,
+.sign_type1_inline .sign_member_wrap .sign_member .sign_wrap,
+.sign_type1_inline .sign_member_wrap .sign_member .sign_date {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 79px;
+}
+
+
+
+
+
+
+/* 결재선 모달 */
+
+ul{
+	list-style: none;
+}
+
+div.tab_menu_wrap {
+    margin: 15px 0 15px;
+    padding: 0;
+    display: block;
+    border-bottom: 1px solid #dfdfdf;
+}
+
+ul.tab_menu li:first-child {
+    margin-left: 0;
+}
+
+ul.tab_menu {
+    overflow: hidden;
+    margin-bottom: -1px;
+}
+ul.tab_menu li {
+    float: left;
+    padding: 12px 0;
+    margin: 0 16px;
+    z-index: 1;
+    cursor: pointer;
+}
+ul.tab_menu li.active, ul.tab_menu li.ui-state-active {
+    border-bottom: 2px solid #000;
+}
+
+ul.tab_menu li span.ic_txt_change {
+    display: none;
+}
+
+ul.tab_menu li.active span.txt, ul.tab_menu li.ui-state-active span.txt {
+    color: #333;
+    font-weight: bold;
+    font-weight: 500;
+}
+
+
+
+
+
+
+/* 결재선모달 바디 */
+
+div.layer_normal div.set_nav {
+    float: left;
+    width: 230px;
+    border: 1px solid #ddd;
+}
+ul.tab_type3 {
+    width: 100%;
+    overflow: hidden;
+}
+
+ul.tab_type3_column2 li {
+    width: 50%;
+}
+
+ul.tab_type3 li {
+    float: left;
+    border-bottom: 1px solid #ddd;
+    margin-right: -1px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+}
+
+ul.tab_type3 li.last {
+    float: none;
+    width: auto;
+}
+
+div.layer_normal div.set_nav ul.tab_type3 li,
+div.layer_normal div.set_data ul.tab_type3 li {
+    border-top: 0;
+}
+
+div.layer_normal div.content section.search {
+    padding: 7px 6px 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.detail_search_wrap .content .set_wrap .set_nav .search_wrap {
+    border: 0;
+}
+
+div.layer_normal div.set_nav div.content_tab_wrap {
+    height: 300px;
+    border: 0;
+    overflow: auto;
+    padding: 8px 0;
+}
+
+.jstree > ul > li {
+    margin-left: 0px;
+}
+
+div.jstree-default li[rel="org"] > a {
+    font-weight: bold;
+}
+
+div.jstree-default li a {
+    vertical-align: middle;
+    height: 18px;
+    line-height: 17px;
+    color: #333;
+}
+
+li.jstree-open > ul {
+    display: block;
+}
+
+div.layer_normal div.set_wrap div.set_data {
+    margin-left: 240px;
+}
+
+div.layer_normal div.set_data {
+    border: 1px solid #ddd;
+}
+.type_normal thead tr th:first-child,
+.type_normal tbody tr td:first-child {
+    padding-right: 0;
+    padding-left: 24px;
+}
+
+table.tb_approval_line thead tr th {
+    padding: 0 5px;
+}
+div.layer_approval_line div.content div.set_data table.type_normal thead th {
+    border-top: 0;
+}
+table.tb_approval_line .box {
+    width: 24px;
+}
+
+table.tb_approval_line .kind {
+    width: 70px;
+    text-align: left;
+}
+
+table.tb_approval_line .name,
+table.tb_approval_line .company {
+    width: 110px;
+    text-align: left;
+}
+
+div.layer_approval_line table.tb_approval_line .depart {
+    width: auto;
+}
+
+table.tb_approval_line .func {
+    width: 30px;
+    text-align: center;
+}
+
+span.ic_classic {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+div.list_approval_line div.tb_approval_line_wrap {
+    margin: 0 0 0 34px;
+}
+
+div.layer_approval_line div.content div.set_data div.list_approval_line_wrap {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+div.layer_approval_line div.content div.set_data table.type_normal thead th {
+    border-top: 0;
+}
+
+div.tit_type3 {
+    position: relative;
+    padding: 0 7px;
+    height: 29px;
+    line-height: 29px;
+    border-bottom: 1px solid #E6E6E6;
+    background: #f4f4f4;
+}
+
+span.txt {
+    display: inline-block;
+}
+
+div.list_approval_line {
+    position: relative;
+    border-bottom: 1px solid #E4E4E4;
+}
+
+div.list_approval_line div.btn_langth {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 34px;
+    height: 100%;
+    background: #fafafa;
+    border-right: 1px solid #dedede;
+    padding: 0;
+}
+
+.appimo{
+	left: 10px;
+    top: 35%;
+    position: absolute;
+}
+
+div.layer_approval_line div.content div.set_data div.tit_type2 {
+    border-bottom: 0;
+}
+
+.btn_fn6 {
+    cursor: pointer;
+    display: inline-block;
+    height: 19px;
+    line-height: 17px;
+    padding: 0px 4px;
+    color: #fff;
+    font-size: 12px;
+    background: #a9a9a9;
+    border-radius: 2px;
+}
+
+.horspace1 {
+    display: inline-block;
+    width: 10px;
+}
+
+div.tit_type2 {
+    background: #eee;
+    border-top: 1px solid #ddd;
+    padding: 8px;
+}
+
+div.layer_approval_line div.content div.set_data div.tit_type2 .tit {
+    margin-right: 8px;
+}
+
+.layer_normal .option_wrap {
+    display: inline-block;
+}
+
+input[type="radio"] {
+    position: relative;
+    top: -1px;
+    margin-right: 4px;
+}
+
+span.option_wrap label {
+    font-weight: normal;
+    font-size: 13px;
+}
+
+span.option_wrap {
+    margin: 0 10px 0 0;
+}
+.radioinput{
+	width: 10px;
+}
+
+
+
+/*  보관함 */
+.status-ongoing,
+.status-completed,
+.status-rejected,
+.status-unknown {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 80px;
+}
+
+.status-ongoing {
+    color: #007bff;
+    background-color: #cce5ff;
+    border: 1px solid #b8daff;
+}
+
+.status-completed {
+    color: #28a745;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.status-rejected {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.status-unknown {
+    color: #6c757d;
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+}
+
+
+
+
+/* 기안문 양식 */
+.headerline{
+ 	width: 100%;
+}
+
+.buttonbak{
+	background-color: transparent;
+}
+
+.approimo{
+	margin: -5px;
+}
+
+.anninput{
+	width: 5%;
+}
+
+
+.fc-event{
+	background: red;
+}

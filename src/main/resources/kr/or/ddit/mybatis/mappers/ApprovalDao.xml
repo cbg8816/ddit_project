@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.approval.dao.ApprovalMapper">
+
+	<resultMap type="EmpVO" id="empvo" autoMapping="true">
+		<association property="position" javaType="PositionVO" autoMapping="true" />
+		<association property="department" javaType="DepartmentVO" autoMapping="true" />
+		<association property="attencance" javaType="AttencanceVO" autoMapping="true" />
+	</resultMap>
+
+	<resultMap type="PmsApprovalVO" id="detailApproMap">
+		<id property="aprId" column="apr_id" />
+		<result property="aprId" column="apr_id" />
+		<result property="formId" column="form_id" />
+		<result property="aprTitle" column="apr_title" />
+		<result property="aprContent" column="apr_content" />
+		<result property="aprRegdate" column="apr_regdate" />
+		<result property="aprWriter" column="apr_writer" />
+		<result property="startDate" column="start_date" />
+		<result property="aprState" column="apr_state" />
+		<result property="aprKind" column="apr_kind" />
+		<result property="endDate" column="end_date" />
+		<result property="halfDay" column="half_day" />
+		<result property="annDep" column="ann_dep" />
+		<collection property="lineList" resultMap="approvalLineMap"/>
+	</resultMap>
+
+	<resultMap type="ApprovalLineVO" id="approvalLineMap">
+		<id property="aprlineId" column="aprline_id" />
+		<result property="aprlineId" column="aprline_id" />
+		<result property="empId" column="emp_id" />
+		<result property="empName" column="emp_name" />
+		<result property="aprlineTurn" column="aprline_turn" />
+		<result property="aprlineStDay" column="aprline_st_day" />
+		<result property="aprlineState" column="aprline_state" />
+		<result property="aprlineCont" column="aprline_cont" />
+		<result property="aprlineReg" column="aprline_reg" />
+		<result property="aprlineDep" column="aprline_dep" />
+	</resultMap>
+
+<!--직원 jstree  -->
+	<select id="selectEmployees" resultMap="empvo">
+         SELECT
+        	e.EMP_NAME,
+        	d.DEP_NM,
+        	p.POSI_NM
+        FROM emp e
+        JOIN department d ON e.DEP_ID = d.DEP_ID
+        JOIN position p ON e.POSI_ID = p.POSI_ID
+    </select>
+
+	<sql id="searchFrag">
+		<where>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'title'">INSTR(APR_TITLE, #{simpleCondition.searchWord}) > 0</when>
+					<when test="simpleCondition.searchType eq 'writer'">INSTR(APR_WRITER, #{simpleCondition.searchWord}) > 0</when>
+					<otherwise>
+						INSTR(APR_TITLE, #{simpleCondition.searchWord}) > 0
+						or
+						INSTR(APR_WRITER, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+	<resultMap type="kr.or.ddit.vo.PmsApprovalVO" id="pmsapprovalvo" autoMapping="true">
+    <id property="aprId" column="APR_ID"/>
+    <association property="formvo" javaType="ApprovalFormVO" autoMapping="true">
+        <id property="formId" column="FORM_ID"/>
+    </association>
+    <association property="empvo" javaType="EmpVO" autoMapping="true">
+        <id property="empId" column="EMP_ID"/>
+    </association>
+    <collection property="lineList" ofType="ApprovalLineVO" resultMap="approvalLineMap"/>
+</resultMap>
+
+<select id="requestboxList" resultMap="pmsapprovalvo">
+    SELECT
+        A.APR_ID,
+        A.FORM_ID,
+        F.FORM_TITLE,
+        A.APR_TITLE,
+        A.APR_CONTENT,
+        A.APR_REGDATE,
+        A.APR_WRITER,
+        E.EMP_NAME,
+        E.EMP_ID,
+        A.APR_STATE,
+        AL.APRLINE_ID,
+        AL.EMP_ID AS LINE_EMP_ID,
+        AL.APRLINE_TURN,
+        AL.APRLINE_ST_DAY,
+        AL.APRLINE_STATE,
+        AL.APRLINE_CONT,
+        AL.APRLINE_REG,
+        AL.APRLINE_DEP
+    FROM
+        PMS_APPROVAL A
+    INNER JOIN
+        APPROVAL_FORM F ON A.FORM_ID = F.FORM_ID
+    INNER JOIN
+        EMP E ON E.EMP_ID = A.APR_WRITER
+    INNER JOIN
+        APPROVAL_LINE AL ON A.APR_ID = AL.APR_ID
+    WHERE
+        AL.EMP_ID = #{simpleCondition.empId}
+        AND AL.APRLINE_STATE = '1'
+    ORDER BY
+        A.APR_ID DESC, AL.APRLINE_TURN ASC
+</select>
+
+
+	<select id="approvalboxList" resultMap="pmsapprovalvo" >
+		SELECT
+			 A.APR_ID
+	       ,A.FORM_ID
+	       ,F.FORM_TITLE
+	       ,A.APR_TITLE
+	       ,A.APR_CONTENT
+	       ,A.APR_REGDATE
+	       ,A.APR_WRITER
+	       ,E.EMP_NAME
+	       ,E.EMP_ID
+	       ,A.APR_STATE
+	    FROM
+	        PMS_APPROVAL A
+	    INNER JOIN
+	        APPROVAL_FORM F ON A.FORM_ID = F.FORM_ID
+	    INNER JOIN
+   			 EMP E ON E.EMP_ID = A.APR_WRITER
+		 <where>
+		    <if test="simpleCondition.boxType != null">
+		        <choose>
+		            <when test="simpleCondition.boxType == 'outbox'">
+		                A.APR_WRITER = #{simpleCondition.empId}
+		            </when>
+		            <when test="simpleCondition.boxType == 'inbox'">
+		                A.APR_WRITER != #{simpleCondition.empId}
+		            </when>
+		        </choose>
+		    </if>
+		    <include refid="searchFrag" />
+		</where>
+		 ORDER BY APR_ID DESC
+	</select>
+
+	<select id="completedApprovals" resultMap="pmsapprovalvo">
+		SELECT
+			 A.APR_ID
+	       ,A.FORM_ID
+	       ,F.FORM_TITLE
+	       ,A.APR_TITLE
+	       ,A.APR_CONTENT
+	       ,A.APR_REGDATE
+	       ,A.APR_WRITER
+	       ,E.EMP_NAME
+	       ,A.APR_STATE
+
+	    FROM
+	        PMS_APPROVAL A
+	    INNER JOIN
+	        APPROVAL_FORM F ON A.FORM_ID = F.FORM_ID
+	    INNER JOIN
+   			 EMP E ON E.EMP_ID = A.APR_WRITER
+   		WHERE
+       		 A.APR_STATE = '2'
+		 <include refid="searchFrag" />
+	</select>
+
+	<select id="returnApprovals" resultMap="pmsapprovalvo">
+		SELECT
+			 A.APR_ID
+	       ,A.FORM_ID
+	       ,F.FORM_TITLE
+	       ,A.APR_TITLE
+	       ,A.APR_CONTENT
+	       ,A.APR_REGDATE
+	       ,A.APR_WRITER
+	       ,E.EMP_NAME
+	       ,A.APR_STATE
+
+	    FROM
+	        PMS_APPROVAL A
+	    INNER JOIN
+	        APPROVAL_FORM F ON A.FORM_ID = F.FORM_ID
+	    INNER JOIN
+   			 EMP E ON E.EMP_ID = A.APR_WRITER
+   		WHERE
+       		 A.APR_STATE = '3'
+		 <include refid="searchFrag" />
+	</select>
+
+	<insert id="annualupdate" parameterType="PmsApprovalVO">
+		<selectKey order="BEFORE" resultType="String" keyProperty="aprId">
+			SELECT SEQ_APR_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO PMS_APPROVAL (
+	            APR_ID
+				,FORM_ID
+				,APR_TITLE
+				,APR_CONTENT
+				,APR_REGDATE
+				,APR_WRITER
+				,START_DATE
+				,APR_KIND
+				,END_DATE
+				,HALF_DAY
+				,ANN_DEP
+	         ) VALUES (
+	          #{aprId}
+	          	,'A00007'
+	        	,#{aprTitle}
+		   		,#{aprContent}
+		    	,SYSDATE
+		    	,#{aprWriter}
+		    	,#{startDate}
+		    	,#{aprKind}
+		    	,#{endDate}
+		    	,#{halfDay}
+		    	,#{annDep}
+	      	)
+	</insert>
+
+	<insert id="linecreate" parameterType="ApprovalLineVO">
+		<selectKey order="BEFORE" resultType="String" keyProperty="aprlineId">
+			SELECT SEQ_APRLINE_ID.NEXTVAL FROM DUAL
+		</selectKey>
+			INSERT INTO APPROVAL_LINE(
+				APRLINE_ID
+				,APR_ID
+				,EMP_ID
+				,APRLINE_TURN
+				,APRLINE_ST_DAY
+				,APRLINE_STATE
+        	) VALUES(
+				#{aprlineId}
+				,#{aprId}
+				,(select emp_id from emp where emp_name = #{empName})
+				,#{aprlineTurn}
+				,sysdate
+				,#{aprlineState}
+			)
+	</insert>
+	<resultMap type="AttencanceVO" id="attencanceMap" autoMapping="true">
+		<association property="emp" javaType="EmpVO" autoMapping="true"/>
+	</resultMap>
+
+		<!--기안문 id가져오는거  -->
+	<select id="selectAttencanceByEmpId" resultMap="attencanceMap">
+	     SELECT * FROM  EMP LEFT OUTER JOIN ATTENDANCE ON ( EMP.EMP_ID = ATTENDANCE.EMP_ID ) WHERE EMP.EMP_ID = #{empId}
+	</select>
+
+<!--annDetail  -->
+	<select id="detailAppro" parameterType="ApprovalFormVO" resultMap="detailApproMap">
+		select
+		    pa.APR_ID, FORM_ID, APR_TITLE, APR_CONTENT, APR_REGDATE, APR_WRITER, START_DATE, APR_STATE, APR_KIND, END_DATE, HALF_DAY, ANN_DEP,
+		    APRLINE_ID, EMP_ID, (select emp_name from emp where emp_id = al.emp_id) as emp_name, APRLINE_TURN, APRLINE_ST_DAY, APRLINE_STATE, APRLINE_CONT, APRLINE_REG,
+		    (
+		        select posi_nm
+				from emp e inner join position p on(e.posi_id = p.posi_id)
+				where emp_id = al.emp_id
+		    ) as aprline_dep
+		from PMS_APPROVAL pa left outer join APPROVAL_LINE al on(pa.apr_id = al.apr_id)
+		where pa.apr_id = #{aprId}
+	</select>
+
+</mapper>

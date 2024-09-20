@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.EnterDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.EnterDefaultVO">
+    <id column="ORDER_TURN" jdbcType="CHAR" property="orderTurn" />
+    <result column="ENTER_DAY" jdbcType="TIMESTAMP" property="enterDay" />
+    <result column="ENTER_QTY" jdbcType="NUMERIC" property="enterQty" />
+    <result column="ENTER_PRICE" jdbcType="NUMERIC" property="enterPrice" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ENTER
+    where ORDER_TURN = #{orderTurn,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.EnterDefaultVO">
+    insert into ENTER (ORDER_TURN, ENTER_DAY, ENTER_QTY, 
+      ENTER_PRICE)
+    values (#{orderTurn,jdbcType=CHAR}, #{enterDay,jdbcType=TIMESTAMP}, #{enterQty,jdbcType=NUMERIC}, 
+      #{enterPrice,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.EnterDefaultVO">
+    update ENTER
+    set ENTER_DAY = #{enterDay,jdbcType=TIMESTAMP},
+      ENTER_QTY = #{enterQty,jdbcType=NUMERIC},
+      ENTER_PRICE = #{enterPrice,jdbcType=NUMERIC}
+    where ORDER_TURN = #{orderTurn,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ORDER_TURN, ENTER_DAY, ENTER_QTY, ENTER_PRICE
+    from ENTER
+    where ORDER_TURN = #{orderTurn,jdbcType=CHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ORDER_TURN, ENTER_DAY, ENTER_QTY, ENTER_PRICE
+    from ENTER
+  </select>
+</mapper>

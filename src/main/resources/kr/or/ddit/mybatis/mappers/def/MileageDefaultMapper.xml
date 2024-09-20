@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.MileageDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MileageDefaultVO">
+    <id column="MIL_ID" jdbcType="VARCHAR" property="milId" />
+    <id column="MEM_ID" jdbcType="VARCHAR" property="memId" />
+    <result column="MIL_NAME" jdbcType="VARCHAR" property="milName" />
+    <result column="MIL_REGDATE" jdbcType="TIMESTAMP" property="milRegdate" />
+    <result column="MIL_YN" jdbcType="VARCHAR" property="milYn" />
+    <result column="MIL_AMOUNT" jdbcType="NUMERIC" property="milAmount" />
+    <result column="MIL_CONTENT" jdbcType="CLOB" property="milContent" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from MILEAGE
+    where MIL_ID = #{milId,jdbcType=VARCHAR}
+      and MEM_ID = #{memId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.MileageDefaultVO">
+    insert into MILEAGE (MIL_ID, MEM_ID, MIL_NAME, 
+      MIL_REGDATE, MIL_YN, MIL_AMOUNT, 
+      MIL_CONTENT)
+    values (#{milId,jdbcType=VARCHAR}, #{memId,jdbcType=VARCHAR}, #{milName,jdbcType=VARCHAR}, 
+      #{milRegdate,jdbcType=TIMESTAMP}, #{milYn,jdbcType=VARCHAR}, #{milAmount,jdbcType=NUMERIC}, 
+      #{milContent,jdbcType=CLOB})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.MileageDefaultVO">
+    update MILEAGE
+    set MIL_NAME = #{milName,jdbcType=VARCHAR},
+      MIL_REGDATE = #{milRegdate,jdbcType=TIMESTAMP},
+      MIL_YN = #{milYn,jdbcType=VARCHAR},
+      MIL_AMOUNT = #{milAmount,jdbcType=NUMERIC},
+      MIL_CONTENT = #{milContent,jdbcType=CLOB}
+    where MIL_ID = #{milId,jdbcType=VARCHAR}
+      and MEM_ID = #{memId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select MIL_ID, MEM_ID, MIL_NAME, MIL_REGDATE, MIL_YN, MIL_AMOUNT, MIL_CONTENT
+    from MILEAGE
+    where MIL_ID = #{milId,jdbcType=VARCHAR}
+      and MEM_ID = #{memId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select MIL_ID, MEM_ID, MIL_NAME, MIL_REGDATE, MIL_YN, MIL_AMOUNT, MIL_CONTENT
+    from MILEAGE
+  </select>
+</mapper>

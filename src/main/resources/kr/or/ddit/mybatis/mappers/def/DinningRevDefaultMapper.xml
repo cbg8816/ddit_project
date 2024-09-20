@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.DinningRevDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.DinningRevDefaultVO">
+    <id column="DIN_ID" jdbcType="VARCHAR" property="dinId" />
+    <result column="DIN_NAME" jdbcType="VARCHAR" property="dinName" />
+    <result column="DIN_DATE" jdbcType="TIMESTAMP" property="dinDate" />
+    <result column="DIN_PLATFORM" jdbcType="VARCHAR" property="dinPlatform" />
+    <result column="DIN_PAYOPT" jdbcType="VARCHAR" property="dinPayopt" />
+    <result column="DIN_TPRICE" jdbcType="NUMERIC" property="dinTprice" />
+    <result column="DIN_STATE" jdbcType="VARCHAR" property="dinState" />
+    <result column="DINTYPE_ID" jdbcType="VARCHAR" property="dintypeId" />
+    <result column="DIN_CONTENT" jdbcType="CLOB" property="dinContent" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from DINNING_REV
+    where DIN_ID = #{dinId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.DinningRevDefaultVO">
+    insert into DINNING_REV (DIN_ID, DIN_NAME, DIN_DATE, 
+      DIN_PLATFORM, DIN_PAYOPT, DIN_TPRICE, 
+      DIN_STATE, DINTYPE_ID, DIN_CONTENT
+      )
+    values (#{dinId,jdbcType=VARCHAR}, #{dinName,jdbcType=VARCHAR}, #{dinDate,jdbcType=TIMESTAMP}, 
+      #{dinPlatform,jdbcType=VARCHAR}, #{dinPayopt,jdbcType=VARCHAR}, #{dinTprice,jdbcType=NUMERIC}, 
+      #{dinState,jdbcType=VARCHAR}, #{dintypeId,jdbcType=VARCHAR}, #{dinContent,jdbcType=CLOB}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.DinningRevDefaultVO">
+    update DINNING_REV
+    set DIN_NAME = #{dinName,jdbcType=VARCHAR},
+      DIN_DATE = #{dinDate,jdbcType=TIMESTAMP},
+      DIN_PLATFORM = #{dinPlatform,jdbcType=VARCHAR},
+      DIN_PAYOPT = #{dinPayopt,jdbcType=VARCHAR},
+      DIN_TPRICE = #{dinTprice,jdbcType=NUMERIC},
+      DIN_STATE = #{dinState,jdbcType=VARCHAR},
+      DINTYPE_ID = #{dintypeId,jdbcType=VARCHAR},
+      DIN_CONTENT = #{dinContent,jdbcType=CLOB}
+    where DIN_ID = #{dinId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select DIN_ID, DIN_NAME, DIN_DATE, DIN_PLATFORM, DIN_PAYOPT, DIN_TPRICE, DIN_STATE, 
+    DINTYPE_ID, DIN_CONTENT
+    from DINNING_REV
+    where DIN_ID = #{dinId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select DIN_ID, DIN_NAME, DIN_DATE, DIN_PLATFORM, DIN_PAYOPT, DIN_TPRICE, DIN_STATE, 
+    DINTYPE_ID, DIN_CONTENT
+    from DINNING_REV
+  </select>
+</mapper>

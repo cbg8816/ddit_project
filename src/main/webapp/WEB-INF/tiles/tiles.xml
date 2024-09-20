@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd" >
+<tiles-definitions>
+	<!-- web -->
+  	<definition name="abstractParentWeb" template="/WEB-INF/layouts/layout_web.jsp">
+	  	<put-attribute name="preScript" value="/WEB-INF/includee/web/preScript.jsp"/>
+	  	<put-attribute name="header" value="/WEB-INF/includee/web/header.jsp"/>
+	  	<put-attribute name="footer" value="/WEB-INF/includee/web/footer.jsp"/>
+	  	<put-attribute name="postScript" value="/WEB-INF/includee/web/postScript.jsp"/>
+  	</definition>
+  
+  	<definition name="Web" extends="abstractParentWeb">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/web/web.jsp"/>
+  	</definition>
+  
+  	<definition name="wiles:*/*" extends="abstractParentWeb">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/web/{1}.jsp"/>
+  	</definition>
+  	<definition name="wiles:*/*" extends="abstractParentWeb">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/web/{1}/{2}.jsp"/>
+  	</definition>
+  	<definition name="wiles:*/*/*" extends="abstractParentWeb">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/web/{1}/{2}/{3}.jsp"/>
+  	</definition>
+  	
+  	
+  	
+  	
+	<!-- pms -->
+  	<definition name="abstractParentPms" template="/WEB-INF/layouts/layout_pms.jsp">
+	  	<put-attribute name="preScript" value="/WEB-INF/includee/pms/preScript.jsp"/>
+	  	<put-attribute name="header" value="/WEB-INF/includee/pms/header.jsp"/>
+	  	<put-attribute name="sidebar" value="/WEB-INF/includee/pms/sidebar.jsp"/>
+	  	<put-attribute name="footer" value="/WEB-INF/includee/pms/footer.jsp"/>
+	  	<put-attribute name="postScript" value="/WEB-INF/includee/pms/postScript.jsp"/>
+  	</definition>
+
+  
+  	<definition name="index" extends="abstractParentPms">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/pms/index.jsp"/>
+  	</definition>
+  	
+  	
+  	<definition name="tiles:*" extends="abstractParentPms">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/pms/{1}.jsp"/>
+  	</definition>
+  	<definition name="tiles:*/*" extends="abstractParentPms">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/pms/{1}/{2}.jsp"/>
+  	</definition>
+  	<definition name="tiles:*/*/*" extends="abstractParentPms">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/pms/{1}/{2}/{3}.jsp"/>
+  	</definition>
+  	
+  	
+	<!-- pms mypage -->
+  	<definition name="abstractParentMypage" template="/WEB-INF/layouts/layout_mypage.jsp">
+	  	<put-attribute name="preScript" value="/WEB-INF/includee/pms/preScript.jsp"/>
+	  	<put-attribute name="header" value="/WEB-INF/includee/pms/header.jsp"/>
+	  	<put-attribute name="sidebar" value="/WEB-INF/includee/mypage/sidebar.jsp"/>
+	  	<put-attribute name="footer" value="/WEB-INF/includee/pms/footer.jsp"/>
+	  	<put-attribute name="postScript" value="/WEB-INF/includee/pms/postScript.jsp"/>
+  	</definition>
+
+  
+<!--   	<definition name="index" extends="abstractParentMypage"> -->
+<!--   		<put-attribute name="contentPage" value="/WEB-INF/views/pms/emp.jsp"/> -->
+<!--   	</definition> -->
+  	
+  	
+  	<definition name="miles:*" extends="abstractParentMypage">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/pms/{1}.jsp"/>
+  	</definition>
+  	<definition name="miles:*/*" extends="abstractParentMypage">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/pms/{1}/{2}.jsp"/>
+  	</definition>
+  	<definition name="miles:*/*/*" extends="abstractParentMypage">
+  		<put-attribute name="contentPage" value="/WEB-INF/views/pms/{1}/{2}/{3}.jsp"/>
+  	</definition>
+ 
+</tiles-definitions>

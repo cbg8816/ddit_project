@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.approval.dao.ApprovalFormMapper">
+
+<!-- 양식명  -->
+	<select id="approvalformList" resultType="kr.or.ddit.vo.ApprovalFormVO">
+         SELECT
+			FORM_ID
+			,FORM_TITLE
+			,FORM_YN
+		FROM APPROVAL_FORM
+
+    </select>
+
+
+</mapper>

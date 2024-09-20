@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.inquire.dao.InquireDAO">
+
+	<resultMap type="InquireVO" id="inquireMap" autoMapping="true">
+
+		<id property="inqNo" column="INQ_NO"/>
+
+	</resultMap>
+
+	<insert id="insertInquire" parameterType="InquireVO">
+
+		INSERT INTO INQUIRE(
+							INQ_NO
+							, MEM_ID
+							, INQ_TITLE
+							, INQ_CONTENT
+							, INQ_WRITER
+							, INQ_REGDATE
+							, INQ_CATEGORY
+							, INQ_FILE
+							, INQ_LOCK
+							)
+					VALUES(
+							'INQ' || INQ_SEQ.NEXTVAL
+							, #{memId, jdbcType=VARCHAR}
+							, #{inqTitle, jdbcType=VARCHAR}
+							, #{inqContent, jdbcType=CLOB}
+							, #{inqWriter, jdbcType=VARCHAR}
+							, SYSDATE
+							, #{inqCategory, jdbcType=VARCHAR}
+							, #{inqFile, jdbcType=VARCHAR}
+							, #{inqLock, jdbcType=VARCHAR}
+							)
+
+	</insert>
+
+		<!-- 코드 프레그먼트 -->
+	<sql id="searchFrag">
+		FROM INQUIRE
+		<trim prefix="WHERE">
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'title'">
+						INSTR(INQ_TITLE, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'content'">
+						INSTR(INQ_CONTENT, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'memId'">
+						INSTR(MEM_ID, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(INQ_TITLE, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(INQ_CONTENT, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</trim>
+	</sql>
+
+	<select id="selectTotalRecord" resultType="int">
+
+		SELECT COUNT(*)
+		<include refid="searchFrag" />
+
+	</select>
+
+	<select id="selectTotalRecordMember" resultType="int">
+
+		SELECT COUNT(*)
+		FROM INQUIRE
+		WHERE MEM_ID = #{memId, jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="selectInquireList" resultMap="inquireMap">
+		SELECT B.*
+		FROM
+			(SELECT A.*, ROWNUM RNUM1
+				FROM
+				(SELECT
+				    INQ_NO
+				    , MEM_ID
+				    , INQ_TITLE
+				    , INQ_CONTENT
+				    , INQ_WRITER
+				    , INQ_REGDATE
+				    , INQ_CATEGORY
+				    , INQ_FILE
+				    , INQ_COMMENT
+				    , INQ_LOCK
+				    , ROWNUM RNUM
+				<include refid="searchFrag" />
+				ORDER BY INQ_REGDATE DESC
+				)A
+			)B
+		 <![CDATA[
+		      WHERE RNUM1 >= #{firstRecord} AND RNUM1 <= #{lastRecord}
+		 ]]>
+
+	</select>
+
+	<select id="selectInquireListMember" resultMap="inquireMap">
+		SELECT B.*
+		FROM
+			(SELECT A.*, ROWNUM RNUM1
+				FROM
+				(SELECT
+				    INQ_NO
+				    , MEM_ID
+				    , INQ_TITLE
+				    , INQ_CONTENT
+				    , INQ_WRITER
+				    , INQ_REGDATE
+				    , INQ_CATEGORY
+				    , INQ_FILE
+				    , INQ_COMMENT
+				    , INQ_LOCK
+				    , ROWNUM RNUM
+				FROM INQUIRE
+				WHERE MEM_ID = #{memId, jdbcType=VARCHAR}
+				ORDER BY INQ_NO DESC
+				)A
+			)B
+			<![CDATA[
+		      WHERE RNUM1 >= #{firstRecord} AND RNUM1 <= #{lastRecord}
+		 ]]>
+
+	</select>
+
+	<select id="selectInquire" resultMap="inquireMap" parameterType="string">
+
+		SELECT
+		    INQ_NO
+		    , M.MEM_ID
+		    , MEM_TEL
+		    , MEM_EMAIL
+		    , INQ_TITLE
+		    , INQ_CONTENT
+		    , INQ_WRITER
+		    , INQ_REGDATE
+		    , INQ_CATEGORY
+		    , INQ_COMMENT
+		    , INQ_FILE
+		    , INQ_COMMENT
+		    , INQ_LOCK
+		FROM INQUIRE I
+		INNER JOIN MEMBER M ON I.MEM_ID = M.MEM_ID
+		WHERE INQ_NO = #{inqNo, jdbcType=VARCHAR}
+
+	</select>
+
+	<update id="updateInquire" parameterType="InquireVO">
+
+		UPDATE INQUIRE
+		SET INQ_TITLE = #{inqTitle, jdbcType=VARCHAR}
+			, INQ_CONTENT = #{inqContent, jdbcType=CLOB}
+			, INQ_CATEGORY = #{inqCategory, jdbcType=VARCHAR}
+			, INQ_FILE = #{inqFile, jdbcType=VARCHAR}
+			, INQ_LOCK = #{inqLock, jdbcType=VARCHAR}
+		WHERE INQ_NO = #{inqNo, jdbcType=VARCHAR}
+
+	</update>
+
+	<delete id="deleteInquire" parameterType="string">
+
+		DELETE FROM INQUIRE
+		WHERE INQ_NO = #{inqNo, jdbcType=VARCHAR}
+
+	</delete>
+
+	<select id="selectVOCList" resultMap="inquireMap">
+
+		SELECT B.*
+		FROM
+			(SELECT A.*, ROWNUM NO
+				FROM
+				(SELECT
+				    INQ_NO
+				    , MEM_ID
+				    , INQ_TITLE
+				    , INQ_CONTENT
+				    , INQ_WRITER
+				    , INQ_REGDATE
+				    , INQ_CATEGORY
+				    , INQ_FILE
+				    , INQ_COMMENT
+				    , INQ_LOCK
+				    , ROWNUM RNUM
+				FROM INQUIRE
+				WHERE INQ_CATEGORY = '2'
+				ORDER BY INQ_REGDATE DESC
+				)A
+			)B
+			<![CDATA[
+		      WHERE NO >= #{firstRecord} AND NO <= #{lastRecord}
+		 	]]>
+
+	</select>
+
+	<select id="selectTotalRecordVOC" resultType="int">
+
+		SELECT COUNT(*)
+		FROM INQUIRE
+		WHERE INQ_CATEGORY = '2'
+
+	</select>
+
+</mapper>

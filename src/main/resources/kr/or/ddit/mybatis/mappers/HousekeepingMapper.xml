@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.housekeeping.dao.HousekeepingMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.HousekeepingVO">
+    <id column="HKP_NO" jdbcType="VARCHAR" property="hkpNo" />
+    <result column="MNG_ID" jdbcType="VARCHAR" property="mngId" />
+    <result column="HKP_ROOM" jdbcType="VARCHAR" property="hkpRoom" />
+    <result column="HKP_LOCATION" jdbcType="VARCHAR" property="hkpLocation" />
+    <result column="HKP_STATUS" jdbcType="VARCHAR" property="hkpStatus" />
+    <result column="HKP_MANAGER" jdbcType="VARCHAR" property="hkpManager" />
+    <result column="HKP_NOTE" jdbcType="VARCHAR" property="hkpNote" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from HOUSEKEEPING
+    where HKP_NO = #{hkpNo,jdbcType=NUMERIC}
+  </delete>
+
+  <insert id="insertHousekeeping" parameterType="kr.or.ddit.vo.HousekeepingVO">
+    insert into HOUSEKEEPING (HKP_NO, MNG_ID, HKP_ROOM,
+      HKP_LOCATION, HKP_STATUS, HKP_MANAGER,
+      HKP_NOTE)
+    values (#{hkpNo,jdbcType=NUMERIC}, #{mngId,jdbcType=VARCHAR}, #{hkpRoom,jdbcType=VARCHAR},
+      #{hkpLocation,jdbcType=VARCHAR}, #{hkpStatus,jdbcType=VARCHAR}, #{hkpManager,jdbcType=VARCHAR},
+      #{hkpNote,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateHousekeeping" parameterType="kr.or.ddit.vo.HousekeepingVO">
+    update HOUSEKEEPING
+    set
+      HKP_ROOM = #{hkpRoom,jdbcType=VARCHAR},
+      HKP_LOCATION = #{hkpLocation,jdbcType=VARCHAR},
+      HKP_MANAGER = #{hkpManager,jdbcType=VARCHAR},
+      HKP_NOTE = #{hkpNote,jdbcType=VARCHAR}
+    where HKP_NO = #{hkpNo,jdbcType=NUMERIC}
+  </update>
+
+  <select id="seletHousekeeping" parameterType="int">
+    select HKP_NO,HKP_DAY, MNG_ID, HKP_ROOM, HKP_LOCATION, HKP_STATUS, HKP_MANAGER, HKP_NOTE
+    from HOUSEKEEPING
+    where HKP_NO = #{hkpNo,jdbcType=NUMERIC}
+  </select>
+
+  <select id="HousekeepingList" >
+   	SELECT *
+FROM (
+    SELECT B.*, ROWNUM AS rnum
+    FROM (
+        SELECT HKP_NO, MNG_ID, HKP_ROOM, HKP_LOCATION, HKP_STATUS, HKP_MANAGER, HKP_NOTE, HKP_DAY
+        FROM HOUSEKEEPING
+        <include refid="searchFrag" />
+        ORDER BY HKP_NO desc
+    ) B
+)
+    <![CDATA[
+WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+   	]]>
+  </select>
+
+  	<select id="selectTotalRecord" resultType="int" >
+		SELECT COUNT(HKP_NO)
+		FROM HOUSEKEEPING
+		<include refid="searchFrag" />
+	</select>
+
+ 	<!-- 검색 조건 -->
+<!-- 	<sql id="searchFrag"> -->
+<!-- 		<trim prefix="WHERE"> -->
+<!-- 			<if -->
+<!-- 				test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)"> -->
+<!-- 				<choose> -->
+<!-- 					<when test="simpleCondition.searchType eq 'name'"> -->
+<!-- 						INSTR(HKP_MANAGER, #{simpleCondition.searchWord}) > 0 -->
+<!-- 					</when> -->
+<!-- 					<when test="simpleCondition.searchType eq 'day'"> -->
+<!-- 						INSTR(HKP_DAY, #{simpleCondition.searchWord}) > 0 -->
+<!-- 					</when> -->
+<!-- 					<otherwise> -->
+<!-- 						INSTR(HKP_HKP_MANAGER, #{simpleCondition.searchWord}) > 0 -->
+<!-- 						OR -->
+<!-- 						INSTR(HKP_DAY, #{simpleCondition.searchWord}) > 0 -->
+
+<!-- 					</otherwise> -->
+<!-- 				</choose> -->
+<!-- 			</if> -->
+<!-- 		</trim> -->
+<!-- 	</sql> -->
+<sql id="searchFrag">
+    <where>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+            <choose>
+                <when test="simpleCondition.searchType eq 'name'">
+                    INSTR(HKP_MANAGER, #{simpleCondition.searchWord}) > 0
+                </when>
+                <when test="simpleCondition.searchType eq 'room'">
+                    INSTR(HKP_ROOM, #{simpleCondition.searchWord}) > 0
+                </when>
+                <otherwise>
+                    INSTR(HKP_MANAGER, #{simpleCondition.searchWord}) > 0
+                    OR
+                    INSTR(HKP_ROOM, #{simpleCondition.searchWord}) > 0
+                </otherwise>
+            </choose>
+        </if>
+    </where>
+</sql>
+
+	<select id="seletKeepingIncomplete">
+		SELECT *
+		FROM (
+		    SELECT
+				HKP_NO
+				, MNG_ID
+				, HKP_ROOM
+				, HKP_LOCATION
+				, HKP_STATUS
+				, HKP_MANAGER
+				, HKP_NOTE
+				, HKP_DAY
+		        , ROW_NUMBER() OVER (ORDER BY HKP_NO DESC) AS rnum
+		    FROM HOUSEKEEPING
+		    WHERE HKP_STATUS = '정비중'
+			)
+		<![CDATA[
+        WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+         ]]>
+	</select>
+
+	<select id="seletKeepingComplete">
+		SELECT *
+		FROM (
+		    SELECT
+				HKP_NO
+				, MNG_ID
+				, HKP_ROOM
+				, HKP_LOCATION
+				, HKP_STATUS
+				, HKP_MANAGER
+				, HKP_NOTE
+				, HKP_DAY
+		        , ROW_NUMBER() OVER (ORDER BY HKP_NO DESC) AS rnum
+		    FROM HOUSEKEEPING
+		    WHERE HKP_STATUS = '정비완료'
+			)
+		<![CDATA[
+        WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+         ]]>
+	</select>
+
+
+	<select id="seletkeepingIncompletecount"  resultType="int">
+		select Count(HKP_STATUS)
+	    FROM HOUSEKEEPING
+		WHERE HKP_STATUS = '정비중'
+	</select>
+
+	<select id="seletkeepingCompletecount"  resultType="int">
+		select Count(HKP_STATUS)
+	    FROM HOUSEKEEPING
+		WHERE HKP_STATUS = '정비완료'
+	</select>
+
+</mapper>

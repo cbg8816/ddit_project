@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.RevRoomDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.RevRoomDefaultVO">
+    <id column="REVROOM_ID" jdbcType="VARCHAR" property="revroomId" />
+    <result column="HTREV_ID" jdbcType="VARCHAR" property="htrevId" />
+    <result column="ROOM_ID" jdbcType="VARCHAR" property="roomId" />
+    <result column="ROOMTYPE_ID" jdbcType="VARCHAR" property="roomtypeId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from REV_ROOM
+    where REVROOM_ID = #{revroomId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.RevRoomDefaultVO">
+    insert into REV_ROOM (REVROOM_ID, HTREV_ID, ROOM_ID, 
+      ROOMTYPE_ID)
+    values (#{revroomId,jdbcType=VARCHAR}, #{htrevId,jdbcType=VARCHAR}, #{roomId,jdbcType=VARCHAR}, 
+      #{roomtypeId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.RevRoomDefaultVO">
+    update REV_ROOM
+    set HTREV_ID = #{htrevId,jdbcType=VARCHAR},
+      ROOM_ID = #{roomId,jdbcType=VARCHAR},
+      ROOMTYPE_ID = #{roomtypeId,jdbcType=VARCHAR}
+    where REVROOM_ID = #{revroomId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select REVROOM_ID, HTREV_ID, ROOM_ID, ROOMTYPE_ID
+    from REV_ROOM
+    where REVROOM_ID = #{revroomId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select REVROOM_ID, HTREV_ID, ROOM_ID, ROOMTYPE_ID
+    from REV_ROOM
+  </select>
+</mapper>

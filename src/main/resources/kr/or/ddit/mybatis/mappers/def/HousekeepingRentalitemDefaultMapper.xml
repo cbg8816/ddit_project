@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.HousekeepingRentalitemDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.HousekeepingRentalitemDefaultVO">
+    <id column="HKR_NO" jdbcType="VARCHAR" property="hkrNo" />
+    <id column="HKR_WRITER" jdbcType="VARCHAR" property="hkrWriter" />
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="HKR_DATE" jdbcType="TIMESTAMP" property="hkrDate" />
+    <result column="HKR_ROOM" jdbcType="VARCHAR" property="hkrRoom" />
+    <result column="HKR_COSTOMER" jdbcType="VARCHAR" property="hkrCostomer" />
+    <result column="HKR_CHECKIN" jdbcType="TIMESTAMP" property="hkrCheckin" />
+    <result column="HKR_CHECKOUT" jdbcType="TIMESTAMP" property="hkrCheckout" />
+    <result column="HKR_KIND" jdbcType="VARCHAR" property="hkrKind" />
+    <result column="HKR_QTY" jdbcType="NUMERIC" property="hkrQty" />
+    <result column="HKR_HP" jdbcType="VARCHAR" property="hkrHp" />
+    <result column="HKR_RETURN" jdbcType="VARCHAR" property="hkrReturn" />
+    <result column="LPRDO_ID" jdbcType="NUMERIC" property="lprdoId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from HOUSEKEEPING_RENTALITEM
+    where HKR_NO = #{hkrNo,jdbcType=VARCHAR}
+      and HKR_WRITER = #{hkrWriter,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.HousekeepingRentalitemDefaultVO">
+    insert into HOUSEKEEPING_RENTALITEM (HKR_NO, HKR_WRITER, PROD_ID, 
+      HKR_DATE, HKR_ROOM, HKR_COSTOMER, 
+      HKR_CHECKIN, HKR_CHECKOUT, HKR_KIND, 
+      HKR_QTY, HKR_HP, HKR_RETURN, 
+      LPRDO_ID)
+    values (#{hkrNo,jdbcType=VARCHAR}, #{hkrWriter,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
+      #{hkrDate,jdbcType=TIMESTAMP}, #{hkrRoom,jdbcType=VARCHAR}, #{hkrCostomer,jdbcType=VARCHAR}, 
+      #{hkrCheckin,jdbcType=TIMESTAMP}, #{hkrCheckout,jdbcType=TIMESTAMP}, #{hkrKind,jdbcType=VARCHAR}, 
+      #{hkrQty,jdbcType=NUMERIC}, #{hkrHp,jdbcType=VARCHAR}, #{hkrReturn,jdbcType=VARCHAR}, 
+      #{lprdoId,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.HousekeepingRentalitemDefaultVO">
+    update HOUSEKEEPING_RENTALITEM
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+      HKR_DATE = #{hkrDate,jdbcType=TIMESTAMP},
+      HKR_ROOM = #{hkrRoom,jdbcType=VARCHAR},
+      HKR_COSTOMER = #{hkrCostomer,jdbcType=VARCHAR},
+      HKR_CHECKIN = #{hkrCheckin,jdbcType=TIMESTAMP},
+      HKR_CHECKOUT = #{hkrCheckout,jdbcType=TIMESTAMP},
+      HKR_KIND = #{hkrKind,jdbcType=VARCHAR},
+      HKR_QTY = #{hkrQty,jdbcType=NUMERIC},
+      HKR_HP = #{hkrHp,jdbcType=VARCHAR},
+      HKR_RETURN = #{hkrReturn,jdbcType=VARCHAR},
+      LPRDO_ID = #{lprdoId,jdbcType=NUMERIC}
+    where HKR_NO = #{hkrNo,jdbcType=VARCHAR}
+      and HKR_WRITER = #{hkrWriter,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select HKR_NO, HKR_WRITER, PROD_ID, HKR_DATE, HKR_ROOM, HKR_COSTOMER, HKR_CHECKIN, 
+    HKR_CHECKOUT, HKR_KIND, HKR_QTY, HKR_HP, HKR_RETURN, LPRDO_ID
+    from HOUSEKEEPING_RENTALITEM
+    where HKR_NO = #{hkrNo,jdbcType=VARCHAR}
+      and HKR_WRITER = #{hkrWriter,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select HKR_NO, HKR_WRITER, PROD_ID, HKR_DATE, HKR_ROOM, HKR_COSTOMER, HKR_CHECKIN, 
+    HKR_CHECKOUT, HKR_KIND, HKR_QTY, HKR_HP, HKR_RETURN, LPRDO_ID
+    from HOUSEKEEPING_RENTALITEM
+  </select>
+</mapper>

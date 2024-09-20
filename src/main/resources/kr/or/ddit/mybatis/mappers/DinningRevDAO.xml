@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.dinningrev.dao.DinningRevDAO">
+
+<!-- 	<resultMap type="DinningRevVO" id="dinRevMap" autoMapping="true"> -->
+<!-- 	</resultMap> -->
+
+	<select id="selectDinRevList" resultType="DinningRevVO">
+		WITH DINREVVIEW AS(
+		    SELECT *
+		    FROM DINNING_REV DR
+		        INNER JOIN TOTAL_REV T ON (DR.DIN_ID = T.TREV_ID)
+		        INNER JOIN MEMBER M ON (T.MEM_ID = M.MEM_ID)
+		        INNER JOIN DINTYPE DT ON (DR.DINTYPE_ID = DT.DINTYPE_ID)
+		        INNER JOIN CODETYPE C ON (TREV_ST = C.CDTYPE_ID)
+		        <include refid="searchFrag" />
+		        ORDER BY DR.DIN_ID DESC
+		)
+		    SELECT A.*
+		    FROM(
+		        SELECT DINREVVIEW.*, ROWNUM RNUM
+		        FROM DINREVVIEW
+		    ) A
+		    <![CDATA[
+				WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+			]]>
+	</select>
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM DINNING_REV DR
+		    INNER JOIN DINTYPE DT ON (DR.DINTYPE_ID = DT.DINTYPE_ID)
+		    INNER JOIN TOTAL_REV T ON (DR.DIN_ID = T.TREV_ID)
+		    INNER JOIN MEMBER M ON (T.MEM_ID = M.MEM_ID)
+		    <include refid="searchFrag" />
+	</select>
+
+	<select id="selectDinRev" parameterType="DinningRevVO">
+		SELECT *
+		FROM DINNING_REV DR
+		    INNER JOIN TOTAL_REV T ON (DR.DIN_ID = T.TREV_ID)
+		    INNER JOIN MEMBER M ON (T.MEM_ID = M.MEM_ID)
+		    INNER JOIN DINTYPE DT ON (DR.DINTYPE_ID = DT.DINTYPE_ID)
+		    INNER JOIN CODETYPE C ON (T.TREV_ST = C.CDTYPE_ID)
+		WHERE DR.DIN_ID = #{dinId,jdbcType=VARCHAR}
+	</select>
+
+<!-- 	검색조건 : 예약번호, 고객명, 다이닝타입, 이용날짜 -->
+	<sql id="searchFrag">
+		<where>
+			<trim prefixOverrides="AND">
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dinCondition.revNum)">
+	                INSTR(DR.DIN_ID, #{dinCondition.revNum}) > 0
+	            </if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dinCondition.memName)">
+	               AND INSTR(M.MEM_NAME, #{dinCondition.memName}) > 0
+	            </if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dinCondition.dinType)">
+	                AND INSTR(DT.DINTYPE_ID, #{dinCondition.dinType}) > 0
+	            </if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dinCondition.dinDate)">
+	                AND INSTR(DR.DIN_DATE, #{dinCondition.dinDate}) > 0
+	            </if>
+			</trim>
+		</where>
+	</sql>
+
+	<update id="updateDinRev" parameterType="DinningRevVO">
+		UPDATE DINNING_REV
+		SET
+		    DINTYPE_ID = #{dintypeId,jdbcType=VARCHAR}
+		    , DIN_CONTENT = #{dinContent,jdbcType=CLOB}
+		    , DIN_DATE = #{dinDate,jdbcType=DATE}
+		    , DIN_PAYOPT = #{dinPayopt,jdbcType=VARCHAR}
+		    , DIN_TPRICE = #{dinTprice,jdbcType=NUMERIC}
+		WHERE DIN_ID = #{dinId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateTotalRev" parameterType="DinningRevVO">
+		UPDATE TOTAL_REV
+		SET
+		    TREV_ADULT = #{trevAdult,jdbcType=NUMERIC}
+		    , TREV_CHILD = #{trevChild,jdbcType=NUMERIC}
+		    , TREV_PAYOPT = #{trevPayopt,jdbcType=VARCHAR}
+		    , TREV_RTYPE = #{trevRtype,jdbcType=VARCHAR}
+		    , TREV_CARNO = #{trevCarno,jdbcType=VARCHAR}
+		    , TREV_ST = #{trevSt,jdbcType=VARCHAR}
+		    , TREV_DATE = #{trevDate,jdbcType=DATE}
+		WHERE TREV_ID = #{trevId,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertMember" parameterType="DinningRevVO">
+		<selectKey order="BEFORE" resultType="string" keyProperty="memId">
+			SELECT 'MEM' || LPAD(NVL(TO_NUMBER(SUBSTR(MAX(MEM_ID), 4)), 0) + 1, 5, '0')
+			FROM MEMBER
+		</selectKey>
+	    INSERT INTO MEMBER (
+	    	MEM_ID
+	        , MEM_NAME
+	        , MEM_EMAIL
+	        , MEM_TEL
+	    ) VALUES (
+	    	#{memId,jdbcType=VARCHAR}
+	        , #{memName,jdbcType=VARCHAR}
+	        , #{memEmail,jdbcType=VARCHAR}
+	        , #{memTel,jdbcType=VARCHAR}
+	    )
+	</insert>
+
+		<insert id="insertTotalRev" parameterType="DinningRevVO">
+		<selectKey order="BEFORE" resultType="string" keyProperty="trevId">
+		SELECT 'REV' || LPAD(NVL(TO_NUMBER(SUBSTR(MAX(TREV_ID), 4)), 0) + 1, 5, '0')
+		FROM TOTAL_REV
+		</selectKey>
+		INSERT INTO TOTAL_REV (
+			TREV_ID
+		    , MEM_ID
+		    , TREV_ADULT
+		    , TREV_CHILD
+		    , TREV_PAYOPT
+		    , TREV_RTYPE
+		    , TREV_CARNO
+		    , TREV_ST
+		) VALUES (
+		    #{trevId,jdbcType=VARCHAR}
+		    , (SELECT MEM_ID FROM (
+		         SELECT MEM_ID FROM MEMBER
+		         ORDER BY MEM_ID DESC
+		     ) WHERE ROWNUM = 1)
+		    ,#{trevAdult,jdbcType=NUMERIC}
+		    ,#{trevChild,jdbcType=NUMERIC}
+		    ,#{trevPayopt,jdbcType=VARCHAR}
+		    , '02'
+		    ,#{trevCarno,jdbcType=VARCHAR}
+		    ,#{trevSt,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<insert id="insertDinRev" parameterType="DinningRevVO">
+		INSERT INTO DINNING_REV (
+		    DIN_ID
+		    , DINTYPE_ID
+		    , DIN_CONTENT
+		    , DIN_DATE
+		    , DIN_PAYOPT
+		    , DIN_TPRICE
+		) VALUES (
+		        (SELECT TREV_ID FROM (
+		         SELECT TREV_ID FROM TOTAL_REV
+		         ORDER BY TREV_ID DESC
+		     ) WHERE ROWNUM = 1)
+		     , #{dintypeId,jdbcType=VARCHAR}
+		     , #{dinContent,jdbcType=CLOB}
+		     , #{dinDate,jdbcType=VARCHAR}
+		     , #{dinPayopt,jdbcType=VARCHAR}
+		     , #{dinTprice,jdbcType=NUMERIC}
+		)
+	</insert>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

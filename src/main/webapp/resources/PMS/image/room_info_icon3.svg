@@ -1,0 +1,26 @@
+
+<svg version="1.1" baseProfile="basic" id="Layer_1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="37.31px"
+	 height="25.031px" viewBox="0 0 37.31 25.031" xml:space="preserve">
+
+	<defs>
+		<rect id="SVGID_1_" y="0.001" width="37.309" height="25.03"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	
+		<polyline clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+		3.877,11.297 3.877,0.75 33.432,0.75 33.432,11.297 	"/>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+		M36.56,20.142H0.75v-4.37c0-2.201,1.784-3.985,3.985-3.985h27.839c2.201,0,3.985,1.784,3.985,3.985V20.142z"/>
+	
+		<polyline clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+		2.92,24.281 2.92,20.143 34.389,20.143 34.389,24.281 	"/>
+	
+		<rect x="7.461" y="7.395" clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="8.62" height="4.392"/>
+	
+		<rect x="21.248" y="7.395" clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="8.62" height="4.392"/>
+
+</svg>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.workshift.dao.WorkshiftDAO">
+
+	<resultMap type="WorkshiftVO" id="workshiftMap" autoMapping="true">
+		<association property="emp" javaType="EmpVO" autoMapping="true" />
+	</resultMap>
+
+<!-- 	<resultMap type="EmpVO" id="empMap"> -->
+<!-- 		<association property="position" javaType="PositionVO" autoMapping="true"/> -->
+<!-- 		<association property="department" javaType="DepartmentVO" autoMapping="true"/> -->
+<!-- 	</resultMap> -->
+
+	<select id="selectWorkshiftList" resultMap="workshiftMap" >
+<!-- 		SELECT * -->
+<!-- 		FROM WORK_SHIFT WS -->
+<!-- 		    INNER JOIN EMP E ON (E.EMP_ID = WS.EMP_ID) -->
+<!-- 		    WHERE E.DEP_ID = '30' -->
+<!-- 		    ORDER BY WS.WORK_DAY -->
+
+		SELECT WORK_ID, W.EMP_ID, EMP_NAME, WORK_TYPE, WORK_DAY
+		FROM WORK_SHIFT W
+		    INNER JOIN EMP ON (EMP.EMP_ID = W.EMP_ID)
+		    WHERE EMP.DEP_ID = '30'
+		    AND INSTR(W.WORK_DAY, '2024-09') > 0
+		ORDER BY WORK_DAY
+	</select>
+
+
+	<!-- 모든직원의 한달치 근무리스트	 -->
+	<resultMap type="EmpVO" id="empWorkListMap" autoMapping="false">
+		<id property="empId" column="EMP_ID"/>
+		<id property="empName" column="EMP_NAME"/>
+		<id property="depId" column="DEP_ID"/>
+		<collection property="workshiftList" ofType="WorkshiftVO" autoMapping="true">
+			<id property="empId" column="EMP_ID"/>
+			<id property="workDay" column="WORK_DAY"/>
+		</collection>
+	</resultMap>
+	<select id="selecteEmpWorkshiftList" resultMap="empWorkListMap">
+		SELECT E.DEP_ID, E.EMP_ID, E.EMP_NAME, W.WORK_ID, W.EMP_ID, W.WORK_TYPE, W.WORK_OFFYN, W.WORK_REMARK, W.WORK_DAY, W.WORK_ORDERID
+		FROM WORK_SHIFT W
+		    INNER JOIN EMP E ON (E.EMP_ID = W.EMP_ID)
+<!-- 		WHERE  INSTR(WORK_DAY, '2024-09') > 0 -->
+		WHERE E.DEP_ID = #{depid}
+		<choose>
+			<when test="dal == null">
+				AND  INSTR(WORK_DAY, TO_CHAR(SYSDATE, 'YYYY-MM')) > 0
+			</when>
+			<when test="dal != null">
+				AND  INSTR(WORK_DAY, #{dal}) > 0
+			</when>
+		</choose>
+		ORDER BY E.EMP_NAME, TO_DATE(WORK_DAY), W.EMP_ID
+<!-- 		ORDER BY TO_DATE(WORK_DAY), W.EMP_ID -->
+<!-- 		ORDER BY E.EMP_NAME -->
+	</select>
+
+	<select id="selectDays" resultMap="workshiftMap">
+		SELECT DISTINCT(WORK_DAY)
+		FROM WORK_SHIFT
+<!-- 		WHERE  INSTR(WORK_DAY, '2024-09') > 0 -->
+		<choose>
+			<when test="dal == null">
+				WHERE  INSTR(WORK_DAY, TO_CHAR(SYSDATE, 'YYYY-MM')) > 0
+			</when>
+			<when test="dal != null">
+				WHERE  INSTR(WORK_DAY, #{dal}) > 0
+			</when>
+		</choose>
+		ORDER BY TO_DATE(WORK_DAY)
+	</select>
+
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM WORK_SHIFT W
+    		INNER JOIN EMP E ON (E.EMP_ID = W.EMP_ID)
+    		WHERE E.DEP_ID = '30'
+	</select>
+
+	<select id="selectDepEmpList" resultType="EmpVO">
+	   SELECT EMP_ID
+		     , EMP_PW
+		     , EMP_HIRDATE
+		     , EMP_NAME
+		     , EMP_BIR
+		     , EMP_TEL
+		     , EMP_GEN
+		     , EMP_SAL
+		     , EMP_STA
+		     , EMP_RES
+		     , EMP_FILE
+	         , POSITION.POSI_ID "position.posiId"
+		     , POSI_NM "position.posiNm"
+		     , DEPARTMENT.DEP_ID "department.deptId"
+		     , DEP_NM "department.depNm"
+		FROM EMP INNER JOIN POSITION ON(EMP.POSI_ID = POSITION.POSI_ID)
+	    	INNER JOIN DEPARTMENT ON(EMP.DEP_ID = DEPARTMENT.DEP_ID)
+		WHERE DEPARTMENT.DEP_ID = #{depid}
+		ORDER BY EMP.EMP_NAME
+	</select>
+
+	<select id="selectEmpWorkshiftList" resultMap="workshiftMap">
+<!-- 		SELECT * -->
+<!-- 		FROM WORK_SHIFT W -->
+<!-- 			INNER JOIN EMP E ON (E.EMP_ID = W.EMP_ID) -->
+<!-- 		WHERE W.EMP_ID = #{empId,jdbcType=VARCHAR} -->
+<!-- 		ORDER BY W.WORK_DAY -->
+
+        SELECT *
+		FROM WORK_SHIFT W
+			INNER JOIN EMP E ON (E.EMP_ID = W.EMP_ID)
+		WHERE W.EMP_ID = #{what,jdbcType=VARCHAR}
+<!-- 		<if test="dal == null"> -->
+<!-- 	        AND SUBSTR(W.WORK_DAY, 0, 5) = SUBSTR(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 0, 5) -->
+<!-- 		</if> -->
+	     <choose>
+			<when test="dal == 'null'">
+<!-- 	        AND SUBSTR(W.WORK_DAY, 0, 5) = SUBSTR(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 0, 5) -->
+				AND INSTR(WORK_DAY, TO_CHAR(SYSDATE, 'YYYY-MM')) > 0
+			</when>
+			<when test="dal != null">
+<!-- 				AND SUBSTR(W.WORK_DAY, 0, 5) = #{dal} -->
+				AND INSTR(WORK_DAY, #{dal}) > 0
+			</when>
+			</choose>
+		ORDER BY W.WORK_DAY
+	</select>
+
+
+
+<!-- 	<select id="selectEmpWorkshiftList" resultMap="workshiftMap"> -->
+<!-- 		SELECT -->
+<!-- 		    dates.work_day, -->
+<!-- 		    ws.work_id, -->
+<!-- 		    ws.emp_id, -->
+<!-- 		    ws.work_type, -->
+<!-- 		    ws.work_offyn, -->
+<!-- 		    ws.work_remark, -->
+<!-- 		    ws.work_orderid -->
+<!-- 		FROM ( -->
+<!-- 		    SELECT -->
+<!-- 		        TRUNC(TO_DATE( #{inputDate}, 'YYYY-MM-DD'), 'MM') + LEVEL - 1 AS work_day -->
+<!-- 		    FROM DUAL -->
+<!-- 		   <![CDATA[ CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE( #{inputDate}, 'YYYY-MM-DD')), 'DD')]]> -->
+<!-- 		) dates -->
+<!-- 		LEFT JOIN WORK_SHIFT ws -->
+<!-- 		    ON 'dates.work_day' = 'ws.work_day' -->
+<!-- 		    AND ws.emp_id = #{empId,jdbcType=VARCHAR} -->
+<!-- 		ORDER BY dates.work_day -->
+<!-- 	</select> -->
+
+	<update id="updateWorkshift" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="idx" open="DECLARE BEGIN" separator=";" close="; END;">
+			UPDATE WORK_SHIFT
+			SET
+			    WORK_TYPE = #{item.workType,jdbcType=VARCHAR}
+			    , WORK_OFFYN = #{item.workOffyn,jdbcType=VARCHAR}
+			    , WORK_REMARK = #{item.workRemark,jdbcType=VARCHAR}
+			WHERE WORK_DAY = #{item.workDay,jdbcType=VARCHAR}
+			AND EMP_ID = #{item.empId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+</mapper>

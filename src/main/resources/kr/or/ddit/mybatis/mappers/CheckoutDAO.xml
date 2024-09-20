@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.checkout.dao.CheckoutDAO">
+
+<!-- 	퇴실 목록 조회 => 예약상태 TREV_ST = 'OUT'(퇴실)
+						객실 결제상태 PAY_ST = '1'(객실 결제완료)
+						결제완료상태 PAY_CM = 'Y' (결제완료 O)-->
+	<select id="selectCheckoutList">
+
+		SELECT B.*
+		FROM(
+			SELECT A.*, ROWNUM RNUM
+			FROM
+				(SELECT
+					HTREV_CHKIN
+					, HTREV_CHKOUT
+					, HTREV_STAY
+					, ROOMTYPE_NM
+					, ROOM_ID
+					, HTREV_TPRICE
+					, P.TREV_ID TREV_ID
+					, MEM_NAME
+					, NVL(TREV_CARNO, '없음') TREV_CARNO
+					, P.PAY_ID PAY_ID
+					, TREV_ST
+					, PAY_EXT
+				FROM PAY P
+					INNER JOIN TOTAL_REV T ON P.TREV_ID = T.TREV_ID
+					INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+					INNER JOIN HOTEL_REV H ON T.TREV_ID = H.HTREV_ID
+					INNER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+					INNER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+				WHERE
+					PAY_CM = 'Y'
+					AND TREV_ST = 'OUT'
+					<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.revNum)">
+		                AND INSTR(P.TREV_ID, #{hotelCondition.revNum}) > 0
+		            </if>
+		            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.memName)">
+		                AND INSTR(MEM_NAME, #{hotelCondition.memName}) > 0
+		            </if>
+		            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.Carno)">
+		                AND INSTR(TREV_CARNO, #{hotelCondition.Carno}) > 0
+		            </if>
+				ORDER BY HTREV_CHKOUT DESC
+			)A
+		)B
+		 <![CDATA[
+		      WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		 ]]>
+
+	</select>
+
+<!-- 	퇴실 목록 총 개수 -->
+	<select id="selectTotalRecord" resultType="int">
+
+		SELECT COUNT(*)
+		FROM PAY P
+			INNER JOIN TOTAL_REV T ON P.TREV_ID = T.TREV_ID
+			INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+			INNER JOIN HOTEL_REV H ON T.TREV_ID = H.HTREV_ID
+			INNER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+			INNER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+		WHERE
+			PAY_CM = 'Y'
+			AND TREV_ST = 'OUT'
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.revNum)">
+		       AND INSTR(P.TREV_ID, #{hotelCondition.revNum}) > 0
+		    </if>
+		    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.memName)">
+		       AND INSTR(MEM_NAME, #{hotelCondition.memName}) > 0
+		    </if>
+		    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.Carno)">
+		       AND INSTR(TREV_CARNO, #{hotelCondition.Carno}) > 0
+		    </if>
+
+	</select>
+
+<!-- 	퇴실 예정자 목록 조회 => 예약상태 TREV_ST = 'IN'(입실)
+						객실 결제상태 PAY_ST = '1'(객실 결제완료)
+						결제완료상태 PAY_CM = 'N' (결제완료 X)
+						HTREV_CHKOUT = TO_CHAR(SYSDATE, 'YYYY-MM-DD') (오늘) -->
+	<select id="selectCheckoutSysList">
+
+		SELECT B.*
+		FROM(
+			SELECT A.*, ROWNUM RNUM
+			FROM
+				(SELECT
+					HTREV_CHKIN
+					, HTREV_CHKOUT
+					, HTREV_STAY
+					, ROOMTYPE_NM
+					, ROOM_ID
+					, HTREV_TPRICE
+					, P.TREV_ID TREV_ID
+					, MEM_NAME
+					, NVL(TREV_CARNO, '없음') TREV_CARNO
+					, P.PAY_ID PAY_ID
+					, TREV_ST
+					, PAY_EXT
+				FROM PAY P
+					INNER JOIN TOTAL_REV T ON P.TREV_ID = T.TREV_ID
+					INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+					INNER JOIN HOTEL_REV H ON T.TREV_ID = H.HTREV_ID
+					INNER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+					INNER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+				WHERE
+					TREV_ST = 'IN'
+			            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.chkout)">
+			                AND INSTR(HTREV_CHKOUT, #{hotelCondition.chkout}) > 0
+			            </if>
+						<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.revNum)">
+			                AND INSTR(P.TREV_ID, #{hotelCondition.revNum}) > 0
+			            </if>
+			            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.memName)">
+			                AND INSTR(MEM_NAME, #{hotelCondition.memName}) > 0
+			            </if>
+			            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.Carno)">
+			                AND INSTR(TREV_CARNO, #{hotelCondition.Carno}) > 0
+			            </if>
+				ORDER BY HTREV_CHKOUT ASC
+			)A
+		)B
+		<![CDATA[
+		      WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		 ]]>
+
+	</select>
+
+<!-- 	퇴실 예정자 목록 총 개수 -->
+	<select id="selectTotalRecordSys">
+
+		SELECT COUNT(*)
+		FROM PAY P
+			INNER JOIN TOTAL_REV T ON P.TREV_ID = T.TREV_ID
+			INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+			INNER JOIN HOTEL_REV H ON T.TREV_ID = H.HTREV_ID
+			INNER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+			INNER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+		WHERE
+			TREV_ST = 'IN'
+			            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.chkout)">
+			                AND INSTR(HTREV_CHKOUT, #{hotelCondition.chkout}) > 0
+			            </if>
+						<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.revNum)">
+			                AND INSTR(P.TREV_ID, #{hotelCondition.revNum}) > 0
+			            </if>
+			            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.memName)">
+			                AND INSTR(MEM_NAME, #{hotelCondition.memName}) > 0
+			            </if>
+			            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.Carno)">
+			                AND INSTR(TREV_CARNO, #{hotelCondition.Carno}) > 0
+			            </if>
+
+	</select>
+
+	<select id="selectCheckoutDetail">
+
+				SELECT
+					HTREV_CHKIN
+					, HTREV_CHKOUT
+					, HTREV_STAY
+					, ROOMTYPE_NM
+					, ROOM_ID
+					, HTREV_TPRICE
+					, P.TREV_ID TREV_ID
+					, MEM_NAME
+					, TREV_CARNO
+					, P.PAY_ID PAY_ID
+					, EXTCRG_NO
+					, TREV_ST
+					, PAY_EXT
+				FROM PAY P
+					INNER JOIN TOTAL_REV T ON P.TREV_ID = T.TREV_ID
+					INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+					INNER JOIN HOTEL_REV H ON T.TREV_ID = H.HTREV_ID
+					INNER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+					INNER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+					LEFT OUTER JOIN EXTRACHARGES E ON E.PAY_ID = P.PAY_ID
+                WHERE P.PAY_ID = #{payId, jdbcType=VARCHAR}
+
+	</select>
+
+	<update id="updatePayOk" parameterType="string">
+
+		UPDATE TOTAL_REV
+		SET TREV_ST = 'OUT'
+		WHERE TREV_ID = #{trevId, jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updatePayOk2" parameterType="string">
+
+		UPDATE PAY
+		SET PAY_CM = 'Y'
+		WHERE TREV_ID = #{trevId, jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updatePayOk3" parameterType="string">
+
+		UPDATE ROOMSTATUS
+		SET ROOM_ST = '2'
+		WHERE ROOM_ID = #{roomId, jdbcType=VARCHAR}
+
+	</update>
+
+</mapper>

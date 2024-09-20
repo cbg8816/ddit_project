@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.NoticeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.NoticeDefaultVO">
+    <id column="NOTI_NO" jdbcType="VARCHAR" property="notiNo" />
+    <result column="NOTI_WRITER" jdbcType="VARCHAR" property="notiWriter" />
+    <result column="NOTI_TITLE" jdbcType="VARCHAR" property="notiTitle" />
+    <result column="NOTI_REGDATE" jdbcType="TIMESTAMP" property="notiRegdate" />
+    <result column="NOTI_CATEGORY" jdbcType="VARCHAR" property="notiCategory" />
+    <result column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="NOTI_FILE" jdbcType="VARCHAR" property="notiFile" />
+    <result column="NOTI_CONTENT" jdbcType="CLOB" property="notiContent" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from NOTICE
+    where NOTI_NO = #{notiNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.NoticeDefaultVO">
+    insert into NOTICE (NOTI_NO, NOTI_WRITER, NOTI_TITLE, 
+      NOTI_REGDATE, NOTI_CATEGORY, EMP_ID, 
+      NOTI_FILE, NOTI_CONTENT)
+    values (#{notiNo,jdbcType=VARCHAR}, #{notiWriter,jdbcType=VARCHAR}, #{notiTitle,jdbcType=VARCHAR}, 
+      #{notiRegdate,jdbcType=TIMESTAMP}, #{notiCategory,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, 
+      #{notiFile,jdbcType=VARCHAR}, #{notiContent,jdbcType=CLOB})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.NoticeDefaultVO">
+    update NOTICE
+    set NOTI_WRITER = #{notiWriter,jdbcType=VARCHAR},
+      NOTI_TITLE = #{notiTitle,jdbcType=VARCHAR},
+      NOTI_REGDATE = #{notiRegdate,jdbcType=TIMESTAMP},
+      NOTI_CATEGORY = #{notiCategory,jdbcType=VARCHAR},
+      EMP_ID = #{empId,jdbcType=VARCHAR},
+      NOTI_FILE = #{notiFile,jdbcType=VARCHAR},
+      NOTI_CONTENT = #{notiContent,jdbcType=CLOB}
+    where NOTI_NO = #{notiNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select NOTI_NO, NOTI_WRITER, NOTI_TITLE, NOTI_REGDATE, NOTI_CATEGORY, EMP_ID, NOTI_FILE, 
+    NOTI_CONTENT
+    from NOTICE
+    where NOTI_NO = #{notiNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select NOTI_NO, NOTI_WRITER, NOTI_TITLE, NOTI_REGDATE, NOTI_CATEGORY, EMP_ID, NOTI_FILE, 
+    NOTI_CONTENT
+    from NOTICE
+  </select>
+</mapper>

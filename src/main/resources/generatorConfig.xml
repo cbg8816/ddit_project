@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC
+ "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+ "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <context id="simple" targetRuntime="MyBatis3Simple">
+  
+	<plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin" />
+	<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+	<plugin type="com.softwareloop.mybatis.generator.plugins.LombokPlugin" />
+	
+	<commentGenerator>
+		<property name="suppressAllComments" value="true"/>
+		<property name="suppressDate" value="true"/>
+	</commentGenerator>
+	
+    <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+        connectionURL="jdbc:oracle:thin:@112.220.114.130:1521:xe" userId="TEAM3_202402F" password="java" />
+        
+    <javaTypeResolver>
+    	<property name="forceBigDecimals" value="false"/>
+		<!-- DATE 타입을 String 이 아닌 LocalDateTime 으로 선언할때 필요함.	-->	
+		<property name="useJSR310Types" value="true"/>
+    </javaTypeResolver>    
+	
+	<javaModelGenerator targetPackage="kr.or.ddit.vo.def" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </javaModelGenerator>
+	
+    <sqlMapGenerator targetPackage="kr.or.ddit.mybatis.mappers.def" targetProject="src/main/resources">
+    	<property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="kr.or.ddit.commons.def.mapper"  targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+	
+	<!-- 
+	SELECT '<table tableName="'||TABLE_NAME||'"  domainObjectName="'||
+	    REPLACE(INITCAP(TABLE_NAME), '_', '') ||'DefaultVO" mapperName="'||
+	    REPLACE(INITCAP(TABLE_NAME), '_', '')||'DefaultMapper"/>'
+	FROM USER_TABLES; 
+	-->
+	<!-- 위 코드 조각으로 계정 내 모든 테이블에 대해 table 엘리먼트 생성할 수 있음. -->
+	
+	<table tableName="PARTY_SERVICE"  domainObjectName="PartyServiceDefaultVO" mapperName="PartyServiceDefaultMapper"/>
+<table tableName="ROOM"  domainObjectName="RoomDefaultVO" mapperName="RoomDefaultMapper"/>
+<table tableName="ROOMTYPE"  domainObjectName="RoomtypeDefaultVO" mapperName="RoomtypeDefaultMapper"/>
+<table tableName="EVENT_VENUE"  domainObjectName="EventVenueDefaultVO" mapperName="EventVenueDefaultMapper"/>
+<table tableName="HOUSEKEEPING_STORAGEITEME"  domainObjectName="HousekeepingStorageitemeDefaultVO" mapperName="HousekeepingStorageitemeDefaultMapper"/>
+<table tableName="HOUSEKEEPING_RENTALITEM"  domainObjectName="HousekeepingRentalitemDefaultVO" mapperName="HousekeepingRentalitemDefaultMapper"/>
+<table tableName="MEMBER"  domainObjectName="MemberDefaultVO" mapperName="MemberDefaultMapper"/>
+<table tableName="INQUIRE"  domainObjectName="InquireDefaultVO" mapperName="InquireDefaultMapper"/>
+<table tableName="NOTICE"  domainObjectName="NoticeDefaultVO" mapperName="NoticeDefaultMapper"/>
+<table tableName="BUDGET"  domainObjectName="BudgetDefaultVO" mapperName="BudgetDefaultMapper"/>
+<table tableName="HOTEL_REV"  domainObjectName="HotelRevDefaultVO" mapperName="HotelRevDefaultMapper"/>
+<table tableName="WORK_SHIFT"  domainObjectName="WorkShiftDefaultVO" mapperName="WorkShiftDefaultMapper"/>
+<table tableName="EMP"  domainObjectName="EmpDefaultVO" mapperName="EmpDefaultMapper"/>
+<table tableName="BROKEN_ROOM"  domainObjectName="BrokenRoomDefaultVO" mapperName="BrokenRoomDefaultMapper"/>
+<table tableName="EXTRACHARGES"  domainObjectName="ExtrachargesDefaultVO" mapperName="ExtrachargesDefaultMapper"/>
+<table tableName="RANK"  domainObjectName="RankDefaultVO" mapperName="RankDefaultMapper"/>
+<table tableName="MILEAGE"  domainObjectName="MileageDefaultVO" mapperName="MileageDefaultMapper"/>
+<table tableName="FAVORITES"  domainObjectName="FavoritesDefaultVO" mapperName="FavoritesDefaultMapper"/>
+<table tableName="MILUSE"  domainObjectName="MiluseDefaultVO" mapperName="MiluseDefaultMapper"/>
+<table tableName="PACKAGE"  domainObjectName="PackageDefaultVO" mapperName="PackageDefaultMapper"/>
+<table tableName="EVENT"  domainObjectName="EventDefaultVO" mapperName="EventDefaultMapper"/>
+<table tableName="EVENT_JOIN"  domainObjectName="EventJoinDefaultVO" mapperName="EventJoinDefaultMapper"/>
+<table tableName="PMS_APPROVAL"  domainObjectName="PmsApprovalDefaultVO" mapperName="PmsApprovalDefaultMapper"/>
+<table tableName="APPROVAL_FORM"  domainObjectName="ApprovalFormDefaultVO" mapperName="ApprovalFormDefaultMapper"/>
+<table tableName="APPROVAL_LINE"  domainObjectName="ApprovalLineDefaultVO" mapperName="ApprovalLineDefaultMapper"/>
+<table tableName="APPROVAL_REFER"  domainObjectName="ApprovalReferDefaultVO" mapperName="ApprovalReferDefaultMapper"/>
+<table tableName="SCHEDULE"  domainObjectName="ScheduleDefaultVO" mapperName="ScheduleDefaultMapper"/>
+<table tableName="PMS_MAIL"  domainObjectName="PmsMailDefaultVO" mapperName="PmsMailDefaultMapper"/>
+<table tableName="ATCH_FILE"  domainObjectName="AtchFileDefaultVO" mapperName="AtchFileDefaultMapper"/>
+<table tableName="ATCH_DETAIL"  domainObjectName="AtchDetailDefaultVO" mapperName="AtchDetailDefaultMapper"/>
+<table tableName="MAIL_SEND"  domainObjectName="MailSendDefaultVO" mapperName="MailSendDefaultMapper"/>
+<table tableName="MAIL_RECEIVE"  domainObjectName="MailReceiveDefaultVO" mapperName="MailReceiveDefaultMapper"/>
+<table tableName="DINTYPE"  domainObjectName="DintypeDefaultVO" mapperName="DintypeDefaultMapper"/>
+<table tableName="PROD"  domainObjectName="ProdDefaultVO" mapperName="ProdDefaultMapper"/>
+<table tableName="LPROD"  domainObjectName="LprodDefaultVO" mapperName="LprodDefaultMapper"/>
+<table tableName="BUYER"  domainObjectName="BuyerDefaultVO" mapperName="BuyerDefaultMapper"/>
+<table tableName="ORDERS"  domainObjectName="OrdersDefaultVO" mapperName="OrdersDefaultMapper"/>
+<table tableName="DINNING_REV"  domainObjectName="DinningRevDefaultVO" mapperName="DinningRevDefaultMapper"/>
+<table tableName="EMP_NOTICE"  domainObjectName="EmpNoticeDefaultVO" mapperName="EmpNoticeDefaultMapper"/>
+<table tableName="LINVEST"  domainObjectName="LinvestDefaultVO" mapperName="LinvestDefaultMapper"/>
+<table tableName="INVEST"  domainObjectName="InvestDefaultVO" mapperName="InvestDefaultMapper"/>
+<table tableName="SPECIFICATION"  domainObjectName="SpecificationDefaultVO" mapperName="SpecificationDefaultMapper"/>
+<table tableName="ATTENDANCE"  domainObjectName="AttendanceDefaultVO" mapperName="AttendanceDefaultMapper"/>
+<table tableName="CODE"  domainObjectName="CodeDefaultVO" mapperName="CodeDefaultMapper"/>
+<table tableName="REV_ROOM"  domainObjectName="RevRoomDefaultVO" mapperName="RevRoomDefaultMapper"/>
+<table tableName="TOTAL_REV"  domainObjectName="TotalRevDefaultVO" mapperName="TotalRevDefaultMapper"/>
+<table tableName="APPROVAL_FAV"  domainObjectName="ApprovalFavDefaultVO" mapperName="ApprovalFavDefaultMapper"/>
+<table tableName="HOUSEKEEPING"  domainObjectName="HousekeepingDefaultVO" mapperName="HousekeepingDefaultMapper"/>
+<table tableName="CODETYPE"  domainObjectName="CodetypeDefaultVO" mapperName="CodetypeDefaultMapper"/>
+<table tableName="ROOMSTATUS"  domainObjectName="RoomstatusDefaultVO" mapperName="RoomstatusDefaultMapper"/>
+<table tableName="MANAGER"  domainObjectName="ManagerDefaultVO" mapperName="ManagerDefaultMapper"/>
+<table tableName="ATTENDANCE_DETAIL"  domainObjectName="AttendanceDetailDefaultVO" mapperName="AttendanceDetailDefaultMapper"/>
+<table tableName="PAY"  domainObjectName="PayDefaultVO" mapperName="PayDefaultMapper"/>
+<table tableName="DATESLOT"  domainObjectName="DateslotDefaultVO" mapperName="DateslotDefaultMapper"/>
+<table tableName="EXTCRG_TYPE"  domainObjectName="ExtcrgTypeDefaultVO" mapperName="ExtcrgTypeDefaultMapper"/>
+<table tableName="ENTER"  domainObjectName="EnterDefaultVO" mapperName="EnterDefaultMapper"/>
+<table tableName="USE_OF_PROD"  domainObjectName="UseOfProdDefaultVO" mapperName="UseOfProdDefaultMapper"/>
+<table tableName="MEMO"  domainObjectName="MemoDefaultVO" mapperName="MemoDefaultMapper"/>
+<table tableName="REFUND"  domainObjectName="RefundDefaultVO" mapperName="RefundDefaultMapper"/>
+<table tableName="PAYSTUB"  domainObjectName="PaystubDefaultVO" mapperName="PaystubDefaultMapper"/>
+<table tableName="POSITION"  domainObjectName="PositionDefaultVO" mapperName="PositionDefaultMapper"/>
+<table tableName="DEPARTMENT"  domainObjectName="DepartmentDefaultVO" mapperName="DepartmentDefaultMapper"/>
+<table tableName="ASSET"  domainObjectName="AssetDefaultVO" mapperName="AssetDefaultMapper"/>
+<table tableName="WORK_DATE"  domainObjectName="WorkDateDefaultVO" mapperName="WorkDateDefaultMapper"/>
+
+	
+  </context>
+</generatorConfiguration>

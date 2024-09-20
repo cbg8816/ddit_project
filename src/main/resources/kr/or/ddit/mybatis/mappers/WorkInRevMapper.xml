@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.workinrev.dao.WorkInRevMapper">
+
+<resultMap type="PossibleRoomsVO" id="possibleRoomsMap" autoMapping="true"></resultMap>
+
+<select id="selectLastPK" resultType="string">
+	SELECT TREV_ID
+	    FROM (
+	    SELECT TREV_ID, ROWNUM RNUM
+	    FROM(
+	        SELECT TREV_ID
+	        FROM TOTAL_REV
+	        ORDER BY TREV_ID DESC
+	    )
+	)WHERE RNUM = 1
+</select>
+
+<select id="selectPossibleRooms" resultMap="possibleRoomsMap" parameterType="WorkInRevVO">
+    SELECT
+        ROOM.ROOM_ID
+        , ROOM.ROOMTYPE_ID
+        , ROOMTYPE.ROOMTYPE_NM
+        , ROOM_FL
+        , ROOM_REMARK
+    FROM ROOM
+    INNER JOIN ROOMTYPE ON ROOM.ROOMTYPE_ID = ROOMTYPE.ROOMTYPE_ID
+    WHERE ROOM.ROOM_ID NOT IN (
+        SELECT
+            ROOM_ID
+        FROM DATESLOT
+        INNER JOIN REV_ROOM ON DATESLOT.REVROOM_ID = REV_ROOM.REVROOM_ID
+        WHERE (#{htrevChkin, jdbcType=VARCHAR} || 'PM' = DATESLOT_DATE || DATESLOT_NM
+        OR #{htrevChkout, jdbcType=VARCHAR} || 'AM' = DATESLOT_DATE || DATESLOT_NM
+        OR TO_DATE(DATESLOT_DATE) BETWEEN TO_DATE(#{htrevChkin, jdbcType=VARCHAR})+1 AND TO_DATE(#{htrevChkout, jdbcType=VARCHAR})-1)
+        AND ROOM_ID IS NOT NULL
+    )
+    AND ROOM_ID IN (
+	    SELECT ROOM_ID
+	    FROM ROOMSTATUS
+	    WHERE ROOM_ST = '6'
+    )
+    ORDER BY 2, 1 DESC
+</select>
+
+<select id="selectLastMemPK" resultType="string">
+	SELECT
+	    MEM_ID
+	FROM(
+	    SELECT
+	        MEM_ID, ROWNUM RNUM
+	    FROM(
+	        SELECT MEM_ID FROM MEMBER
+	        WHERE MEM_ROLE IS NULL
+	        ORDER BY MEM_ID DESC
+	    )
+	)
+	WHERE RNUM = 1
+</select>
+
+<insert id="insertToMember" parameterType="WorkInRevVO">
+	INSERT
+	INTO MEMBER
+	(
+	      MEM_ID
+	    , MEM_NAME
+	    , MEM_TEL
+	)
+	VALUES
+	(
+		  #{memId, jdbcType=VARCHAR}
+		, #{memName, jdbcType=VARCHAR}
+		, #{memTel, jdbcType=VARCHAR}
+	)
+</insert>
+
+<insert id="insertRev" parameterType="WorkInRevVO">
+	INSERT ALL
+	INTO TOTAL_REV
+	(
+	    TREV_ID
+	    , MEM_ID
+	    , TREV_ADULT
+	    , TREV_CHILD
+	    , TREV_RTYPE
+	    , TREV_DATE
+	    , TREV_CARNO
+	    , TREV_ST
+	)
+	VALUES
+	(
+		  #{trevId, jdbcType=VARCHAR}
+		, #{memId, jdbcType=VARCHAR}
+		, #{trevAdult, jdbcType=NUMERIC}
+		, #{trevChild, jdbcType=NUMERIC}
+		, #{trevRtype, jdbcType=VARCHAR}
+		, SYSDATE
+		, #{trevCarno, jdbcType=VARCHAR}
+		, 'IN'
+	)
+	INTO HOTEL_REV
+	(
+	    HTREV_ID
+	    , HTREV_CN
+	    , HTREV_CHKIN
+	    , HTREV_CHKOUT
+	    , HTREV_STAY
+	    , HTREV_TPRICE
+	)
+	VALUES
+	(
+		  #{trevId, jdbcType=VARCHAR}
+		, ''
+		, #{htrevChkin, jdbcType=VARCHAR}
+		, #{htrevChkout, jdbcType=VARCHAR}
+		, #{htrevStay, jdbcType=NUMERIC}
+		, #{htrevTprice, jdbcType=NUMERIC}
+	)
+	INTO REV_ROOM
+	(
+		REVROOM_ID
+		, HTREV_ID
+		, ROOM_ID
+		, ROOMTYPE_ID
+		, REVROOM_PRICE
+	)
+	<foreach collection="roomData" item="item" index="idx" separator="INTO REV_ROOM">
+	VALUES
+	(
+		  #{item.revroomId, jdbcType=VARCHAR}
+		, #{item.htrevId, jdbcType=VARCHAR}
+		, #{item.roomId, jdbcType=VARCHAR}
+		, #{item.roomtypeId, jdbcType=VARCHAR}
+		, #{item.revroomPrice, jdbcType=NUMERIC}
+	)
+	</foreach>
+	SELECT 1 FROM DUAL
+</insert>
+<insert id="insertRevWeb" parameterType="WorkInRevVO">
+	INSERT ALL
+	INTO TOTAL_REV
+	(
+	    TREV_ID
+	    , MEM_ID
+	    , TREV_ADULT
+	    , TREV_CHILD
+	    , TREV_RTYPE
+	    , TREV_DATE
+	    , TREV_CARNO
+	    , TREV_ST
+	)
+	VALUES
+	(
+		  #{trevId, jdbcType=VARCHAR}
+		, #{memId, jdbcType=VARCHAR}
+		, #{trevAdult, jdbcType=NUMERIC}
+		, #{trevChild, jdbcType=NUMERIC}
+		, #{trevRtype, jdbcType=VARCHAR}
+		, SYSDATE
+		, #{trevCarno, jdbcType=VARCHAR}
+		, 'RV'
+	)
+	INTO HOTEL_REV
+	(
+	    HTREV_ID
+	    , HTREV_CN
+	    , HTREV_CHKIN
+	    , HTREV_CHKOUT
+	    , HTREV_STAY
+	    , HTREV_TPRICE
+	)
+	VALUES
+	(
+		  #{trevId, jdbcType=VARCHAR}
+		, ''
+		, #{htrevChkin, jdbcType=VARCHAR}
+		, #{htrevChkout, jdbcType=VARCHAR}
+		, #{htrevStay, jdbcType=NUMERIC}
+		, #{htrevTprice, jdbcType=NUMERIC}
+	)
+	INTO REV_ROOM
+	(
+		REVROOM_ID
+		, HTREV_ID
+		, ROOM_ID
+		, ROOMTYPE_ID
+		, REVROOM_PRICE
+	)
+	<foreach collection="roomData" item="item" index="idx" separator="INTO REV_ROOM">
+	VALUES
+	(
+		  #{item.revroomId, jdbcType=VARCHAR}
+		, #{item.htrevId, jdbcType=VARCHAR}
+		, #{item.roomId, jdbcType=VARCHAR}
+		, #{item.roomtypeId, jdbcType=VARCHAR}
+		, #{item.revroomPrice, jdbcType=NUMERIC}
+	)
+	</foreach>
+	SELECT 1 FROM DUAL
+</insert>
+<select id="selectLastRevRoomId" resultType="string">
+	SELECT REVROOM_ID
+	FROM
+	(
+	    SELECT REVROOM_ID, ROWNUM RNUM
+	    FROM REV_ROOM
+	    ORDER BY REVROOM_ID DESC
+	)
+	WHERE RNUM = 1
+</select>
+
+<insert id="insertRevRoom" parameterType="java.util.List">
+	INSERT ALL
+	INTO REV_ROOM (
+		  REVROOM_ID
+		  , HTREV_ID
+		  , ROOM_ID
+		  , ROOMTYPE_ID
+		  , REVROOM_PRICE
+	)
+	<foreach collection="list" item="item" index="idx" separator="INTO REV_ROOM">
+	VALUES(
+		  #{item.roomData.revroomId}
+		, #{item.roomData.htrevId, jdbcType=VARCHAR}
+		, #{item.roomData.roomId, jdbcType=VARCHAR}
+		, #{item.roomData.roomtypeId, jdbcType=VARCHAR}
+		, #{item.roomData.revroomPrice, jdbcType=NUMERIC}
+	)
+	</foreach>
+	SELECT 1 FROM DUAL
+</insert>
+
+
+<!-- Insert 쿼리 예제 -->
+<insert id="insertDateSlot" parameterType="java.util.List">
+    INSERT ALL
+	INTO DATESLOT (
+	    DATESLOT_ID,
+	    REVROOM_ID,
+	    DATESLOT_DATE,
+	    DATESLOT_NM
+	)
+	<foreach collection="list" item="item" index="idx" separator="INTO DATESLOT">
+		VALUES (
+		    (SELECT
+			    DATESLOT_ID + 1
+			FROM
+			(
+			    SELECT
+			        DATESLOT_ID, ROWNUM RNUM
+			    FROM
+			        (
+			        SELECT
+			            DATESLOT_ID
+			        FROM(
+			            SELECT
+			                TO_NUMBER(DATESLOT_ID) DATESLOT_ID
+			            FROM
+			                DATESLOT
+			            )ORDER BY DATESLOT_ID DESC
+			        )
+			    )
+			WHERE RNUM = 1) + #{idx},
+		    #{item.revroomId, jdbcType=VARCHAR},
+		    #{item.dateslotDate, jdbcType=VARCHAR},
+		    #{item.dateslotNm, jdbcType=VARCHAR}
+		)
+	</foreach>
+    SELECT 1 FROM DUAL
+</insert>
+
+<update id="updateRevRoomStatus" parameterType="java.util.List">
+    UPDATE ROOMSTATUS
+    SET ROOM_ST = 1
+    WHERE ROOM_ID IN
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+        #{item}
+    </foreach>
+</update>
+
+
+<select id="selectOneMemberInfo" parameterType="string">
+	SELECT
+	    MEM_ID
+	    , M.RANK_CODE
+	    , R.RANK_NAME
+	    , R.RANK_MLG_PER
+	    , MEM_NAME
+	    , MEM_LOGIN_ID
+	    , MEM_EMAIL
+	    , MEM_TEL
+	    , MEM_MIL
+	FROM MEMBER M
+	INNER JOIN RANK R ON M.RANK_CODE = R.RANK_CODE
+	WHERE MEM_YN = 'N'
+	AND MEM_ROLE = 'USER'
+	AND MEM_NAME = #{memName, jdbcType=VARCHAR}
+</select>
+
+<insert id="insertNewPay" parameterType="WorkInPayVO">
+
+	<selectKey order="BEFORE" resultType="WorkInPayVO" keyColumn="payId,milId" keyProperty="payId,milId">
+		SELECT
+			(
+			    SELECT MAX(TO_NUMBER(PAY_ID))+1 FROM PAY
+			) payId
+			, (
+			    SELECT MAX(TO_NUMBER(MIL_ID))+1 FROM MILEAGE
+			) milId
+		FROM DUAL
+	</selectKey>
+
+	INSERT ALL
+	INTO PAY
+	(
+	    PAY_ID
+	    , PAY_PAYOPT
+	    , PAY_TPRICE
+	    , PAY_DATE
+	    , PAY_ST
+	    , TREV_ID
+	    , PAY_CM
+	)
+	VALUES
+	(
+	      #{payId}
+	    , #{payPayopt, jdbcType=VARCHAR}
+	    , #{payTprice, jdbcType=NUMERIC}
+	    , SYSDATE
+	    , '1'
+	    , #{trevId, jdbcType=VARCHAR}
+	    , 'Y'
+
+	)
+	INTO MILEAGE
+	(
+		MIL_ID
+		, MEM_ID
+		, MIL_REGDATE
+		, MIL_USE
+		, MIL_EARN
+		, PAY_ID
+	)
+	VALUES
+	(
+		  #{milId}
+		, #{memId, jdbcType=VARCHAR}
+		, SYSDATE
+		, #{milUse, jdbcType=NUMERIC}
+		, #{milEarn, jdbcType=NUMERIC}
+		, #{payId}
+	)
+	SELECT 1 FROM DUAL
+</insert>
+
+<update id="updateMemberMileage" parameterType="WorkInPayVO">
+	UPDATE MEMBER
+	SET MEM_MIL = MEM_MIL + #{milEarn, jdbcType=NUMERIC} - #{milUse, jdbcType=NUMERIC}
+	WHERE MEM_ID = #{memId, jdbcType=VARCHAR}
+	AND MEM_ROLE = 'USER'
+</update>
+
+
+
+</mapper>
+

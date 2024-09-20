@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.party.dao.PartyserviceMapper">
+
+	<resultMap type="PartyserviceVO" id="partyMap" autoMapping="true">
+		<association property="member" javaType="MemberVO"
+			autoMapping="true" />
+		<association property="total" javaType="TotalRevDefaultVO"
+			autoMapping="true" />
+	</resultMap>
+
+<select id="PartyserviceList" resultMap="partyMap">
+	SELECT D.*
+	  FROM(
+    	SELECT
+        	A.PARTY_NO
+        	, A.VENUE_NO
+	        , A.PARTY_NAME
+	        , A.PARTY_START
+	        , A.PARTY_END
+	        , A.PARTY_REQUEST
+	        , A.PARTY_PLATFORM
+	        , A.PARTY_PAYOPT
+	        , A.PARTY_REVST
+	        , A.PARTY_PERCENT
+	        , B.TREV_ID
+	        , B.TREV_ADULT
+	        , B.TREV_CHILD
+	        , C.MEM_NAME
+	        , C.MEM_TEL
+	        , ROWNUM RNUM
+		FROM PARTY_SERVICE A
+			JOIN TOTAL_REV B ON A.PARTY_NO = B.TREV_ID
+			JOIN MEMBER C ON B.MEM_ID = C.MEM_ID)D
+	<![CDATA[
+    WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+    ]]>
+    ORDER BY PARTY_START DESC
+</select>
+
+
+	<select id="selectTotalRecord" resultType="int" >
+		SELECT COUNT(PARTY_NO)
+		FROM PARTY_SERVICE
+		<include refid="searchFrag" />
+	</select>
+
+	<!-- 검색 조건 -->
+	<sql id="searchFrag">
+		<where>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'name'">
+						INSTR(HKP_MANAGER, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'room'">
+						INSTR(HKP_ROOM, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'content'">
+						INSTR(HKP_STATUS, #{simpleCondition.searchWord}) > 0
+					</when>
+
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+	<update id="updatePartyservice" parameterType="PartyserviceVO">
+
+	</update>
+
+</mapper>

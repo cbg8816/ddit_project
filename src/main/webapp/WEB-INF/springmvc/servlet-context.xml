@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	
+	<bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+		id="jackson2ObjectMapper"
+	>
+		<property name="featuresToDisable">
+			<array>
+				<util:constant static-field="com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS"/>
+			</array>
+		</property>
+	</bean>
+
+	<!-- 정적 자원 처리를 위한 설정, 정적 자원 요청을 WAS 가 가진 DefaultServlet 에게 위임 처리함. -->
+	<!-- <mvc:default-servlet-handler/> -->
+	<!-- 정적 자원을 일괄 관리할 수 있는 설정. -->
+	<mvc:resources location="/resources/" mapping="/resources/**" cache-period="0" />
+
+	<!-- HandlerMapping, HandlerAdapter, ViewResolver 를 비롯한 -->
+	<!-- spring webmvc 의 핵심 전략 객체들이 자동으로 빈 등록됨. -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
+		<context:include-filter type="annotation" 
+			expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<mvc:tiles-configurer>
+		<mvc:definitions location="/WEB-INF/tiles/*.xml"/>
+	</mvc:tiles-configurer>
+	<mvc:view-resolvers>
+		<mvc:content-negotiation>
+			<mvc:default-views>
+				<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" 
+					p:objectMapper-ref="jackson2ObjectMapper"
+				/>
+			</mvc:default-views>
+		</mvc:content-negotiation>
+		<mvc:tiles/>
+		<mvc:jsp prefix="/WEB-INF/views/" suffix=".jsp"/>
+	</mvc:view-resolvers>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.todayreport.dao.TodayReportMapper">
+
+<select id="selectTodayReportRoom" resultType="TodayReportVO">
+
+	WITH RP AS(
+	SELECT
+		    NVL(DAY_ROOM, 0) DAY_ROOM
+		    , NVL(LAST_YEAR_DAY_ROOM, 0) LAST_YEAR_DAY_ROOM
+		    , DECODE(ROUND((DAY_ROOM - LAST_YEAR_DAY_ROOM) / LAST_YEAR_DAY_ROOM * 100, 2), NULL, 'N/A'
+		        , ROUND((DAY_ROOM - LAST_YEAR_DAY_ROOM) / LAST_YEAR_DAY_ROOM * 100, 2)) DAY_RATE
+		    , NVL(MONTH_ROOM, 0) MONTH_ROOM
+		    , NVL(LAST_YEAR_MONTH_ROOM, 0) LAST_YEAR_MONTH_ROOM
+		    , DECODE(ROUND((MONTH_ROOM - LAST_YEAR_MONTH_ROOM) / LAST_YEAR_MONTH_ROOM * 100, 2), NULL, 'N/A'
+		        , ROUND((MONTH_ROOM - LAST_YEAR_MONTH_ROOM) / LAST_YEAR_MONTH_ROOM * 100, 2)) MONTH_RATE
+		    , NVL(YEAR_ROOM, 0) YEAR_ROOM
+		    , NVL(LAST_YEAR_ROOM, 0) LAST_YEAR_ROOM
+		    , DECODE(ROUND((YEAR_ROOM - LAST_YEAR_ROOM) / LAST_YEAR_ROOM * 100, 2), NULL, 'N/A'
+		        , TO_CHAR(ROUND((YEAR_ROOM - LAST_YEAR_ROOM) / LAST_YEAR_ROOM * 100, 2), 'FM99999990.00')) YEAR_RATE
+		FROM
+		    (SELECT
+		        (
+		            SELECT SUM(HTREV_TPRICE) FROM HOTEL_REV
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY-MM-DD')
+		            BETWEEN HTREV_CHKIN AND HTREV_CHKOUT
+		        ) DAY_ROOM
+		        , (
+		            SELECT SUM(HTREV_TPRICE) FROM HOTEL_REV
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY')-1 || '-' || TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'MM-DD')
+		            BETWEEN HTREV_CHKIN AND HTREV_CHKOUT
+		        ) LAST_YEAR_DAY_ROOM
+		        , (
+		            SELECT SUM(HTREV_TPRICE) FROM HOTEL_REV
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY-MM')
+		            BETWEEN TO_CHAR(TO_DATE(HTREV_CHKIN), 'YYYY-MM') AND TO_CHAR(TO_DATE(HTREV_CHKOUT), 'YYYY-MM')
+		        ) MONTH_ROOM
+		        ,(
+		            SELECT SUM(HTREV_TPRICE) FROM HOTEL_REV
+		            WHERE TO_CHAR(ADD_MONTHS(#{today, jdbcType=VARCHAR}, -1), 'YYYY-MM')
+		            BETWEEN TO_CHAR(TO_DATE(HTREV_CHKIN), 'YYYY-MM') AND TO_CHAR(TO_DATE(HTREV_CHKOUT), 'YYYY-MM')
+		        ) LAST_YEAR_MONTH_ROOM
+		        , (
+		            SELECT SUM(HTREV_TPRICE) FROM HOTEL_REV
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY')
+		            BETWEEN TO_CHAR(TO_DATE(HTREV_CHKIN), 'YYYY') AND TO_CHAR(TO_DATE(HTREV_CHKOUT), 'YYYY')
+		        ) YEAR_ROOM
+		        ,(
+		            SELECT SUM(HTREV_TPRICE) FROM HOTEL_REV
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY')-1
+		            BETWEEN TO_CHAR(TO_DATE(HTREV_CHKIN), 'YYYY') AND TO_CHAR(TO_DATE(HTREV_CHKOUT), 'YYYY')
+		        ) LAST_YEAR_ROOM
+		    FROM DUAL
+		) INDATA
+	), EP AS(
+	    SELECT
+		    NVL(DAY_EXT, 0) DAY_EXT
+		    , NVL(LAST_YEAR_DAY_EXT, 0) LAST_YEAR_DAY_EXT
+		    , DECODE(ROUND((DAY_EXT - LAST_YEAR_DAY_EXT) / LAST_YEAR_DAY_EXT * 100, 2), NULL, 'N/A'
+		        , ROUND((DAY_EXT - LAST_YEAR_DAY_EXT) / LAST_YEAR_DAY_EXT * 100, 2)) DAY_EXT_RATE
+		    , NVL(MONTH_EXT, 0) MONTH_EXT
+		    , NVL(LAST_YEAR_MONTH_EXT, 0) LAST_YEAR_MONTH_EXT
+		    , DECODE(ROUND((MONTH_EXT - LAST_YEAR_MONTH_EXT) / LAST_YEAR_MONTH_EXT * 100, 2), NULL, 'N/A'
+		        , ROUND((MONTH_EXT - LAST_YEAR_MONTH_EXT) / LAST_YEAR_MONTH_EXT * 100, 2)) MONTH_EXT_RATE
+		    , NVL(YEAR_EXT, 0) YEAR_EXT
+		    , NVL(LAST_YEAR_EXT, 0) LAST_YEAR_EXT
+		    , DECODE(ROUND((YEAR_EXT - LAST_YEAR_EXT) / LAST_YEAR_EXT * 100, 2), NULL, 'N/A'
+		        , ROUND((YEAR_EXT - LAST_YEAR_EXT) / LAST_YEAR_EXT * 100, 2)) YEAR_EXT_RATE
+		FROM
+		    (SELECT
+		        (
+		            SELECT SUM(EXTCRG_PRICE) FROM EXTRACHARGES
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY-MM-DD') = EXTCRG_DATE
+		        ) DAY_EXT
+		        , (
+		            SELECT SUM(EXTCRG_PRICE) FROM EXTRACHARGES
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY')-1 || '-' || TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'MM-DD') = EXTCRG_DATE
+		        ) LAST_YEAR_DAY_EXT
+		        ,(
+		            SELECT SUM(EXTCRG_PRICE) FROM EXTRACHARGES
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY-MM') = TO_CHAR(EXTCRG_DATE, 'YYYY-MM')
+		        ) MONTH_EXT
+		        ,(
+		            SELECT SUM(EXTCRG_PRICE) FROM EXTRACHARGES
+		            WHERE TO_CHAR(ADD_MONTHS(#{today, jdbcType=VARCHAR}, -1), 'YYYY-MM') || '-' || TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'DD') = EXTCRG_DATE
+		        ) LAST_YEAR_MONTH_EXT
+		        ,(
+		            SELECT SUM(EXTCRG_PRICE) FROM EXTRACHARGES
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY') = TO_CHAR(EXTCRG_DATE, 'YYYY')
+		        ) YEAR_EXT
+		        ,(
+		            SELECT SUM(EXTCRG_PRICE) FROM EXTRACHARGES
+		            WHERE TO_CHAR(TO_DATE(#{today, jdbcType=VARCHAR}), 'YYYY')-1 = TO_CHAR(EXTCRG_DATE, 'YYYY')
+		        ) LAST_YEAR_EXT
+		    FROM DUAL
+		)
+	), TA AS(
+	    SELECT
+	        RP.DAY_ROOM
+	        , RP.DAY_ROOM + EP.DAY_EXT AS DAY_SUM
+	        , RP.LAST_YEAR_DAY_ROOM
+	        , RP.LAST_YEAR_DAY_ROOM + EP.LAST_YEAR_DAY_EXT AS LAST_DAY_SUM
+	        , RP.MONTH_ROOM + EP.MONTH_EXT AS MONTH_SUM
+	        , RP.MONTH_ROOM
+	        , RP.LAST_YEAR_MONTH_ROOM + EP.LAST_YEAR_MONTH_EXT AS LAST_MONTH_SUM
+	        , RP.LAST_YEAR_MONTH_ROOM
+	        , RP.YEAR_ROOM + EP.YEAR_EXT AS YEAR_SUM
+	        , RP.YEAR_ROOM
+	        , RP.LAST_YEAR_ROOM + EP.LAST_YEAR_EXT AS LAST_YEAR_SUM
+	        , RP.LAST_YEAR_ROOM
+	    FROM RP, EP
+	)
+	SELECT
+	    TA.*
+	    , DECODE(ROUND((DAY_ROOM - LAST_YEAR_DAY_ROOM) / LAST_YEAR_DAY_ROOM * 100, 2), NULL, 'N/A'
+		        , ROUND((DAY_ROOM - LAST_YEAR_DAY_ROOM) / LAST_YEAR_DAY_ROOM * 100, 2)) DAY_RATE
+	    , DECODE(ROUND((MONTH_ROOM - LAST_YEAR_MONTH_ROOM) / LAST_YEAR_MONTH_ROOM * 100, 2), NULL, 'N/A'
+		        , ROUND((MONTH_ROOM - LAST_YEAR_MONTH_ROOM) / LAST_YEAR_MONTH_ROOM * 100, 2)) MONTH_RATE
+	    , DECODE(ROUND((YEAR_ROOM - LAST_YEAR_ROOM) / LAST_YEAR_ROOM * 100, 2), NULL, 'N/A'
+		        , TO_CHAR(ROUND((YEAR_ROOM - LAST_YEAR_ROOM) / LAST_YEAR_ROOM * 100, 2), 'FM99999990.00')) YEAR_RATE
+
+	    , DECODE(ROUND((DAY_SUM - LAST_DAY_SUM) / LAST_DAY_SUM * 100, 2), NULL, 'N/A'
+		        , ROUND((DAY_SUM - LAST_DAY_SUM) / LAST_DAY_SUM * 100, 2)) DAY_EXT_RATE
+	    , DECODE(ROUND((MONTH_SUM - LAST_MONTH_SUM) / LAST_MONTH_SUM * 100, 2), NULL, 'N/A'
+		        , ROUND((MONTH_SUM - LAST_MONTH_SUM) / LAST_MONTH_SUM * 100, 2)) MONTH_EXT_RATE
+	    , DECODE(ROUND((YEAR_SUM - LAST_YEAR_SUM) / LAST_YEAR_SUM * 100, 2), NULL, 'N/A'
+		        , TO_CHAR(ROUND((YEAR_SUM - LAST_YEAR_SUM) / LAST_YEAR_SUM * 100, 2), 'FM99999990.00')) YEAR_EXT_RATE
+	FROM
+	    TA
+
+</select>
+
+<select id="selectTodayReportTotalPay" resultType="TodayReportPaymentVO">
+	SELECT
+	    NVL((
+	        SELECT SUM(PAY_TPRICE) FROM PAY
+	        WHERE #{today, jdbcType=VARCHAR} = TO_CHAR(PAY_DATE, 'YYYY-MM-DD')
+	    ),0) TOTAL_PAY
+	    , NVL((
+	        SELECT SUM(MIL_USE) FROM MILEAGE
+	        WHERE #{today, jdbcType=VARCHAR} = TO_CHAR(MIL_REGDATE, 'YYYY-MM-DD')
+	    ),0) DISCOUNT
+	    , NVL((
+	        SELECT SUM(PAY_TPRICE) FROM PAY
+	        WHERE #{today, jdbcType=VARCHAR} = TO_CHAR(PAY_DATE, 'YYYY-MM-DD')
+	        AND PAY_ST = 3
+	    ),0) RECEIVABLES
+	    , NVL((
+	        SELECT SUM(PAY_TPRICE) FROM PAY
+	        WHERE PAY_PAYOPT IN ('CASH')
+	        AND #{today, jdbcType=VARCHAR} = TO_CHAR(PAY_DATE, 'YYYY-MM-DD')
+	    ),0) PAY_CASH
+	    , NVL((
+	        SELECT SUM(PAY_TPRICE) FROM PAY
+	        WHERE PAY_PAYOPT IN ('CARD')
+	        AND #{today, jdbcType=VARCHAR} = TO_CHAR(PAY_DATE, 'YYYY-MM-DD')
+	    ),0) PAY_CARD
+	    , NVL((
+	        SELECT SUM(PAY_TPRICE) FROM PAY
+	        WHERE PAY_PAYOPT IN ('KAKAOPAY', 'TOSSPAY', 'PAYKO', 'NAVERPAY', 'MOBILE_PHONE')
+	        AND #{today, jdbcType=VARCHAR} = TO_CHAR(PAY_DATE, 'YYYY-MM-DD')
+	    ),0) PAY_EASYPAYMENT
+	    , NVL((
+	        SELECT SUM(PAY_TPRICE) FROM PAY
+	        WHERE PAY_PAYOPT IN ('VIRTUAL_ACCOUNT', 'TRANSFER')
+	        AND #{today, jdbcType=VARCHAR} = TO_CHAR(PAY_DATE, 'YYYY-MM-DD')
+	    ),0) PAY_INTERNET
+	    , NVL((
+	        SELECT SUM(PAY_TPRICE-PAY_DEPOSIT)
+	        FROM PAY
+	        WHERE PAY_ST = 3
+	        AND #{today, jdbcType=VARCHAR} = TO_CHAR(PAY_DATE, 'YYYY-MM-DD')
+	    ),0) PAY_LATER
+	FROM DUAL
+</select>
+
+
+<resultMap type="ExtraChargeSumVO" id="extChareMap" autoMapping="true"></resultMap>
+
+<select id="selectTodayReportExtraCharge" resultMap="extChareMap">
+
+	SELECT
+	    DECODE(ET.ET_NM, NULL, '합계', ET.ET_NM) ET_NM
+	    , SUM(ET_PRICE) SUM_EXT_PRICE
+	    , COUNT(ET_PRICE) COUNT_EXT_PRICE
+	FROM EXTRACHARGES EX
+	INNER JOIN EXTCRG_TYPE ET ON EX.ET_ID = ET.ET_ID
+	WHERE TO_CHAR(EXTCRG_DATE, 'YYYY-MM-DD') = #{today, jdbcType=VARCHAR}
+	GROUP BY ROLLUP(ET_NM)
+
+</select>
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.AtchFileDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.AtchFileDefaultVO">
+    <id column="ATCH_FILE_ID" jdbcType="VARCHAR" property="atchFileId" />
+    <result column="ATCH_FILE_YN" jdbcType="VARCHAR" property="atchFileYn" />
+    <result column="ATCH_FILE_REG" jdbcType="TIMESTAMP" property="atchFileReg" />
+    <result column="ATCH_FILE_WRI" jdbcType="VARCHAR" property="atchFileWri" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ATCH_FILE
+    where ATCH_FILE_ID = #{atchFileId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.AtchFileDefaultVO">
+    insert into ATCH_FILE (ATCH_FILE_ID, ATCH_FILE_YN, ATCH_FILE_REG, 
+      ATCH_FILE_WRI)
+    values (#{atchFileId,jdbcType=VARCHAR}, #{atchFileYn,jdbcType=VARCHAR}, #{atchFileReg,jdbcType=TIMESTAMP}, 
+      #{atchFileWri,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.AtchFileDefaultVO">
+    update ATCH_FILE
+    set ATCH_FILE_YN = #{atchFileYn,jdbcType=VARCHAR},
+      ATCH_FILE_REG = #{atchFileReg,jdbcType=TIMESTAMP},
+      ATCH_FILE_WRI = #{atchFileWri,jdbcType=VARCHAR}
+    where ATCH_FILE_ID = #{atchFileId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ATCH_FILE_ID, ATCH_FILE_YN, ATCH_FILE_REG, ATCH_FILE_WRI
+    from ATCH_FILE
+    where ATCH_FILE_ID = #{atchFileId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ATCH_FILE_ID, ATCH_FILE_YN, ATCH_FILE_REG, ATCH_FILE_WRI
+    from ATCH_FILE
+  </select>
+</mapper>

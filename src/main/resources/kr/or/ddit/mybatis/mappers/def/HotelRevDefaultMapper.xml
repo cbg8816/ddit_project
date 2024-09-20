@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.HotelRevDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.HotelRevDefaultVO">
+    <id column="HTREV_ID" jdbcType="VARCHAR" property="htrevId" />
+    <result column="HTREV_CN" jdbcType="VARCHAR" property="htrevCn" />
+    <result column="HTREV_CHKIN" jdbcType="VARCHAR" property="htrevChkin" />
+    <result column="HTREV_CHKOUT" jdbcType="VARCHAR" property="htrevChkout" />
+    <result column="HTREV_STAY" jdbcType="NUMERIC" property="htrevStay" />
+    <result column="HTREV_PLATFORM" jdbcType="VARCHAR" property="htrevPlatform" />
+    <result column="HTREV_ST" jdbcType="VARCHAR" property="htrevSt" />
+    <result column="HTREV_PAKYN" jdbcType="VARCHAR" property="htrevPakyn" />
+    <result column="HTREV_TPRICE" jdbcType="NUMERIC" property="htrevTprice" />
+    <result column="HTREV_SLOT" jdbcType="VARCHAR" property="htrevSlot" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from HOTEL_REV
+    where HTREV_ID = #{htrevId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.HotelRevDefaultVO">
+    insert into HOTEL_REV (HTREV_ID, HTREV_CN, HTREV_CHKIN, 
+      HTREV_CHKOUT, HTREV_STAY, HTREV_PLATFORM, 
+      HTREV_ST, HTREV_PAKYN, HTREV_TPRICE, 
+      HTREV_SLOT)
+    values (#{htrevId,jdbcType=VARCHAR}, #{htrevCn,jdbcType=VARCHAR}, #{htrevChkin,jdbcType=VARCHAR}, 
+      #{htrevChkout,jdbcType=VARCHAR}, #{htrevStay,jdbcType=NUMERIC}, #{htrevPlatform,jdbcType=VARCHAR}, 
+      #{htrevSt,jdbcType=VARCHAR}, #{htrevPakyn,jdbcType=VARCHAR}, #{htrevTprice,jdbcType=NUMERIC}, 
+      #{htrevSlot,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.HotelRevDefaultVO">
+    update HOTEL_REV
+    set HTREV_CN = #{htrevCn,jdbcType=VARCHAR},
+      HTREV_CHKIN = #{htrevChkin,jdbcType=VARCHAR},
+      HTREV_CHKOUT = #{htrevChkout,jdbcType=VARCHAR},
+      HTREV_STAY = #{htrevStay,jdbcType=NUMERIC},
+      HTREV_PLATFORM = #{htrevPlatform,jdbcType=VARCHAR},
+      HTREV_ST = #{htrevSt,jdbcType=VARCHAR},
+      HTREV_PAKYN = #{htrevPakyn,jdbcType=VARCHAR},
+      HTREV_TPRICE = #{htrevTprice,jdbcType=NUMERIC},
+      HTREV_SLOT = #{htrevSlot,jdbcType=VARCHAR}
+    where HTREV_ID = #{htrevId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select HTREV_ID, HTREV_CN, HTREV_CHKIN, HTREV_CHKOUT, HTREV_STAY, HTREV_PLATFORM, 
+    HTREV_ST, HTREV_PAKYN, HTREV_TPRICE, HTREV_SLOT
+    from HOTEL_REV
+    where HTREV_ID = #{htrevId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select HTREV_ID, HTREV_CN, HTREV_CHKIN, HTREV_CHKOUT, HTREV_STAY, HTREV_PLATFORM, 
+    HTREV_ST, HTREV_PAKYN, HTREV_TPRICE, HTREV_SLOT
+    from HOTEL_REV
+  </select>
+</mapper>

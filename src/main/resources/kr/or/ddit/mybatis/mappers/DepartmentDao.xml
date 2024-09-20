@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.department.dao.DepartmentMapper">
+	<select id="selectDepartmentList" resultType="DepartmentVO">
+		SELECT
+			DEP_ID
+			,DEP_NM
+		FROM DEPARTMENT
+	</select>
+
+<!-- 	<select id="selectDepartment" resultType="DepartmentVO"> -->
+<!-- 		SELECT -->
+<!-- 		     EMP.EMP_ID "emp.empId" -->
+<!-- 		    ,EMP.EMP_NAME "emp.empName" -->
+<!-- 		    , DEPARTMENT.DEP_ID "department.depId" -->
+<!-- 		    , DEPARTMENT.DEP_NM "department.depNm" -->
+<!--             , POSITION.POSI_ID "position.posiId" -->
+<!--             , POSI_NM "position.posiNm" -->
+<!-- 		FROM DEPARTMENT INNER JOIN EMP ON(DEPARTMENT.DEP_ID = EMP.DEP_ID) -->
+<!--             			INNER JOIN POSITION ON(EMP.POSI_ID = POSITION.POSI_ID) -->
+<!-- 		WHERE DEPARTMENT.DEP_ID = #{depId,jdbcType=VARCHAR} -->
+<!-- 	</select> -->
+</mapper>

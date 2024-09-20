@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/font.css" rel="stylesheet" />
+    <link href="css/commmon.css" rel="stylesheet" />
+    <link href="css/stay.css" rel="stylesheet" />
+    <link href="css/icon.css" rel="stylesheet" />
+    <link href="css/video.css" rel="stylesheet" />
+    <link href="css/color.css" rel="stylesheet" />
+    <link href="css/custom.css" rel="stylesheet" />
+    <link href="css/stayani.css" rel="stylesheet" />
+    <link href="css/play.css" rel="stylesheet" />
+    <!-- <link href="css/bootstrap.css" rel="stylesheet" /> -->
+    <link href="test/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/swiper.css" rel="stylesheet" />
+
+    <script src="js/scroll.js"></script>
+     
+    <!-- google icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined|Material+Icons+Round" rel="stylesheet">
+    <!-- swiper cdn css -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css?ver=1721785912">
+    <!-- swiper cdn js -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <!-- jquery cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- <script src="http://lunarhill.co.kr/data/cache/js_wowmin1680496784.js?ver=1721888501"></script> -->
+</head>
+
+<body>
+    <div class="spinner-wrapper">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+    <header>
+        <div id="hd">
+            <h1 id="hd_h1">루나힐풀빌라</h1>
+            <div id="skip_to_container"><a href="#container">본문 바로가기</a></div>
+
+            <div id="hd_wrapper">
+                <div id="logo">
+                    <a href="stay.html">
+                        <img src="http://nstayimg7.speedgabia.com/lunarhill2/common/logo.png" alt="루나힐풀빌라">
+                    </a>
+                </div>
+                <div id="hd_btn">
+                    <a href="login.html" id="btn_resv">실시간예약</a>
+                    <button type="button" id="gnb_menu_btn" title="전체메뉴">
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                        <span class="sound_only">전체메뉴열기</span>
+                    </button>
+                </div>
+            </div>
+            <nav id="gnb">
+                <h2>메인메뉴</h2>
+                <div class="gnb_wrap">
+                    <ul id="gnb_1dul">
+                        <li class="gnb_btn">
+                            <img src="http://nstayimg7.speedgabia.com/lunarhill2/common/logo.png" alt="루나힐풀빌라">
+                            <button type="button" id="gnb_close_btn">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                                <span class="sound_only">메뉴닫기</span>
+                            </button>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="prolog.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">프롤로그</span>
+                                    <span class="flip-txt">prolog</span>
+                                </div>
+                                <div class="gnb_txt">프롤로그</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="#" class="gnb_2da"
+                                            data-text="프롤로그">프롤로그</a></li>
+                                    <li class="gnb_2dli"><a href="#"
+                                            class="gnb_2da" data-text="오시는길">오시는길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="room.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">객실안내</span>
+                                    <span class="flip-txt">Room Info</span>
+                                </div>
+                                <div class="gnb_txt">객실안내</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li><a></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="joy.html" class="gnb_1da h_facil">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">즐길거리</span>
+                                    <span class="flip-txt">Special</span>
+                                </div>
+                                <div class="gnb_txt">즐길거리</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li><a></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="tour.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">여행지</span>
+                                    <span class="flip-txt">Tour</span>
+                                </div>
+                                <div class="gnb_txt">여행지</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="tour.html" class="gnb_2da" data-text="여행지">여행지</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="reservation.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">예약안내</span>
+                                    <span class="flip-txt">Reservation</span>
+                                </div>
+                                <div class="gnb_txt">예약안내</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="#" class="gnb_2da" data-text="예약안내">예약안내</a></li>
+                                    <li class="gnb_2dli"><a href="#" target="_reser" class="gnb_2da" data-text="실시간안내">실시간안내</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <script>
+                $(function () {
+                    $(window).scroll(function () {
+                        if ($(this).scrollTop() > 0) {
+                            $("#hd").addClass("sticky");
+                        } else {
+                            $("#hd").removeClass("sticky");
+                        }
+                    });
+
+                    var $gnb = $(".gnb_1dli > a");
+                    $gnb.mouseover(function () {
+                        $("#hd").addClass("hd_over");
+                        $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                        $(this).parent().addClass("gnb_1dli_over gnb_1dli_on");
+                    });
+
+                    $gnb.bind("click", function (e) {
+                        if ($("#gnb .gnb_wrap").hasClass("active")) {
+                            var $li = $(this).closest(".gnb_1dli");
+
+                            if ($li.hasClass("gnb_1dli_over") && $li.find(".gnb_2dul").is(":visible"))
+                                $li.removeClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideUp();
+                            else if (!$li.find(".gnb_2dul").is(":visible")) {
+                                $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideUp();
+                                $li.addClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideDown();
+                            }
+                            return false;
+                        }
+                    });
+
+                    $('#gnb_1dul>li').bind('mouseleave', function () {
+                        submenu_hide();
+                    });
+
+                    $(".gnb_2dli > a").mouseover(function () {
+                        $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                        $(this).closest(".gnb_1dli").addClass("gnb_1dli_over gnb_1dli_on");
+                    });
+
+                    $('.gnb_2dli').bind('mouseleave', function () {
+                        submenu_hide();
+                    });
+
+                    $('#hd').bind('mouseleave', function () {
+                        $(this).removeClass("hd_over");
+                    });
+
+                    $("#gnb_menu_btn").click(function () {
+                        $("#gnb").addClass("gnb_open");
+                        setTimeout(function () {
+                            $("#gnb .gnb_wrap").addClass("active");
+                        }, 1);
+                    });
+
+                    $("#gnb_close_btn").click(function () {
+                        $("#gnb .gnb_wrap").removeClass("active");
+                        setTimeout(function () {
+                            $("#gnb").removeClass("gnb_open");
+                        }, 300);
+                    });
+                });
+
+                function submenu_hide() {
+                    $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                }
+            </script>
+        </div>
+        <script>
+            $(function () {
+                $(".hd_pops_reject").click(function () {
+                    var id = $(this).attr('class').split(' ');
+                    var ck_name = id[1];
+                    var exp_time = parseInt(id[2]);
+                    $("#" + id[1]).css("display", "none");
+                    set_cookie(ck_name, 1, exp_time, g5_cookie_domain);
+                });
+
+                $('.hd_pops_close').click(function () {
+                    var idb = $(this).attr('class').split(' ');
+                    $('#' + idb[1]).css('display', 'none');
+                });
+            });
+        </script>
+    </header>
+
+    <section>
+
+        <div class="svisual room">
+            ROOM GUIDE<br>
+            <b>객실 안내</b>
+        </div>
+
+        <div id="room">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class="page-title">객실 안내</h3>
+                        <div class="room-intro-guide">
+                            <div class="room-intro">
+                                <div class="room-image wow slideRight">
+                                    <img src="image/room1_ex.jpg" alt="room1" />
+                                </div>
+                                <div class="room-description wow slideLeft">
+                                    <p class="room-des-title">스위트 룸</p>
+                                    <p class="room-des-des">테라스의 탁트인 전경과 모던한 감각의 객실 인테리어가 조화를 이루는 그랜드 프리미어 디럭스 테라스</p>
+                                    <div class="room-in">
+                                        <p>면적 : 33m²</p>
+                                        <p>인원 : 2명</p>
+                                        <p>베드 타입 : KING/KING</p>
+                                    </div>
+                                    <a href="#" class="room-more">상세보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            new WOW().init();
+        </script>
+
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-logo">
+                        <img src="image/footer-logo.jpg" alt="footerLogo" />
+                    </div>
+                    <div class="company">
+                        <div id="information">
+                            <p class="footer-title">INFORMATION</p>
+                            <div class="footer-content">
+                                <div>
+                                    <p>업체이름</p>
+                                    <span class="line-before"></span>
+                                    <p>애메레이트 호텔</p>
+                                </div>
+                                <div>
+                                    <p>대표자</p>
+                                    <span class="line-before"></span>
+                                    <p>대표자</p>
+                                </div>
+                                <div>
+                                    <p>사업자 등록 번호</p>
+                                    <span class="line-before"></span>
+                                    123-12-12345
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tel">
+                            <p class="footer-title">TEL</p>
+                            <div class="footer-content">
+                                <div>
+                                    <p>사업장 전화번호</p>
+                                    <span class="line-before"></span>
+                                    <p>042-123-1234</p>
+                                </div>
+                                <div>
+                                    <p>전화가능 시간</p>
+                                    <span class="line-before"></span>
+                                    <p>09:00 ~ 18:00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="reservation">
+                            <p class="footer-title">RESERVATION</p>
+                            <div class="footer-content">
+                                <a href="#" class="footer-res">예약 바로가기</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copyright">
+                        <p>COPYRIGHT&copy;Emirate hotel. ALL RIGHTS RESERVE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <!-- <script src="js/bootstrap.min.js"></script> -->
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/jquery.magnific-popup.js"></script>
+    <script src="js/validator.min.js"></script>
+    <script src="js/scripts.js"></script>
+
+    <script src="test/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.CodetypeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.CodetypeDefaultVO">
+    <id column="CDTYPE_ID" jdbcType="VARCHAR" property="cdtypeId" />
+    <result column="CDTYPE_KNM" jdbcType="VARCHAR" property="cdtypeKnm" />
+    <result column="CDTYPE_ENM" jdbcType="VARCHAR" property="cdtypeEnm" />
+    <result column="CDTYPE_RES_DATE" jdbcType="VARCHAR" property="cdtypeResDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CODETYPE
+    where CDTYPE_ID = #{cdtypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.CodetypeDefaultVO">
+    insert into CODETYPE (CDTYPE_ID, CDTYPE_KNM, CDTYPE_ENM, 
+      CDTYPE_RES_DATE)
+    values (#{cdtypeId,jdbcType=VARCHAR}, #{cdtypeKnm,jdbcType=VARCHAR}, #{cdtypeEnm,jdbcType=VARCHAR}, 
+      #{cdtypeResDate,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.CodetypeDefaultVO">
+    update CODETYPE
+    set CDTYPE_KNM = #{cdtypeKnm,jdbcType=VARCHAR},
+      CDTYPE_ENM = #{cdtypeEnm,jdbcType=VARCHAR},
+      CDTYPE_RES_DATE = #{cdtypeResDate,jdbcType=VARCHAR}
+    where CDTYPE_ID = #{cdtypeId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select CDTYPE_ID, CDTYPE_KNM, CDTYPE_ENM, CDTYPE_RES_DATE
+    from CODETYPE
+    where CDTYPE_ID = #{cdtypeId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CDTYPE_ID, CDTYPE_KNM, CDTYPE_ENM, CDTYPE_RES_DATE
+    from CODETYPE
+  </select>
+</mapper>

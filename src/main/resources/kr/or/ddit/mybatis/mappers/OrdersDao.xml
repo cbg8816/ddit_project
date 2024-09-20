@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.orders.dao.OrdersMapper">
+
+	<resultMap type="OrdersVO" id="ordersMap" autoMapping="true">
+		<association property="lprod" javaType="LprodVO"
+			autoMapping="true" />
+		<association property="prod" javaType="prodVO"
+			autoMapping="true" />
+		<association property="buyer" javaType="buyerVO"
+			autoMapping="true" />
+		<association property="orderApply" javaType="OrdersApplyVO"
+			autoMapping="true" />
+	</resultMap>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		DELETE FROM ORDERS
+		WHERE ORDER_TURN = (
+   		 SELECT ORDER_APPLY_TURN 
+    		FROM ORDERS_APPLY 
+   		 WHERE ORDER_APPLY_NO = #{orderApplyNo}
+		)
+	</delete>
+	<insert id="insert" parameterType="OrdersVO">
+		<selectKey order="BEFORE" resultType="string"
+			keyProperty="orderTurn">
+			SELECT 'O' || TO_CHAR(
+			NVL(MAX(TO_NUMBER(SUBSTR(ORDER_TURN, 2))), 0) + 1,  'FM000'
+			) AS NEXT_ORDER_TURN
+			FROM ORDERS
+		</selectKey>
+		INSERT INTO ORDERS(
+		ORDER_DATE
+		, ORDER_STATE
+		, ORDER_PAYMENTSTATE
+		, ORDER_QTY
+		, ORDER_PRICE
+		, ORDER_LGU
+		, ORDER_ID
+		, ORDER_TURN
+		, ORDER_BUYER
+		, ORDER_TOTAL
+		)VALUES(
+		#{orderDate}
+		, #{orderState}
+		, #{orderPaymentstate}
+		, #{orderQty}
+		, #{orderPrice}
+		, #{orderLgu}
+		, #{orderId}
+		, #{orderTurn}
+		, #{orderBuyer}
+		, #{orderTotal}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="OrdersVO">
+		UPDATE ORDERS
+		SET ORDER_STATE = #{param1}
+		WHERE ORDER_TURN IN (
+   	 	SELECT ORDER_TURN
+   		 FROM ORDERS 
+   		 INNER JOIN ORDERS_APPLY  ON (ORDER_TURN = ORDER_APPLY_TURN)
+	    WHERE ORDER_APPLY_NO = #{param2}
+		)
+	</update>
+	<select id="selectByPrimaryKey" parameterType="OrdersVO"
+		resultMap="ordersMap">
+		SELECT
+		ORDERS.*
+		, LPROD_ID, LPROD_GU, LPROD_NM
+		, PROD.*
+		, BUYER.*
+		, ORDERS_APPLY.*
+		FROM ORDERS INNER JOIN LPROD ON (ORDER_LGU = LPROD_GU)
+		INNER JOIN PROD ON (ORDER_ID = PROD_ID)
+		INNER JOIN BUYER ON (ORDER_BUYER = BUYER_ID)
+		INNER JOIN ORDERS_APPLY ON (ORDER_TURN = ORDER_APPLY_TURN)
+		where ORDER_APPLY_NO = #{orderTurn}
+	</select>
+	<select id="selectAll" resultMap="ordersMap">
+		SELECT B.*
+		FROM (
+		SELECT A.*, ROWNUM RNUM
+		FROM (
+		SELECT
+		ORDER_DATE
+		, ORDER_STATE
+		, ORDER_PAYMENTSTATE
+		, ORDER_QTY
+		, ORDER_PRICE
+		, ORDER_LGU
+		, ORDER_ID
+		, ORDER_TURN
+		, ORDER_BUYER
+		, ORDER_TOTAL
+		, LPROD_NM 
+		, BUYER_NAME 
+		, PROD.*
+		, (
+		SELECT COUNT(ORDER_TURN) FROM ORDERS
+		WHERE ORDER_BUYER = BUYER_ID
+		AND ORDER_ID = PROD_ID
+		AND ORDER_LGU = LPROD_GU
+		) ORDER_COUNT
+		FROM ORDERS
+		INNER JOIN PROD ON (ORDER_ID = PROD_ID)
+		INNER JOIN BUYER ON (ORDER_BUYER =BUYER_ID)
+		INNER JOIN LPROD ON (ORDER_LGU =LPROD_GU)
+		) A
+		) B
+		WHERE RNUM BETWEEN
+		#{firstRecord} AND #{lastRecord}
+	</select>
+	
+	
+	<sql id="searchFrag">
+		FROM ORDERS
+		INNER JOIN PROD ON (ORDER_ID = PROD_ID)
+		INNER JOIN BUYER ON (ORDER_BUYER =BUYER_ID)
+		INNER JOIN LPROD ON (ORDER_LGU =LPROD_GU)
+		<trim prefix=" WHERE ">
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'name'">
+						INSTR(BUYER_NAME, #{simpleCondition.searchWord}) >
+						0
+					</when>
+					<when test="simpleCondition.searchType eq 'address'">
+						INSTR(BUYER_ADD1, #{simpleCondition.searchWord}) >
+						0
+					</when>
+					<otherwise>
+						INSTR(BUYER_NAME, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(BUYER_ADD1, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</trim>
+	</sql>
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM ORDERS INNER JOIN PROD ON (ORDER_ID = PROD_ID)
+		INNER JOIN BUYER ON (ORDER_BUYER =BUYER_ID)
+		INNER JOIN LPROD ON (ORDER_LGU =LPROD_GU)
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.EventDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.EventDefaultVO">
+    <id column="EVENT_ID" jdbcType="VARCHAR" property="eventId" />
+    <result column="EVENT_NAME" jdbcType="VARCHAR" property="eventName" />
+    <result column="EVENT_PERIOD" jdbcType="TIMESTAMP" property="eventPeriod" />
+    <result column="EVENT_CONTENT" jdbcType="CLOB" property="eventContent" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from EVENT
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.EventDefaultVO">
+    insert into EVENT (EVENT_ID, EVENT_NAME, EVENT_PERIOD, 
+      EVENT_CONTENT)
+    values (#{eventId,jdbcType=VARCHAR}, #{eventName,jdbcType=VARCHAR}, #{eventPeriod,jdbcType=TIMESTAMP}, 
+      #{eventContent,jdbcType=CLOB})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.EventDefaultVO">
+    update EVENT
+    set EVENT_NAME = #{eventName,jdbcType=VARCHAR},
+      EVENT_PERIOD = #{eventPeriod,jdbcType=TIMESTAMP},
+      EVENT_CONTENT = #{eventContent,jdbcType=CLOB}
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EVENT_ID, EVENT_NAME, EVENT_PERIOD, EVENT_CONTENT
+    from EVENT
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EVENT_ID, EVENT_NAME, EVENT_PERIOD, EVENT_CONTENT
+    from EVENT
+  </select>
+</mapper>

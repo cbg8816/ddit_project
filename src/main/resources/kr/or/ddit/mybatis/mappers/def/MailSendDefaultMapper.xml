@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.MailSendDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MailSendDefaultVO">
+    <id column="MAIL_SEND_NO" jdbcType="VARCHAR" property="mailSendNo" />
+    <id column="MAIL_SENDER" jdbcType="VARCHAR" property="mailSender" />
+    <id column="MAIL_ID" jdbcType="VARCHAR" property="mailId" />
+    <result column="MAIL_SEND_DATE" jdbcType="TIMESTAMP" property="mailSendDate" />
+    <result column="MAIL_SNED_DELYN" jdbcType="VARCHAR" property="mailSnedDelyn" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from MAIL_SEND
+    where MAIL_SEND_NO = #{mailSendNo,jdbcType=VARCHAR}
+      and MAIL_SENDER = #{mailSender,jdbcType=VARCHAR}
+      and MAIL_ID = #{mailId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.MailSendDefaultVO">
+    insert into MAIL_SEND (MAIL_SEND_NO, MAIL_SENDER, MAIL_ID, 
+      MAIL_SEND_DATE, MAIL_SNED_DELYN)
+    values (#{mailSendNo,jdbcType=VARCHAR}, #{mailSender,jdbcType=VARCHAR}, #{mailId,jdbcType=VARCHAR}, 
+      #{mailSendDate,jdbcType=TIMESTAMP}, #{mailSnedDelyn,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.MailSendDefaultVO">
+    update MAIL_SEND
+    set MAIL_SEND_DATE = #{mailSendDate,jdbcType=TIMESTAMP},
+      MAIL_SNED_DELYN = #{mailSnedDelyn,jdbcType=VARCHAR}
+    where MAIL_SEND_NO = #{mailSendNo,jdbcType=VARCHAR}
+      and MAIL_SENDER = #{mailSender,jdbcType=VARCHAR}
+      and MAIL_ID = #{mailId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select MAIL_SEND_NO, MAIL_SENDER, MAIL_ID, MAIL_SEND_DATE, MAIL_SNED_DELYN
+    from MAIL_SEND
+    where MAIL_SEND_NO = #{mailSendNo,jdbcType=VARCHAR}
+      and MAIL_SENDER = #{mailSender,jdbcType=VARCHAR}
+      and MAIL_ID = #{mailId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select MAIL_SEND_NO, MAIL_SENDER, MAIL_ID, MAIL_SEND_DATE, MAIL_SNED_DELYN
+    from MAIL_SEND
+  </select>
+</mapper>

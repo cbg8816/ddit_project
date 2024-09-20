@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+.go-left{
+	text-align:left;
+}
+
+.price{
+	text-align:right;
+}
+
+.sub-title{
+	font-weight: bold;
+}

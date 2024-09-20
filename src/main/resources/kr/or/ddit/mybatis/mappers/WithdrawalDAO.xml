@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.withdrawal.dao.WithdrawalMapper">
+	
+	<resultMap type="WithdrawalVO" id="withdrawalMap" autoMapping="true">
+		<id property="withdrawalNo" column="WITHDRAWAL_NO" />
+		<association property="buyer" javaType="BuyerVO"
+			autoMapping="true" />
+		<association property="enter" javaType="EnterVO"
+			autoMapping="true" />
+			<association property="orders" javaType="OrdersVO"
+			autoMapping="true" />
+			<association property="prod" javaType="ProdVO"
+			autoMapping="true" />
+	</resultMap>
+
+	<insert id="insert" parameterType="kr.or.ddit.vo.WithdrawalVO">
+		<selectKey order="BEFORE" resultType="string"
+			keyProperty="withdrawalNo">
+			SELECT REPLACE(ENTER_TURN, 'EN', 'WD') 
+				FROM ENTER
+				WHERE ENTER_TURN = #{withdrawalEnter}
+				GROUP BY ENTER_TURN
+		</selectKey>
+		INSERT INTO WITHDRAWAL(
+		WITHDRAWAL_NO
+		, WITHDRAWAL_ENTER
+		, WITHDRAWAL_BUYER
+		, WITHDRAWAL_DATE
+		, WITHDRAWAL_BUYERNAME
+		, WITHDRAWAL_BANK
+		, WITHDRAWAL_BANKNO
+		, WITHDRAWAL_TOTAL
+		, WITHDRAWAL_SEND
+		, WITHDRAWAL_REMAIN
+		)VALUES(
+		#{withdrawalNo}
+		,#{withdrawalEnter}
+		,#{withdrawalBuyer}
+		,#{withdrawalDate}
+		,#{withdrawalBuyername}
+		,#{withdrawalBank}
+		,#{withdrawalBankno}
+		,#{withdrawalTotal}
+		,#{withdrawalSend}
+		,#{withdrawalRemain}
+		)
+	</insert>
+	
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM WITHDRAWAL
+		<include refid="searchFrag" />
+	</select>
+
+	<select id="selectwithdrawalList" resultType="WithdrawalVO">
+		SELECT B.*
+		FROM (
+		SELECT A.*, ROWNUM RNUM
+		FROM (
+		SELECT
+		WITHDRAWAL.*
+		, (
+		SELECT COUNT(WITHDRAWAL_NO) FROM WITHDRAWAL
+		) WITHDRAWL_COUNT
+        FROM WITHDRAWAL
+        INNER JOIN ENTER ON (WITHDRAWAL_ENTER = ENTER_TURN)
+        <include refid="searchFrag" />
+        AND ENTER_WITH ='출금완료'
+        ORDER BY WITHDRAWAL_DATE DESC
+		) A
+		) B
+		WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+	
+	<select id="selectRemainList" resultType="WithdrawalVO">
+		SELECT B.*
+		FROM (
+		SELECT A.*, ROWNUM RNUM
+		FROM (
+		SELECT
+		WITHDRAWAL.*
+		, (
+		SELECT COUNT(WITHDRAWAL_NO) FROM WITHDRAWAL
+		) WITHDRAWL_COUNT
+        FROM WITHDRAWAL
+        INNER JOIN ENTER ON (WITHDRAWAL_ENTER = ENTER_TURN)
+        <include refid="searchFrag" />
+        AND ENTER_WITH ='미지급'
+         ORDER BY WITHDRAWAL_DATE DESC
+		) A
+		) B
+		WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+	
+	<select id="selectWithdrawal" resultMap="withdrawalMap">
+		SELECT
+		ORDERS.*
+		, LPROD_ID, LPROD_GU, LPROD_NM
+		, PROD.*
+		, BUYER.*
+		, ORDERS_APPLY.*
+		FROM ORDERS_APPLY INNER JOIN LPROD ON (ORDER_APPLY_LGU = LPROD_GU)
+		INNER JOIN PROD ON (ORDER_APPLY_ID = PROD_ID)
+		INNER JOIN BUYER ON (ORDER_APPLY_BUYER = BUYER_ID)
+		INNER JOIN ORDERS ON (ORDER_APPLY_TURN = ORDER_TURN)
+        INNER JOIN ENTER ON (ORDER_APPLY_NO = ENTER_ORDER)
+		WHERE ENTER_TURN = #{withdrawalNo}
+	</select>
+	
+	<sql id="searchFrag">
+		<trim prefix=" WHERE ">
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'no'">
+						INSTR(WITHDRAWAL_NO, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'buyerName'">
+						INSTR(WITHDRAWAL_BUYERNAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(WITHDRAWAL_NO, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(WITHDRAWAL_BUYERNAME, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</trim>
+	</sql>
+
+</mapper>

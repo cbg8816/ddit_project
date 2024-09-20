@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.PmsMailDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.PmsMailDefaultVO">
+    <id column="MAIL_ID" jdbcType="VARCHAR" property="mailId" />
+    <result column="MAIL_TITLE" jdbcType="VARCHAR" property="mailTitle" />
+    <result column="MAIL_ATCH_FILE" jdbcType="VARCHAR" property="mailAtchFile" />
+    <result column="MAIL_CONTENT" jdbcType="CLOB" property="mailContent" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PMS_MAIL
+    where MAIL_ID = #{mailId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.PmsMailDefaultVO">
+    insert into PMS_MAIL (MAIL_ID, MAIL_TITLE, MAIL_ATCH_FILE, 
+      MAIL_CONTENT)
+    values (#{mailId,jdbcType=VARCHAR}, #{mailTitle,jdbcType=VARCHAR}, #{mailAtchFile,jdbcType=VARCHAR}, 
+      #{mailContent,jdbcType=CLOB})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.PmsMailDefaultVO">
+    update PMS_MAIL
+    set MAIL_TITLE = #{mailTitle,jdbcType=VARCHAR},
+      MAIL_ATCH_FILE = #{mailAtchFile,jdbcType=VARCHAR},
+      MAIL_CONTENT = #{mailContent,jdbcType=CLOB}
+    where MAIL_ID = #{mailId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select MAIL_ID, MAIL_TITLE, MAIL_ATCH_FILE, MAIL_CONTENT
+    from PMS_MAIL
+    where MAIL_ID = #{mailId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select MAIL_ID, MAIL_TITLE, MAIL_ATCH_FILE, MAIL_CONTENT
+    from PMS_MAIL
+  </select>
+</mapper>

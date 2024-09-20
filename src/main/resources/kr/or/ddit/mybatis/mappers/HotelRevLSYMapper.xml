@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.hotelrev.dao.HotelRevLSYMapper">
+
+<select id="selectRevDetail" parameterType="string">
+	WITH REV AS(
+	SELECT
+	    H.HTREV_ID --회원아이디
+	    , M.MEM_NAME -- 회원명
+	    , M.MEM_MIL --예약 후 마일리지
+	    , T.TREV_ADULT --성인 수
+	    , T.TREV_CHILD --아동 수
+	    , T.TREV_DATE --예약일시
+	    , T.TREV_CARNO -- 차량
+	    , H.HTREV_CHKIN --체크인
+	    , H.HTREV_CHKOUT --체크아웃
+	    , H.HTREV_TPRICE -- 총 금액
+	FROM TOTAL_REV T
+	INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+	INNER JOIN HOTEL_REV H ON T.TREV_ID = H.HTREV_ID
+	WHERE T.TREV_ID = 'QW001'
+	), ROOMS AS(
+	SELECT
+	    RR.REVROOM_ID
+	    , RR.HTREV_ID
+	    , RR.ROOM_ID
+	    , RR.ROOMTYPE_ID
+	    , RR.REVROOM_PRICE
+	    , RT.ROOMTYPE_NM
+	FROM REV_ROOM RR
+	INNER JOIN ROOM R ON RR.ROOM_ID = R.ROOM_ID
+	INNER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+	)
+	SELECT
+	    REV.*
+	    , ROOMS.*
+	FROM REV
+	INNER JOIN ROOMS ON REV.HTREV_ID = ROOMS.HTREV_ID
+</select>
+
+</mapper>

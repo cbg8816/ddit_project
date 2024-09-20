@@ -1,0 +1,559 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- date-range-picker css cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.3.0/dist/css/coreui.min.css" rel="stylesheet"
+        integrity="sha384-dw7JkvSY887ST9P6l07YXWD9wHo/t/4udcC8ZXIl0QZNeb7vum2AzYLoBF+4nT0O" crossorigin="anonymous">
+    <!-- google icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="test/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font.css" rel="stylesheet" />
+    <link href="css/commmon.css" rel="stylesheet" />
+    <link href="css/stay.css" rel="stylesheet" />
+    <link href="css/icon.css" rel="stylesheet" />
+    <link href="css/video.css" rel="stylesheet" />
+    <link href="css/color.css" rel="stylesheet" />
+    <link href="css/custom.css" rel="stylesheet" />
+    <link href="css/stayani.css" rel="stylesheet" />
+    <link href="css/play.css" rel="stylesheet" />
+    <!-- <link href="css/bootstrap.css" rel="stylesheet" /> -->
+    <link href="css/swiper.css" rel="stylesheet" />
+
+    <script src="js/scroll.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css?ver=1721785912">
+    <!-- jquery cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- bootstrap js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <!DOCTYPE html>
+    <!-- date-range-picker js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.3.0/dist/js/coreui.bundle.min.js"
+        integrity="sha384-4PYgpInDJBnJOokPuV+iHGQesWl3gGqociope/kxBvo2rVBQAdBVyU0Kr3jbeT5K"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="spinner-wrapper">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+    <header>
+        <div id="hd">
+            <h1 id="hd_h1">루나힐풀빌라</h1>
+            <div id="skip_to_container"><a href="#container">본문 바로가기</a></div>
+
+            <div id="hd_wrapper">
+                <div id="logo">
+                    <a href="stay.html">
+                        <img src="http://nstayimg7.speedgabia.com/lunarhill2/common/logo.png" alt="루나힐풀빌라">
+                    </a>
+                </div>
+                <div id="hd_btn">
+                    <a href="login.html" id="btn_resv">실시간예약</a>
+                    <button type="button" id="gnb_menu_btn" title="전체메뉴">
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                        <span class="sound_only">전체메뉴열기</span>
+                    </button>
+                </div>
+            </div>
+            <nav id="gnb">
+                <h2>메인메뉴</h2>
+                <div class="gnb_wrap">
+                    <ul id="gnb_1dul">
+                        <li class="gnb_btn">
+                            <img src="http://nstayimg7.speedgabia.com/lunarhill2/common/logo.png" alt="루나힐풀빌라">
+                            <button type="button" id="gnb_close_btn">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                                <span class="sound_only">메뉴닫기</span>
+                            </button>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="prolog.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">프롤로그</span>
+                                    <span class="flip-txt">prolog</span>
+                                </div>
+                                <div class="gnb_txt">프롤로그</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="#" class="gnb_2da" data-text="프롤로그">프롤로그</a></li>
+                                    <li class="gnb_2dli"><a href="#" class="gnb_2da" data-text="오시는길">오시는길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="room.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">객실안내</span>
+                                    <span class="flip-txt">Room Info</span>
+                                </div>
+                                <div class="gnb_txt">객실안내</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li><a></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="joy.html" class="gnb_1da h_facil">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">즐길거리</span>
+                                    <span class="flip-txt">Special</span>
+                                </div>
+                                <div class="gnb_txt">즐길거리</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li><a></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="tour.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">여행지</span>
+                                    <span class="flip-txt">Tour</span>
+                                </div>
+                                <div class="gnb_txt">여행지</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="tour.html" class="gnb_2da" data-text="여행지">여행지</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="gnb_1dli">
+                            <a href="reservation.html" class="gnb_1da">
+                                <div class="flip-wrap js-flip">
+                                    <span class="flip-txt">예약안내</span>
+                                    <span class="flip-txt">Reservation</span>
+                                </div>
+                                <div class="gnb_txt">예약안내</div>
+                            </a>
+                            <span class="bg"><i class="fa fa-angle-right pull-right"></i></span>
+                            <div class="gnb_2dul">
+                                <ul class="gnb_2dul_box">
+                                    <li class="gnb_2dli"><a href="#" class="gnb_2da" data-text="예약안내">예약안내</a></li>
+                                    <li class="gnb_2dli"><a href="#" target="_reser" class="gnb_2da"
+                                            data-text="실시간안내">실시간안내</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <script>
+                $(function () {
+                    $(window).scroll(function () {
+                        if ($(this).scrollTop() > 0) {
+                            $("#hd").addClass("sticky");
+                        } else {
+                            $("#hd").removeClass("sticky");
+                        }
+                    });
+
+                    var $gnb = $(".gnb_1dli > a");
+                    $gnb.mouseover(function () {
+                        $("#hd").addClass("hd_over");
+                        $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                        $(this).parent().addClass("gnb_1dli_over gnb_1dli_on");
+                    });
+
+                    $gnb.bind("click", function (e) {
+                        if ($("#gnb .gnb_wrap").hasClass("active")) {
+                            var $li = $(this).closest(".gnb_1dli");
+
+                            if ($li.hasClass("gnb_1dli_over") && $li.find(".gnb_2dul").is(":visible"))
+                                $li.removeClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideUp();
+                            else if (!$li.find(".gnb_2dul").is(":visible")) {
+                                $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideUp();
+                                $li.addClass("gnb_1dli_over gnb_1dli_on").find(".gnb_2dul").slideDown();
+                            }
+                            return false;
+                        }
+                    });
+
+                    $('#gnb_1dul>li').bind('mouseleave', function () {
+                        submenu_hide();
+                    });
+
+                    $(".gnb_2dli > a").mouseover(function () {
+                        $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                        $(this).closest(".gnb_1dli").addClass("gnb_1dli_over gnb_1dli_on");
+                    });
+
+                    $('.gnb_2dli').bind('mouseleave', function () {
+                        submenu_hide();
+                    });
+
+                    $('#hd').bind('mouseleave', function () {
+                        $(this).removeClass("hd_over");
+                    });
+
+                    $("#gnb_menu_btn").click(function () {
+                        $("#gnb").addClass("gnb_open");
+                        setTimeout(function () {
+                            $("#gnb .gnb_wrap").addClass("active");
+                        }, 1);
+                    });
+
+                    $("#gnb_close_btn").click(function () {
+                        $("#gnb .gnb_wrap").removeClass("active");
+                        setTimeout(function () {
+                            $("#gnb").removeClass("gnb_open");
+                        }, 300);
+                    });
+                });
+
+                function submenu_hide() {
+                    $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_on");
+                }
+            </script>
+        </div>
+        <script>
+            $(function () {
+                $(".hd_pops_reject").click(function () {
+                    var id = $(this).attr('class').split(' ');
+                    var ck_name = id[1];
+                    var exp_time = parseInt(id[2]);
+                    $("#" + id[1]).css("display", "none");
+                    set_cookie(ck_name, 1, exp_time, g5_cookie_domain);
+                });
+
+                $('.hd_pops_close').click(function () {
+                    var idb = $(this).attr('class').split(' ');
+                    $('#' + idb[1]).css('display', 'none');
+                });
+            });
+        </script>
+    </header>
+
+    <section id="reservation">
+        <div class="svisual res">
+            TOUR GUIDE<br>
+            <b>여행지 안내</b>
+        </div>
+
+
+        <div class="container res-tab">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#tab-res-1">실시간예약</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#tab-res-2">예약안내</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#tab-res-3">예약확인</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div id="tab-res-1" class="container tab-pane active"><br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-container">
+                                <h3 class="tab-content-title">RESERVATION</h3>
+                                <div class="page-progress">
+                                    <div class="progress-info">
+                                        <div class="progress-circle active">
+                                            <i class="fa-solid fa-calendar-days"></i>
+                                        </div>
+                                        <p>객실선택</p>
+                                    </div>
+                                    <div class="progress-next">
+                                        <div class="circle"></div>
+                                        <div class="circle"></div>
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="progress-info">
+                                        <div class="progress-circle">
+                                            <i class="fa-regular fa-credit-card"></i>
+                                        </div>
+                                        <p>결제</p>
+                                    </div>
+                                    <div class="progress-next">
+                                        <div class="circle"></div>
+                                        <div class="circle"></div>
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="progress-info">
+                                        <div class="progress-circle">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <p>결제완료</p>
+                                    </div>
+                                </div>
+                                <P>[체크인/체크아웃 날짜를 먼저 선택 해 주세요.]</P>
+                                <!-- 참고용 예약 폼 -->
+                                <!-- <div class="thumb tab_01">
+                                    <iframe src="https://digitalnow.co.kr/booking/stepR1/riverflows" width='100%' height='2300' frameborder=0></iframe>
+                                </div> -->
+                                <div class="res-flex">
+                                    <div class="col-lg-9">
+                                        <div data-coreui-start-date="2022/08/03" data-coreui-end-date="2022/08/17"
+                                            data-coreui-locale="en-US" data-coreui-toggle="date-range-picker">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <a href="room.html" class="res-room-btn">객실 먼저 둘러보기</a>
+                                    </div>
+                                </div>
+                                <!-- <p>날짜를 선택하면 밑에 객실 정보가 비동기로 나온다.</p> -->
+                                <div class="room-select">
+                                    <div class="room-grid">
+                                        <div class="res-room-image">
+                                            <img src="image/room1_ex.jpg" alt="room1" />
+                                        </div>
+                                        <div class="res-room-description">
+                                            <p class="room-title">room title</p>
+                                            <p class="room-des">추가설명</p>
+                                            <p class="room-price"><i class="fa-solid fa-won-sign"></i>120,000</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="payment-btn-box">
+                                    <a href="paymentDetail.html" class="payment-btn">결제</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-res-2" class="container tab-pane fade"><br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-container">
+                                <h3 class="tab-content-title">RESERVATION GUIDE</h3>
+
+                                <div class="item">
+                                    <div>이용안내</div>
+                                    <div class="resertxt">
+                                        <ul class="li-marker">
+                                            <li><b class="redtxt">입실시간 오후 15시~22시입니다.(22시 이후에 도착할 시에는 사전에 연락 주시기
+                                                    바랍니다.)</b></li>
+                                            <li><b class="redtxt">퇴실시간 오전 11시까지입니다.</b></li>
+                                            <li>객실 정리 시간이 오전 11시부터 오후 3시까지이며, 오후 3시 이전 입실은 어렵습니다.</li>
+                                            <li>예약하신 인원 외 손님초대나 방문 시에도 추가요금이 적용됩니다.</li>
+                                            <li>최대인원 초과 시 입실 및 환불이 불가합니다.</li>
+                                            <li>미성년자는 보호자 동반 없이 이용하실 수 없습니다.</li>
+                                            <li>개인의 부주의로 인한 분실 및 사고가 일어나지 않도록 주의해 주시기 바랍니다.</li>
+                                            <li>상업적인 용도로 펜션내 촬영을 삼가해 주시기 바라며, 필요시 펜션에 사전 문의 부탁드립니다.</li>
+                                            <li>안전한 휴식을 위해 객실내 불꽃, 촛불, 그릴, 숯 등의 반입을 금지합니다.</li>
+                                            <li>반려동물은 입실이 불가합니다..</li>
+                                            <li>시설물 및 비품의 외부유출을 금하며, 파손이나 분실시에는 변상하셔야 됨을 알려드립니다.</li>
+                                            <li>실내에서 육류 또는 생선류 등의 조리를 금지하며, 지정된 장소를 이용해주시기 바랍니다.</li>
+                                            <li>객실내 시설 및 집기가 훼손 또는 분실되지 않도록 이용에 주의해 주시기 바랍니다.</li>
+                                            <li>객실 내에서는 절대 금연이며, 야외 흡연구역을 이용해주시기 바랍니다.</li>
+                                            <li>시설물 이용시, 유아를 포함한 개인 안전관리에 유념해주시고 본인 부주의에 의한 안전사고는 본인에게 책임이 있음을 알려드립니다.
+                                            </li>
+                                            <li>퇴실 시 음식물을 비롯한 모든 쓰레기는 지정된 장소에 분리수거 해주시고, 사용하신 주방기구는 세척해주시기 바랍니다.</li>
+                                            <br>
+
+                                            <li class="marker-none">
+                                                <ul class="li-marker">
+                                                    <div><b class="bluetxt">[추가인원 안내]</b></div>
+                                                    <li>성인(14세 이상) : 30,000원</li>
+                                                    <li>아동(4세~13세) : 20,000원</li>
+                                                    <li>유아(4세 미만) : 10,000원</li>
+                                                    <li>24개월 미만은 무료</li>
+                                                </ul>
+                                            </li>
+
+                                            <li class="marker-none">
+                                                <ul class="li-marker">
+                                                    <div><b class="bluetxt">[수영장 이용안내]</b></div>
+                                                    <li>독채풀빌라에 한하여 개별 수영장 이용 가능</li>
+                                                    <li>입실시부터 21:00 까지 이용 가능</li>
+                                                    <li>1박당 50,000원(이용필수)</li>
+                                                    <li>현장결제</li>
+                                                </ul>
+                                            </li>
+
+                                            <li class="marker-none">
+                                                <ul class="li-marker">
+                                                    <div><b class="bluetxt">[개별바베큐 이용안내]</b></div>
+                                                    <li>전기그릴 2인 기준 30,000원(1인 추가시마다 5,000원)</li>
+                                                </ul>
+                                            </li>
+
+                                            <li class="marker-none">
+                                                <ul class="li-marker">
+                                                    <div><b class="bluetxt">[주차장 이용안내]</b></div>
+                                                    <li>독채풀빌라 : 독채 바로 옆 주차 1대 가능 그 외 추가 차량은 관리동 앞 공용주차장 사용</li>
+                                                    <li>원룸형 : 관리동 앞 공용주차장 사용</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div><b class="bluetxt">[환불규정]</b></div>
+                                    <div class="resertxt">
+                                        <ul>
+                                            <!-- <li>올바른 예약 문화를 위한 불가피한 조치입니다. 아래의 환불규정을 꼭 숙지하신 후 예약해 주시기 바랍니다.</li>
+                                            <li>보호자 동반 없는 미성년자 예약 발견 시 환불 없이 예약 취소됩니다.</li>
+                                            <li>예약의 특성상 모든 예약금 입금 후 취소시에는 날짜와 무관하게 10%의 위약금이 있습니다.</li>
+                                            <li>환불은 입금자와 동일인에게만 가능합니다.</li>
+                                            <li>예약일 변경 시 발생하는 수수료도 취소 수수료가 동일하게 적용되오니 예약 시 신중하게 생각하시고 결정해 주시기 바랍니다.</li> -->
+                                            <li class="redtxt">아래의 환불수수료 정책을 꼭 확인해 주시기 바랍니다.
+                                                <table cellspacing="0" class="reser_tableNS">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>이용일
+                                                                기준</td>
+                                                            <td>기본취소</td>
+                                                            <td>9일 전</td>
+                                                            <td>8일 전</td>
+                                                            <td>7일 전</td>
+                                                            <td>6일 전</td>
+                                                            <td>5일 전</td>
+                                                            <td>4일 전</td>
+                                                            <td>3일 전</td>
+                                                            <td>2일 전</td>
+                                                            <td>1일 전</td>
+                                                            <td>이용당일</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>환불 금액</td>
+                                                            <td>90%</td>
+                                                            <td>90%</td>
+                                                            <td>80%</td>
+                                                            <td>70%</td>
+                                                            <td>60%</td>
+                                                            <td>50%</td>
+                                                            <td>40%</td>
+                                                            <td>30%</td>
+                                                            <td>20%</td>
+                                                            <td>10%</td>
+                                                            <td>0%</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-res-3" class="container tab-pane fade"><br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-container">
+                                <h3 class="tab-content-title">RESERVATION CONFIRM</h3>
+                                <div class="res-look-up">
+                                    <h3 class="tab-content-title">예약확인</h3>
+                                    <p>(체크인 날짜가 지난 예약은 확인하실 수 없습니다.)</p>
+                                    <div>
+                                        <div class="res-user">
+                                            <span>예약자명</span>
+                                            <input type="text" />
+                                        </div>
+                                        <div class="res-user">
+                                            <span>예약자 연락처</span>
+                                            <input type="text" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-logo">
+                        <img src="image/footer-logo.jpg" alt="footerLogo" />
+                    </div>
+                    <div class="company">
+                        <div id="information">
+                            <p class="footer-title">INFORMATION</p>
+                            <div class="footer-content">
+                                <div>
+                                    <p>업체이름</p>
+                                    <span class="line-before"></span>
+                                    <p>애메레이트 호텔</p>
+                                </div>
+                                <div>
+                                    <p>대표자</p>
+                                    <span class="line-before"></span>
+                                    <p>대표자</p>
+                                </div>
+                                <div>
+                                    <p>사업자 등록 번호</p>
+                                    <span class="line-before"></span>
+                                    123-12-12345
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tel">
+                            <p class="footer-title">TEL</p>
+                            <div class="footer-content">
+                                <div>
+                                    <p>사업장 전화번호</p>
+                                    <span class="line-before"></span>
+                                    <p>042-123-1234</p>
+                                </div>
+                                <div>
+                                    <p>전화가능 시간</p>
+                                    <span class="line-before"></span>
+                                    <p>09:00 ~ 18:00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="reservation">
+                            <p class="footer-title">RESERVATION</p>
+                            <div class="footer-content">
+                                <a href="#" class="footer-res">예약 바로가기</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copyright">
+                        <p>COPYRIGHT&copy;Emirate hotel. ALL RIGHTS RESERVE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <!-- <script src="js/bootstrap.min.js"></script> -->
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/jquery.magnific-popup.js"></script>
+    <script src="js/validator.min.js"></script>
+    <script src="js/scripts.js"></script>
+
+    <script src="test/bootstrap.min.js"></script>
+</body>
+
+</html>

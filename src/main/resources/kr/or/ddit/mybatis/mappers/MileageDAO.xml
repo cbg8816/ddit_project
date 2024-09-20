@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mileage.dao.MileageDAO">
+
+<!-- 	resultMap mileage -->
+	<resultMap type="MileageVO" id="milMap" autoMapping="true">
+
+		<id column="MIL_ID" property="milId"/>
+
+	</resultMap>
+
+	<select id="selectListMileageMember" resultMap="milMap">
+
+		SELECT B.*
+		FROM
+		(
+			SELECT A.*, ROWNUM RNUM
+			FROM
+			(
+				SELECT
+					MIL_ID
+					, MEM_ID
+					, MIL_REGDATE
+					, MIL_EARN
+                    , MIL_USE
+                    , P.PAY_ID
+                    , P.TREV_ID TREV_ID
+					, RO.ROOMTYPE_NM AS ROOMTYPE_NM
+				FROM MILEAGE M
+				INNER JOIN PAY P ON M.PAY_ID = P.PAY_ID
+				INNER JOIN HOTEL_REV H ON P.TREV_ID = H.HTREV_ID
+				INNER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+				INNER JOIN ROOMTYPE RO ON R.ROOMTYPE_ID = RO.ROOMTYPE_ID
+				WHERE M.MEM_ID = #{memId, jdbcType=VARCHAR}
+				ORDER BY MIL_REGDATE DESC
+			)A
+		)B
+		<![CDATA[
+		      WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		]]>
+
+	</select>
+
+	<select id="selectTotalRecordMember" resultType="int" parameterType="string">
+
+		SELECT COUNT(*)
+		FROM MILEAGE
+		WHERE MEM_ID = #{memId, jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="selectMileageEarn" resultType="int" parameterType="string">
+
+		SELECT NVL(A.EARN, 0)
+		FROM
+		(
+		SELECT SUM(MIL_EARN) EARN
+				FROM MILEAGE
+				WHERE MEM_ID = #{memId, jdbcType=VARCHAR}
+		)A
+
+
+	</select>
+
+	<select id="selectMileageUse" resultType="int" parameterType="string">
+
+		SELECT NVL(A.USE, 0)
+		FROM
+		(
+		SELECT SUM(MIL_USE) USE
+				FROM MILEAGE
+				WHERE MEM_ID = #{memId, jdbcType=VARCHAR}
+		)A
+
+	</select>
+
+	<select id="selectMileageTotal" resultType="int" parameterType="string">
+
+	 	SELECT NVL(B.TOTAL, 0)
+		FROM
+		(
+		SELECT A.EARN-A.USE TOTAL
+		        FROM
+		        (
+			        SELECT SUM(MIL_EARN) EARN, SUM(MIL_USE) USE
+					FROM MILEAGE
+					WHERE MEM_ID = #{memId, jdbcType=VARCHAR}
+			        )A
+		        )B
+
+	</select>
+
+</mapper>

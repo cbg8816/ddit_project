@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.attencance.dao.AttencanceDAO">
+
+	<resultMap type="AttencanceVO" id="attencanceMap" autoMapping="true">
+		<id property="atteId" column="ATTE_ID" />
+		<collection property="attDetailList" ofType="AttencanceDetailVO" autoMapping="true" />
+	</resultMap>
+
+	<select id="selectAttencance" resultMap="attencanceMap">
+		WITH ATTENDANCEVIEW AS (
+			SELECT
+			ATTE_ID
+		    , EMP.EMP_ID
+		    , ATTE_ALL_AN_LEAVE
+		    , ATTE_LEFT_AN_LEAVE
+		    , ATTE_USE_AN_LEAVE
+		    , EMP.EMP_NAME "emp.empName"
+		FROM ATTENDANCE INNER JOIN EMP ON (ATTENDANCE.EMP_ID = EMP.EMP_ID)
+	      	)
+	      	SELECT ATTENDANCEVIEW.*
+	      		, AD_ID
+            , AD_CONTENT
+            , AD_CATAGORY
+            , AD_STR_DATE
+            , AD_END_DAY
+	      	FROM ATTENDANCEVIEW LEFT OUTER JOIN ATTENDANCE_DETAIL ON(ATTENDANCEVIEW.EMP_ID = ATTENDANCE_DETAIL.EMP_ID)
+		WHERE ATTE_ID = #{atteId,jdbcType=VARCHAR}
+	</select>
+
+<!-- 	<select id="selectAttencance" resultType="AttencanceVO"> -->
+<!-- 		SELECT -->
+<!-- 			ATTE_ID -->
+<!-- 		    , EMP.EMP_ID -->
+<!-- 		    , ATTE_ALL_AN_LEAVE -->
+<!-- 		    , ATTE_LEFT_AN_LEAVE -->
+<!-- 		    , ATTE_USE_AN_LEAVE -->
+<!-- 		    , EMP.EMP_NAME "emp.empName" -->
+<!-- 		FROM ATTENDANCE INNER JOIN EMP ON (ATTENDANCE.EMP_ID = EMP.EMP_ID) -->
+<!-- 		WHERE ATTE_ID = #{atteId,jdbcType=VARCHAR} -->
+<!-- 	</select> -->
+
+	<sql id="searchFrag">
+		<where>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'name'">
+						INSTR(EMP_NAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(EMP_NAME, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(ATTE_ID)
+		FROM ATTENDANCE INNER JOIN EMP ON (ATTENDANCE.EMP_ID = EMP.EMP_ID)
+		<include refid="searchFrag"></include>
+	</select>
+
+	<select id="selectAttencanceList" resultType="AttencanceVO">
+		 SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM,  A.*
+				FROM (
+				    SELECT
+						    ATTE_ID
+						    , EMP.EMP_ID "emp.empId"
+						    , ATTE_ALL_AN_LEAVE
+						    , ATTE_LEFT_AN_LEAVE
+						    , ATTE_USE_AN_LEAVE
+						    , EMP_NAME "emp.empName"
+						FROM ATTENDANCE INNER JOIN EMP ON (ATTENDANCE.EMP_ID = EMP.EMP_ID)
+						<include refid="searchFrag"></include>
+				) A
+			) B
+			<![CDATA[
+	        WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+	        ]]>
+	</select>
+
+
+	<insert id="insertattvo" parameterType="AttendanceDefaultVO">
+		<selectKey order="BEFORE" resultType="String" keyProperty="adId">
+			SELECT SEQ_AD_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO ATTENDANCE_DETAIL(
+			AD_ID
+			,EMP_ID
+			,AD_CONTENT
+			,AD_CATAGORY
+			,AD_STR_DATE
+			,AD_END_DAY
+		)  VALUES (
+		 #{adId}
+		 ,#{empId}
+		 ,#{adContent}
+		 ,#{adCatagory}
+		 ,#{adStrDate ,jdbcType=TIMESTAMP}
+   		 ,#{adEndDay,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+
+</mapper>

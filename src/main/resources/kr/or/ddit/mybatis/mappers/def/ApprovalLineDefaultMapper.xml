@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.ApprovalLineDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.ApprovalLineDefaultVO">
+    <id column="APRLINE_ID" jdbcType="VARCHAR" property="aprlineId" />
+    <id column="APR_ID" jdbcType="VARCHAR" property="aprId" />
+    <result column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="APRLINE_TURN" jdbcType="NUMERIC" property="aprlineTurn" />
+    <result column="APRLINE_ST_DAY" jdbcType="TIMESTAMP" property="aprlineStDay" />
+    <result column="APRLINE_STATE" jdbcType="VARCHAR" property="aprlineState" />
+    <result column="APRLINE_CONT" jdbcType="VARCHAR" property="aprlineCont" />
+    <result column="APRLINE_REG" jdbcType="TIMESTAMP" property="aprlineReg" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from APPROVAL_LINE
+    where APRLINE_ID = #{aprlineId,jdbcType=VARCHAR}
+      and APR_ID = #{aprId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.ApprovalLineDefaultVO">
+    insert into APPROVAL_LINE (APRLINE_ID, APR_ID, EMP_ID, 
+      APRLINE_TURN, APRLINE_ST_DAY, APRLINE_STATE, 
+      APRLINE_CONT, APRLINE_REG)
+    values (#{aprlineId,jdbcType=VARCHAR}, #{aprId,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, 
+      #{aprlineTurn,jdbcType=NUMERIC}, #{aprlineStDay,jdbcType=TIMESTAMP}, #{aprlineState,jdbcType=VARCHAR}, 
+      #{aprlineCont,jdbcType=VARCHAR}, #{aprlineReg,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.ApprovalLineDefaultVO">
+    update APPROVAL_LINE
+    set EMP_ID = #{empId,jdbcType=VARCHAR},
+      APRLINE_TURN = #{aprlineTurn,jdbcType=NUMERIC},
+      APRLINE_ST_DAY = #{aprlineStDay,jdbcType=TIMESTAMP},
+      APRLINE_STATE = #{aprlineState,jdbcType=VARCHAR},
+      APRLINE_CONT = #{aprlineCont,jdbcType=VARCHAR},
+      APRLINE_REG = #{aprlineReg,jdbcType=TIMESTAMP}
+    where APRLINE_ID = #{aprlineId,jdbcType=VARCHAR}
+      and APR_ID = #{aprId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select APRLINE_ID, APR_ID, EMP_ID, APRLINE_TURN, APRLINE_ST_DAY, APRLINE_STATE, APRLINE_CONT, 
+    APRLINE_REG
+    from APPROVAL_LINE
+    where APRLINE_ID = #{aprlineId,jdbcType=VARCHAR}
+      and APR_ID = #{aprId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select APRLINE_ID, APR_ID, EMP_ID, APRLINE_TURN, APRLINE_ST_DAY, APRLINE_STATE, APRLINE_CONT, 
+    APRLINE_REG
+    from APPROVAL_LINE
+  </select>
+</mapper>

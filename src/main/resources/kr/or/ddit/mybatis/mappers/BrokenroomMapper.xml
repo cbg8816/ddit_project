@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.housekeeping.dao.BrokenroomMapper">
+
+	<resultMap type="BrokenroomVO" id="brokenroomMap" autoMapping="true">
+		<id property="hkbNo" column="HKB_NO"/>
+		<association property="roomstatus" javaType="RoomStatusVO" autoMapping="true" />
+	</resultMap>
+
+
+
+	<sql id="freebrokenroomColumns">
+		HKB_NO
+		, ROOM_ID
+		, HKB_LOCATION
+		, HKB_INFOR
+		, HKB_EMP
+		, HKB_COMPLE
+		, HKB_DAY
+	</sql>
+
+
+
+ 	<select id="selectBrokenList" resultMap="brokenroomMap">
+		SELECT *
+		FROM (
+		    SELECT B.*, ROWNUM AS rnum
+		    FROM (
+		        SELECT HKB_NO
+				, ROOM_ID
+				, HKB_LOCATION
+				, HKB_INFOR
+				, HKB_EMP
+				, HKB_COMPLE
+				, HKB_DAY
+		        FROM BROKEN_ROOM
+		        <include refid="searchFrag" />
+		        ORDER BY HKB_NO DESC
+		    ) B
+		)
+		<![CDATA[
+		WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+		]]>
+	</select>
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(HKB_NO)
+		FROM BROKEN_ROOM
+		<include refid="searchFrag" />
+	</select>
+
+<!-- 	 검색 조건 -->
+<sql id="searchFrag">
+    <where>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+            <choose>
+                <when test="simpleCondition.searchType eq 'name'">
+                    INSTR(HKB_EMP, #{simpleCondition.searchWord}) > 0
+                </when>
+                <when test="simpleCondition.searchType eq 'location'">
+                    INSTR(HKB_LOCATION, #{simpleCondition.searchWord}) > 0
+                </when>
+                <when test="simpleCondition.searchType eq 'infor'">
+                    INSTR(HKB_INFOR, #{simpleCondition.searchWord}) > 0
+                </when>
+                <otherwise>
+                    INSTR(HKB_EMP, #{simpleCondition.searchWord}) > 0
+                    OR
+                    INSTR(HKB_LOCATION, #{simpleCondition.searchWord}) > 0
+                    OR
+                    INSTR(HKB_INFOR, #{simpleCondition.searchWord}) > 0
+                </otherwise>
+            </choose>
+        </if>
+    </where>
+</sql>
+
+
+	<select id="seletBrokenRoom">
+		SELECT
+	    	<include refid="freebrokenroomColumns" />
+	    FROM BROKEN_ROOM
+		WHERE HKB_NO = #{hkbNo}
+	</select>
+
+	<insert id="insetBrokenRoom" parameterType="BrokenroomVO">
+	<selectKey order="BEFORE" resultType="int" keyProperty="hkbNo">
+		SELECT HKB_SEQ.NEXTVAL FROM DUAL
+	</selectKey>
+		INSERT INTO BROKEN_ROOM
+		(
+		HKB_NO
+		, ROOM_ID
+		, HKB_LOCATION
+		, HKB_INFOR
+		, HKB_EMP
+		, HKB_COMPLE
+		, HKB_DAY
+    	)
+    	VALUES
+    	(
+            #{hkbNo}
+    		, #{roomId}
+    		, #{hkbLocation}
+    		, #{hkbInfor}
+    		, NULL
+    		, '수리예정'
+    		, #{hkbDay}
+   	 	)
+	</insert>
+
+
+	<update id="updateStatus" parameterType="RoomStatusVO">
+		UPDATE
+			ROOMSTATUS
+		SET
+			ROOM_ST = '5'
+		WHERE
+			ROOM_ID = #{roomId}
+	</update>
+
+	<update id="updateBrokenroom" parameterType="BrokenRoomVO">
+	UPDATE BROKEN_ROOM
+    	SET
+        	ROOM_ID = #{roomId}
+        	, HKB_DAY = #{hkbDay}
+        	, HKB_LOCATION = #{hkbLocation}
+        	, HKB_INFOR = #{hkbInfor}
+        	, HKB_EMP = #{hkbEmp}
+    WHERE HKB_NO = #{hkbNo}
+	</update>
+
+	<select id="seletRepaired">
+		SELECT *
+		FROM (
+		    SELECT
+		        HKB_NO,
+		        ROOM_ID,
+		        HKB_LOCATION,
+		        HKB_INFOR,
+		        HKB_EMP,
+		        HKB_COMPLE,
+		        HKB_DAY,
+		        ROW_NUMBER() OVER (ORDER BY HKB_NO DESC) AS rnum
+		    FROM BROKEN_ROOM
+		    WHERE HKB_COMPLE = '수리예정'
+			)
+		<![CDATA[
+		WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+		]]>
+	</select>
+	
+	<select id="seletRepairing">
+		SELECT *
+		FROM (
+		    SELECT
+		        HKB_NO,
+		        ROOM_ID,
+		        HKB_LOCATION,
+		        HKB_INFOR,
+		        HKB_EMP,
+		        HKB_COMPLE,
+		        HKB_DAY,
+		        ROW_NUMBER() OVER (ORDER BY HKB_NO DESC) AS rnum
+		    FROM BROKEN_ROOM
+		    WHERE HKB_COMPLE = '수리중'
+			)
+		<![CDATA[
+		WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+		]]>
+	</select>
+	
+	<select id="seletRepairfinish">
+		SELECT *
+		FROM (
+		    SELECT
+		        HKB_NO,
+		        ROOM_ID,
+		        HKB_LOCATION,
+		        HKB_INFOR,
+		        HKB_EMP,
+		        HKB_COMPLE,
+		        HKB_DAY,
+		        ROW_NUMBER() OVER (ORDER BY HKB_NO DESC) AS rnum
+		    FROM BROKEN_ROOM
+		    WHERE HKB_COMPLE = '수리완료'
+			)
+		<![CDATA[
+		WHERE rnum BETWEEN #{firstRecord} AND #{lastRecord}
+		]]>
+	</select>
+
+	<select id="seletRepairedcount"  resultType="int">
+		select Count(HKB_COMPLE)
+	    FROM BROKEN_ROOM
+		WHERE HKB_COMPLE = '수리예정'
+	</select>
+	
+	<select id="seletRepairingcount"  resultType="int">
+		select Count(HKB_COMPLE)
+	    FROM BROKEN_ROOM
+		WHERE HKB_COMPLE = '수리중'
+	</select>
+	
+	<select id="seletRepairfinishcount"  resultType="int">
+		select Count(HKB_COMPLE)
+	    FROM BROKEN_ROOM
+		WHERE HKB_COMPLE = '수리완료'
+	</select>
+	
+	
+	
+
+
+</mapper>

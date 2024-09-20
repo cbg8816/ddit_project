@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.LinvestDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.LinvestDefaultVO">
+    <id column="LINVEST_ID" jdbcType="VARCHAR" property="linvestId" />
+    <result column="LINVEST_NM" jdbcType="VARCHAR" property="linvestNm" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from LINVEST
+    where LINVEST_ID = #{linvestId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.LinvestDefaultVO">
+    insert into LINVEST (LINVEST_ID, LINVEST_NM)
+    values (#{linvestId,jdbcType=VARCHAR}, #{linvestNm,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.LinvestDefaultVO">
+    update LINVEST
+    set LINVEST_NM = #{linvestNm,jdbcType=VARCHAR}
+    where LINVEST_ID = #{linvestId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select LINVEST_ID, LINVEST_NM
+    from LINVEST
+    where LINVEST_ID = #{linvestId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select LINVEST_ID, LINVEST_NM
+    from LINVEST
+  </select>
+</mapper>

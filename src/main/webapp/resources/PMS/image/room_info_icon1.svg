@@ -1,0 +1,30 @@
+
+<svg version="1.1" baseProfile="basic" id="Layer_1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24.232px"
+	 height="34.877px" viewBox="0 0 24.232 34.877" xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="24.232" height="34.877"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	
+		<polygon clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+		20.585,0.75 17.763,4.069 14.939,0.75 12.115,4.069 9.292,0.75 6.469,4.069 3.646,0.75 0.75,3.983 0.75,34.041 3.646,30.809 
+		6.469,34.127 9.292,30.809 12.115,34.127 14.939,30.809 17.763,34.127 20.585,30.809 23.481,34.041 23.481,3.983 	"/>
+</g>
+<path fill="#FFFFFF" d="M5.722,26.479v-3.621V26.479z"/>
+<line fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="5.722" y1="22.857" x2="5.722" y2="26.48"/>
+<path fill="#FFFFFF" d="M8.919,26.479v-3.621V26.479z"/>
+<line fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="8.919" y1="22.857" x2="8.919" y2="26.48"/>
+<path fill="#FFFFFF" d="M12.116,26.479v-3.621V26.479z"/>
+<line fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="12.116" y1="22.857" x2="12.116" y2="26.48"/>
+<path fill="#FFFFFF" d="M15.313,26.479v-3.621V26.479z"/>
+<line fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="15.313" y1="22.857" x2="15.313" y2="26.48"/>
+<path fill="#FFFFFF" d="M18.511,26.479v-3.621V26.479z"/>
+<line fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="18.51" y1="22.857" x2="18.51" y2="26.48"/>
+<line fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="17.169" y1="14.155" x2="7.063" y2="14.155"/>
+<polyline fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+	16.229,11.306 14.206,17.825 12.183,11.306 10.159,17.825 8.136,11.306 "/>
+</svg>

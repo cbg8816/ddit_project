@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.forecasting.dao.ForeCastingMapper">
+
+	<resultMap type="RoomtypeVO" id="forecastingMap" autoMapping="false">
+		<id property="roomtypeId" column="ROOMTYPE_ID"/>
+		<result property="roomtypeId" column="ROOMTYPE_ID"/>
+		<result property="roomtypeNm" column="ROOMTYPE_NM"/>
+		<collection property="forecastingList"  ofType="ForeCastingVO" autoMapping="true">
+<!-- 			<id property="availableRooms" column="availableRooms"/> -->
+		</collection>
+	</resultMap>
+
+<!-- 	<resultMap type="TestVO" id="testMap" autoMapping="false"> -->
+<!-- 		<id property="dateSeq" column="dateSeq"/> -->
+<!-- 		<result property="dateSeq" column="dateSeq"/> -->
+<!-- 		<collection property="test2List"  ofType="Test2VO"> -->
+<!-- 			<id property="roomtypeId" column="ROOMTYPE_ID"/> -->
+<!-- 			<result property="roomtypeId" column="ROOMTYPE_ID"/> -->
+<!-- 			<result property="roomtypeNm" column="ROOMTYPE_NM"/> -->
+<!-- 			<result property="availableRooms" column="available_rooms"/> -->
+<!-- 		</collection> -->
+<!-- 	</resultMap> -->
+<!-- 	<select id="selectForeCasting" resultMap="forecastingMap"> -->
+<!-- 		WITH DATE_SEQ AS ( -->
+<!-- 		    SELECT TO_DATE('2024-09-01','YYYY-MM-DD') + (LEVEL - 1) AS DATE_SEQ -->
+<!-- 		    FROM dual -->
+<!-- 		 	<![CDATA[ CONNECT BY LEVEL <= TO_DATE('2024-09-30','YYYY-MM-DD') - TO_DATE('2024-09-01','YYYY-MM-DD') + 1 ]]> -->
+<!-- 		) -->
+<!-- 		SELECT -->
+<!-- 		    DATE_SEQ.DATE_SEQ, -->
+<!-- 		    ROOM.ROOMTYPE_ID, -->
+<!-- 		    ROOMTYPE.ROOMTYPE_NM, -->
+<!-- 		    COUNT(ROOM.ROOMTYPE_ID) AVAILABLEROOMS -->
+<!-- 		FROM -->
+<!-- 		    DATE_SEQ -->
+<!-- 		LEFT JOIN -->
+<!-- 		    ROOM -->
+<!-- 		ON -->
+<!-- 		    1=1 -->
+<!-- 		LEFT JOIN -->
+<!-- 		    ROOMTYPE -->
+<!-- 		ON -->
+<!-- 		    ROOM.ROOMTYPE_ID = ROOMTYPE.ROOMTYPE_ID -->
+<!-- 		WHERE -->
+<!-- 		    ROOM.ROOM_ID NOT IN ( -->
+<!-- 		        SELECT -->
+<!-- 		            ROOM_ID -->
+<!-- 		        FROM -->
+<!-- 		            DATESLOT -->
+<!-- 		        INNER JOIN -->
+<!-- 		            REV_ROOM -->
+<!-- 		        ON -->
+<!-- 		            DATESLOT.REVROOM_ID = REV_ROOM.REVROOM_ID -->
+<!-- 		        WHERE -->
+<!-- 		            DATE_SEQ.DATE_SEQ || 'PM' = DATESLOT_DATE || DATESLOT_NM -->
+<!-- 		    ) -->
+<!-- 		GROUP BY -->
+<!-- 		    DATE_SEQ.DATE_SEQ, -->
+<!-- 		    ROOM.ROOMTYPE_ID, -->
+<!-- 		    ROOMTYPE.ROOMTYPE_NM -->
+
+<!-- 		ORDER BY -->
+<!-- 		    DATE_SEQ.DATE_SEQ, -->
+<!-- 		    ROOM.ROOMTYPE_ID -->
+
+<!-- 	</select> -->
+
+<select id="selectForeCasting" resultType="GayongVO">
+<!-- <![CDATA[ -->
+<!--     WITH DATE_SEQ AS ( -->
+<!-- 	    SELECT TO_DATE('20240901', 'YYYYMMDD') + (LEVEL - 1) AS DATE_SEQ -->
+<!-- 	    FROM dual -->
+<!-- 	     CONNECT BY LEVEL <= TO_DATE('20240930', 'YYYYMMDD') - TO_DATE('20240901', 'YYYYMMDD') + 1 -->
+<!-- 	) -->
+<!-- ]]> -->
+<!-- 			SELECT TO_DATE(sysdate,'YYYY-MM-DD') + (LEVEL - 1) AS DATE_SEQ -->
+	<if test="startDate == null or endDate == null">
+	<![CDATA[
+		WITH DATE_SEQ AS (
+			SELECT TO_CHAR(sysdate + (LEVEL - 1), 'YYYY-MM-DD') AS DATE_SEQ
+  			FROM dual
+			CONNECT BY LEVEL <= 30
+  		)
+	]]>
+<!-- 	<![CDATA[ -->
+<!-- 	     WITH DATE_SEQ AS ( -->
+<!-- 	 	    SELECT TO_DATE('2024-09-01', 'YYYY-MM-DD') + (LEVEL - 1) AS DATE_SEQ -->
+<!-- 	 	    FROM dual -->
+<!-- 	 	    CONNECT BY LEVEL <= TO_DATE('2024-09-30', 'YYYY-MM-DD') - TO_DATE('2024-09-01', 'YYYY-MM-DD') + 1 -->
+<!-- 	 	) -->
+<!-- 	]]> -->
+	</if>
+	<if test="startDate != null and endDate != null">
+	<![CDATA[
+	    WITH DATE_SEQ AS (
+		    SELECT TO_DATE(#{startDate}, 'YYYY-MM-DD') + (LEVEL - 1) AS DATE_SEQ
+		    FROM dual
+		     CONNECT BY LEVEL <= TO_DATE(#{endDate}, 'YYYY-MM-DD') - TO_DATE(#{startDate}, 'YYYY-MM-DD') + 1
+		)
+	]]>
+	</if>
+    select a.*
+    from (
+	    select
+	        DATE_SEQ as "dateSeq",
+	        ROOMTYPE.ROOMTYPE_ID,
+		    ROOMTYPE.ROOMTYPE_NM,
+	        COUNT(ROOM.ROOMTYPE_ID) AS AVAILABLE_ROOMS
+	    from DATE_SEQ DATE_SEQ, ROOMTYPE ROOMTYPE, room ROOM
+	    where ROOM.ROOMTYPE_ID = ROOMTYPE.ROOMTYPE_ID
+	    GROUP BY
+		    DATE_SEQ.DATE_SEQ,
+		    ROOMTYPE.ROOMTYPE_ID,
+		    ROOMTYPE.ROOMTYPE_NM
+	    order by 2
+	) a
+</select>
+
+<select id="selectNotInRoomId" resultType="hashMap">
+	SELECT RR.ROOM_ID, RR.ROOMTYPE_ID ,DATESLOT_DATE, DATESLOT_NM  FROM REV_ROOM RR LEFT JOIN DATESLOT D ON(RR.REVROOM_ID = D.REVROOM_ID)
+<!-- where DATESLOT_DATE between TO_DATE('20240901', 'YYYY-MM-DD') and TO_DATE('20240930', 'YYYY-MM-DD') -->
+	<if test="startDate == null or endDate == null">
+<!-- 		where DATESLOT_DATE between TO_CHAR(TO_DATE(sysdate, 'YYYY-MM-DD')) and TO_CHAR(TO_DATE(sysdate +30, 'YYYY-MM-DD')) -->
+<!-- 	where DATESLOT_DATE between TO_DATE('2024-09-01', 'YYYY-MM-DD') and TO_DATE('2024-09-30', 'YYYY-MM-DD') -->
+<!-- 	WHERE DATESLOT_DATE BETWEEN TO_DATE(SYSDATE, 'YYYY-MM-DD') AND TO_DATE(SYSDATE+30, 'YYYY-MM-DD') -->
+	WHERE DATESLOT_DATE BETWEEN TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE+30, 'YYYY-MM-DD')
+	</if>
+	<if test="startDate != null and endDate != null">
+		where DATESLOT_DATE between TO_DATE(#{startDate}, 'YYYY-MM-DD') and TO_DATE(#{endDate}, 'YYYY-MM-DD')
+	</if>
+	AND DATESLOT_NM != 'AM'
+	ORDER BY DATESLOT_DATE
+
+</select>
+
+
+	<select id="dayList">
+<!-- 		SELECT TO_DATE(#{startDate},'YYYY-MM-DD') + (LEVEL - 1) "dateSeq" -->
+<!-- 		SELECT TO_CHAR(TO_DATE('2024-09-01','YYYY-MM-DD') + (LEVEL - 1)) "dateSeq" -->
+<!-- 	  	FROM dual -->
+<!-- 		<![CDATA[ CONNECT BY LEVEL <= TO_DATE('2024-09-30','YYYY-MM-DD') - TO_DATE('2024-09-01','YYYY-MM-DD')+1 ]]> -->
+<!-- 			SELECT TO_DATE(sysdate,'YYYY-MM-DD') + (LEVEL - 1) AS DATE_SEQ -->
+<!--  			FROM dual -->
+<!--  			CONNECT BY LEVEL <= TO_DATE(sysdate,'YYYY-MM-DD')+30 - TO_DATE(sysdate,'YYYY-MM-DD') + 1 -->
+
+		<if test="startDate == null or endDate == null">
+		<![CDATA[
+ 			SELECT TO_CHAR(sysdate + (LEVEL - 1), 'YYYY-MM-DD') AS DATE_SEQ
+			FROM dual
+			CONNECT BY LEVEL <= 30
+		]]>
+		</if>
+
+		<if test="startDate != null and endDate != null">
+		SELECT TO_DATE(#{startDate},'YYYY-MM-DD') + (LEVEL - 1) "dateSeq"
+		FROM dual
+		<![CDATA[ CONNECT BY LEVEL <= TO_DATE(#{endDate},'YYYY-MM-DD') - TO_DATE(#{startDate},'YYYY-MM-DD')+1 ]]>
+
+		</if>
+	</select>
+
+
+</mapper>

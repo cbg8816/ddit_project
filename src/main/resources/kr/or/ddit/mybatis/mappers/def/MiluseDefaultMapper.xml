@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.MiluseDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MiluseDefaultVO">
+    <id column="MILUSE_ID" jdbcType="VARCHAR" property="miluseId" />
+    <id column="MEM_ID" jdbcType="VARCHAR" property="memId" />
+    <result column="MILUSE_DATE" jdbcType="TIMESTAMP" property="miluseDate" />
+    <result column="MILUSE_CN" jdbcType="VARCHAR" property="miluseCn" />
+    <result column="MILUSE_AMOUNT" jdbcType="NUMERIC" property="miluseAmount" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from MILUSE
+    where MILUSE_ID = #{miluseId,jdbcType=VARCHAR}
+      and MEM_ID = #{memId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.MiluseDefaultVO">
+    insert into MILUSE (MILUSE_ID, MEM_ID, MILUSE_DATE, 
+      MILUSE_CN, MILUSE_AMOUNT)
+    values (#{miluseId,jdbcType=VARCHAR}, #{memId,jdbcType=VARCHAR}, #{miluseDate,jdbcType=TIMESTAMP}, 
+      #{miluseCn,jdbcType=VARCHAR}, #{miluseAmount,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.MiluseDefaultVO">
+    update MILUSE
+    set MILUSE_DATE = #{miluseDate,jdbcType=TIMESTAMP},
+      MILUSE_CN = #{miluseCn,jdbcType=VARCHAR},
+      MILUSE_AMOUNT = #{miluseAmount,jdbcType=NUMERIC}
+    where MILUSE_ID = #{miluseId,jdbcType=VARCHAR}
+      and MEM_ID = #{memId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select MILUSE_ID, MEM_ID, MILUSE_DATE, MILUSE_CN, MILUSE_AMOUNT
+    from MILUSE
+    where MILUSE_ID = #{miluseId,jdbcType=VARCHAR}
+      and MEM_ID = #{memId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select MILUSE_ID, MEM_ID, MILUSE_DATE, MILUSE_CN, MILUSE_AMOUNT
+    from MILUSE
+  </select>
+</mapper>

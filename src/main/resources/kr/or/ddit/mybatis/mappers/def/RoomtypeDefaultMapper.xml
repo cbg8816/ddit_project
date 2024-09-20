@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.RoomtypeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.RoomtypeDefaultVO">
+    <id column="ROOMTYPE_ID" jdbcType="VARCHAR" property="roomtypeId" />
+    <result column="ROOMTYPE_NM" jdbcType="VARCHAR" property="roomtypeNm" />
+    <result column="ROOMTYPE_PRICE" jdbcType="NUMERIC" property="roomtypePrice" />
+    <result column="ROOMTYPE_PTYPE" jdbcType="VARCHAR" property="roomtypePtype" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ROOMTYPE
+    where ROOMTYPE_ID = #{roomtypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.RoomtypeDefaultVO">
+    insert into ROOMTYPE (ROOMTYPE_ID, ROOMTYPE_NM, ROOMTYPE_PRICE, 
+      ROOMTYPE_PTYPE)
+    values (#{roomtypeId,jdbcType=VARCHAR}, #{roomtypeNm,jdbcType=VARCHAR}, #{roomtypePrice,jdbcType=NUMERIC}, 
+      #{roomtypePtype,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.RoomtypeDefaultVO">
+    update ROOMTYPE
+    set ROOMTYPE_NM = #{roomtypeNm,jdbcType=VARCHAR},
+      ROOMTYPE_PRICE = #{roomtypePrice,jdbcType=NUMERIC},
+      ROOMTYPE_PTYPE = #{roomtypePtype,jdbcType=VARCHAR}
+    where ROOMTYPE_ID = #{roomtypeId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select ROOMTYPE_ID, ROOMTYPE_NM, ROOMTYPE_PRICE, ROOMTYPE_PTYPE
+    from ROOMTYPE
+    where ROOMTYPE_ID = #{roomtypeId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ROOMTYPE_ID, ROOMTYPE_NM, ROOMTYPE_PRICE, ROOMTYPE_PTYPE
+    from ROOMTYPE
+  </select>
+</mapper>

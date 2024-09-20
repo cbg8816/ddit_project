@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.MemberDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MemberDefaultVO">
+    <id column="MEM_ID" jdbcType="VARCHAR" property="memId" />
+    <result column="RANK_CODE" jdbcType="VARCHAR" property="rankCode" />
+    <result column="MEM_NAME" jdbcType="VARCHAR" property="memName" />
+    <result column="MEM_CATEGORY" jdbcType="VARCHAR" property="memCategory" />
+    <result column="MEM_LOGIN_ID" jdbcType="VARCHAR" property="memLoginId" />
+    <result column="MEM_LOGIN_PW" jdbcType="VARCHAR" property="memLoginPw" />
+    <result column="MEM_EMAIL" jdbcType="VARCHAR" property="memEmail" />
+    <result column="MEM_TEL" jdbcType="VARCHAR" property="memTel" />
+    <result column="MEM_YN" jdbcType="VARCHAR" property="memYn" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from MEMBER
+    where MEM_ID = #{memId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.MemberDefaultVO">
+    insert into MEMBER (MEM_ID, RANK_CODE, MEM_NAME, 
+      MEM_CATEGORY, MEM_LOGIN_ID, MEM_LOGIN_PW, 
+      MEM_EMAIL, MEM_TEL, MEM_YN
+      )
+    values (#{memId,jdbcType=VARCHAR}, #{rankCode,jdbcType=VARCHAR}, #{memName,jdbcType=VARCHAR}, 
+      #{memCategory,jdbcType=VARCHAR}, #{memLoginId,jdbcType=VARCHAR}, #{memLoginPw,jdbcType=VARCHAR}, 
+      #{memEmail,jdbcType=VARCHAR}, #{memTel,jdbcType=VARCHAR}, #{memYn,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.MemberDefaultVO">
+    update MEMBER
+    set RANK_CODE = #{rankCode,jdbcType=VARCHAR},
+      MEM_NAME = #{memName,jdbcType=VARCHAR},
+      MEM_CATEGORY = #{memCategory,jdbcType=VARCHAR},
+      MEM_LOGIN_ID = #{memLoginId,jdbcType=VARCHAR},
+      MEM_LOGIN_PW = #{memLoginPw,jdbcType=VARCHAR},
+      MEM_EMAIL = #{memEmail,jdbcType=VARCHAR},
+      MEM_TEL = #{memTel,jdbcType=VARCHAR},
+      MEM_YN = #{memYn,jdbcType=VARCHAR}
+    where MEM_ID = #{memId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select MEM_ID, RANK_CODE, MEM_NAME, MEM_CATEGORY, MEM_LOGIN_ID, MEM_LOGIN_PW, MEM_EMAIL, 
+    MEM_TEL, MEM_YN
+    from MEMBER
+    where MEM_ID = #{memId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select MEM_ID, RANK_CODE, MEM_NAME, MEM_CATEGORY, MEM_LOGIN_ID, MEM_LOGIN_PW, MEM_EMAIL, 
+    MEM_TEL, MEM_YN
+    from MEMBER
+  </select>
+</mapper>

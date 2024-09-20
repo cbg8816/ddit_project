@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.specification.dao.SpecificationMapper">
+
+	<select id="selectSpecificationList" resultType="SpecificationVO">
+		SELECT
+		    SPE_ID
+		    , SPE_NA_PEN
+		    , SPE_HE_INS
+		    , SPE_EMP_INS
+		    , SPE_LONG_INS
+		    , SPE_INCOME_TAX
+		    , SPE_LO_INCOME_TAX
+		FROM SPECIFICATION
+	</select>
+</mapper>

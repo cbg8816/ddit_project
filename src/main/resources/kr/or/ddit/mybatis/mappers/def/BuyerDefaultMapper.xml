@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.BuyerDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.BuyerDefaultVO">
+    <id column="BUYER_ID" jdbcType="CHAR" property="buyerId" />
+    <result column="BUYER_INAME" jdbcType="VARCHAR" property="buyerIname" />
+    <result column="BUYER_LGU" jdbcType="CHAR" property="buyerLgu" />
+    <result column="BUYER_BANK" jdbcType="VARCHAR" property="buyerBank" />
+    <result column="BUYER_BANKNO" jdbcType="VARCHAR" property="buyerBankno" />
+    <result column="BUYER_BANKNAME" jdbcType="VARCHAR" property="buyerBankname" />
+    <result column="BUYER_ZIP" jdbcType="CHAR" property="buyerZip" />
+    <result column="BUYER_ADD1" jdbcType="VARCHAR" property="buyerAdd1" />
+    <result column="BUYER_ADD2" jdbcType="VARCHAR" property="buyerAdd2" />
+    <result column="BUYER_COMTEL" jdbcType="VARCHAR" property="buyerComtel" />
+    <result column="BUYER_FAX" jdbcType="VARCHAR" property="buyerFax" />
+    <result column="BUYER_EMAIL" jdbcType="VARCHAR" property="buyerEmail" />
+    <result column="BUYER_CHARGER" jdbcType="VARCHAR" property="buyerCharger" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BUYER
+    where BUYER_ID = #{buyerId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.BuyerDefaultVO">
+    insert into BUYER (BUYER_ID, BUYER_INAME, BUYER_LGU, 
+      BUYER_BANK, BUYER_BANKNO, BUYER_BANKNAME, 
+      BUYER_ZIP, BUYER_ADD1, BUYER_ADD2, 
+      BUYER_COMTEL, BUYER_FAX, BUYER_EMAIL, 
+      BUYER_CHARGER)
+    values (#{buyerId,jdbcType=CHAR}, #{buyerIname,jdbcType=VARCHAR}, #{buyerLgu,jdbcType=CHAR}, 
+      #{buyerBank,jdbcType=VARCHAR}, #{buyerBankno,jdbcType=VARCHAR}, #{buyerBankname,jdbcType=VARCHAR}, 
+      #{buyerZip,jdbcType=CHAR}, #{buyerAdd1,jdbcType=VARCHAR}, #{buyerAdd2,jdbcType=VARCHAR}, 
+      #{buyerComtel,jdbcType=VARCHAR}, #{buyerFax,jdbcType=VARCHAR}, #{buyerEmail,jdbcType=VARCHAR}, 
+      #{buyerCharger,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.BuyerDefaultVO">
+    update BUYER
+    set BUYER_INAME = #{buyerIname,jdbcType=VARCHAR},
+      BUYER_LGU = #{buyerLgu,jdbcType=CHAR},
+      BUYER_BANK = #{buyerBank,jdbcType=VARCHAR},
+      BUYER_BANKNO = #{buyerBankno,jdbcType=VARCHAR},
+      BUYER_BANKNAME = #{buyerBankname,jdbcType=VARCHAR},
+      BUYER_ZIP = #{buyerZip,jdbcType=CHAR},
+      BUYER_ADD1 = #{buyerAdd1,jdbcType=VARCHAR},
+      BUYER_ADD2 = #{buyerAdd2,jdbcType=VARCHAR},
+      BUYER_COMTEL = #{buyerComtel,jdbcType=VARCHAR},
+      BUYER_FAX = #{buyerFax,jdbcType=VARCHAR},
+      BUYER_EMAIL = #{buyerEmail,jdbcType=VARCHAR},
+      BUYER_CHARGER = #{buyerCharger,jdbcType=VARCHAR}
+    where BUYER_ID = #{buyerId,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select BUYER_ID, BUYER_INAME, BUYER_LGU, BUYER_BANK, BUYER_BANKNO, BUYER_BANKNAME, 
+    BUYER_ZIP, BUYER_ADD1, BUYER_ADD2, BUYER_COMTEL, BUYER_FAX, BUYER_EMAIL, BUYER_CHARGER
+    from BUYER
+    where BUYER_ID = #{buyerId,jdbcType=CHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select BUYER_ID, BUYER_INAME, BUYER_LGU, BUYER_BANK, BUYER_BANKNO, BUYER_BANKNAME, 
+    BUYER_ZIP, BUYER_ADD1, BUYER_ADD2, BUYER_COMTEL, BUYER_FAX, BUYER_EMAIL, BUYER_CHARGER
+    from BUYER
+  </select>
+</mapper>

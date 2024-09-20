@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.admin.dao.AdminDAO">
+
+<!-- 	회원 목록. -->
+	<select id="selectnList">
+
+		SELECT A.*
+		FROM
+		(
+			SELECT
+				MEM_ID
+				, RANK_CODE
+				, MEM_NAME
+				, MEM_LOGIN_ID
+				, MEM_LOGIN_PW
+				, MEM_EMAIL
+				, MEM_TEL
+				, MEM_YN
+				, MEM_ROLE
+				, ROWNUM NO
+			FROM MEMBER
+			WHERE MEM_ROLE = 'USER'
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(adminCondition.memName)">
+			AND INSTR(MEM_NAME, #{adminCondition.memName}) > 0
+			</if>
+			)A
+		<![CDATA[
+		WHERE NO >= #{firstRecord} AND NO <= #{lastRecord}
+		]]>
+
+	</select>
+
+<!-- 	회원 목록 총 개수. -->
+	<select id="selectTotalRecord" resultType="int">
+
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEM_ROLE = 'USER'
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(adminCondition.memName)">
+		AND INSTR(MEM_NAME, #{adminCondition.memName}) > 0
+		</if>
+
+	</select>
+
+</mapper>

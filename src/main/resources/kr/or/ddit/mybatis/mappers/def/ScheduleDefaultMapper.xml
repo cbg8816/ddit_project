@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.ScheduleDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.ScheduleDefaultVO">
+    <id column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="SCHED_TITLE" jdbcType="VARCHAR" property="schedTitle" />
+    <result column="SCHED_CN" jdbcType="VARCHAR" property="schedCn" />
+    <result column="SCHED_GU" jdbcType="VARCHAR" property="schedGu" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SCHEDULE
+    where EMP_ID = #{empId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.ScheduleDefaultVO">
+    insert into SCHEDULE (EMP_ID, SCHED_TITLE, SCHED_CN, 
+      SCHED_GU)
+    values (#{empId,jdbcType=VARCHAR}, #{schedTitle,jdbcType=VARCHAR}, #{schedCn,jdbcType=VARCHAR}, 
+      #{schedGu,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.ScheduleDefaultVO">
+    update SCHEDULE
+    set SCHED_TITLE = #{schedTitle,jdbcType=VARCHAR},
+      SCHED_CN = #{schedCn,jdbcType=VARCHAR},
+      SCHED_GU = #{schedGu,jdbcType=VARCHAR}
+    where EMP_ID = #{empId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EMP_ID, SCHED_TITLE, SCHED_CN, SCHED_GU
+    from SCHEDULE
+    where EMP_ID = #{empId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EMP_ID, SCHED_TITLE, SCHED_CN, SCHED_GU
+    from SCHEDULE
+  </select>
+</mapper>

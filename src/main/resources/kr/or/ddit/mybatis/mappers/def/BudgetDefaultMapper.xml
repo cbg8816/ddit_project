@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.BudgetDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.BudgetDefaultVO">
+    <id column="BUD_ID" jdbcType="VARCHAR" property="budId" />
+    <result column="BUD_START_DATE" jdbcType="TIMESTAMP" property="budStartDate" />
+    <result column="BUD_END_DATE" jdbcType="TIMESTAMP" property="budEndDate" />
+    <result column="BUD_AMOUNT" jdbcType="NUMERIC" property="budAmount" />
+    <result column="BUD_GU" jdbcType="VARCHAR" property="budGu" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BUDGET
+    where BUD_ID = #{budId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.BudgetDefaultVO">
+    insert into BUDGET (BUD_ID, BUD_START_DATE, BUD_END_DATE, 
+      BUD_AMOUNT, BUD_GU)
+    values (#{budId,jdbcType=VARCHAR}, #{budStartDate,jdbcType=TIMESTAMP}, #{budEndDate,jdbcType=TIMESTAMP}, 
+      #{budAmount,jdbcType=NUMERIC}, #{budGu,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.BudgetDefaultVO">
+    update BUDGET
+    set BUD_START_DATE = #{budStartDate,jdbcType=TIMESTAMP},
+      BUD_END_DATE = #{budEndDate,jdbcType=TIMESTAMP},
+      BUD_AMOUNT = #{budAmount,jdbcType=NUMERIC},
+      BUD_GU = #{budGu,jdbcType=VARCHAR}
+    where BUD_ID = #{budId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select BUD_ID, BUD_START_DATE, BUD_END_DATE, BUD_AMOUNT, BUD_GU
+    from BUDGET
+    where BUD_ID = #{budId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select BUD_ID, BUD_START_DATE, BUD_END_DATE, BUD_AMOUNT, BUD_GU
+    from BUDGET
+  </select>
+</mapper>

@@ -1,0 +1,43 @@
+:root {
+    /* font color */
+    --font-primary : #333;
+    --footer-font: #c6c6c6;
+    --payment : #eb7c6f;
+
+    /* main color */
+    --pms-primary : #5D87FF;
+    --primary : #83735c;
+    --primary-opa : #83735cb5;
+    --primary-15 : #83735c26;
+    --primary-shadow : 0 0 0 0.25rem rgba(131, 115, 92, 0.25);
+    --primary-calendar-cell-range-bg: rgba(131, 115, 92, 0.125);
+    --secondary : #f6f0e8;
+    --secondary-15 : #f6f0e826;
+    --third : #e4ca9c;
+    --color-fill : #d48943;
+    --color-btn-tour: #243042;
+    --color-gnb-1 : #eef2f6;
+
+    /* basic color */
+    --white : #fff;
+    --black : #000;
+    --color7 : #777;
+    --color7-15 : #77777726;
+    --color5: #555;
+    --color4 : #444;
+    --colorD : #ddd;
+    --colorC : #ccc;
+    --colorE : #eee;
+    --color9a : #9a9a9a;
+
+    --input-border: #dbdfe6;
+    --input-check-border: #bdb2b2;
+    --input-check: #edebeb;
+
+    --login-background : #f9f9f9;
+    
+
+    --table-default-border: #ececec;
+
+
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.CodeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.CodeDefaultVO">
+    <id column="CODE" jdbcType="VARCHAR" property="code" />
+    <id column="CDTYPE_ID" jdbcType="VARCHAR" property="cdtypeId" />
+    <result column="CODE_NM" jdbcType="VARCHAR" property="codeNm" />
+    <result column="CODE_TYPE" jdbcType="VARCHAR" property="codeType" />
+    <result column="USEYN" jdbcType="CHAR" property="useyn" />
+    <result column="CODE_TIME_DATE" jdbcType="TIMESTAMP" property="codeTimeDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from CODE
+    where CODE = #{code,jdbcType=VARCHAR}
+      and CDTYPE_ID = #{cdtypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.CodeDefaultVO">
+    insert into CODE (CODE, CDTYPE_ID, CODE_NM, 
+      CODE_TYPE, USEYN, CODE_TIME_DATE
+      )
+    values (#{code,jdbcType=VARCHAR}, #{cdtypeId,jdbcType=VARCHAR}, #{codeNm,jdbcType=VARCHAR}, 
+      #{codeType,jdbcType=VARCHAR}, #{useyn,jdbcType=CHAR}, #{codeTimeDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.CodeDefaultVO">
+    update CODE
+    set CODE_NM = #{codeNm,jdbcType=VARCHAR},
+      CODE_TYPE = #{codeType,jdbcType=VARCHAR},
+      USEYN = #{useyn,jdbcType=CHAR},
+      CODE_TIME_DATE = #{codeTimeDate,jdbcType=TIMESTAMP}
+    where CODE = #{code,jdbcType=VARCHAR}
+      and CDTYPE_ID = #{cdtypeId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select CODE, CDTYPE_ID, CODE_NM, CODE_TYPE, USEYN, CODE_TIME_DATE
+    from CODE
+    where CODE = #{code,jdbcType=VARCHAR}
+      and CDTYPE_ID = #{cdtypeId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CODE, CDTYPE_ID, CODE_NM, CODE_TYPE, USEYN, CODE_TIME_DATE
+    from CODE
+  </select>
+</mapper>

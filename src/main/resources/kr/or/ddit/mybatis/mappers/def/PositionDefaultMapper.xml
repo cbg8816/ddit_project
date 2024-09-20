@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.PositionDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.PositionDefaultVO">
+    <id column="POSI_ID" jdbcType="VARCHAR" property="posiId" />
+    <result column="DEP_ID" jdbcType="VARCHAR" property="depId" />
+    <result column="POSI_NM" jdbcType="VARCHAR" property="posiNm" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from POSITION
+    where POSI_ID = #{posiId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.PositionDefaultVO">
+    insert into POSITION (POSI_ID, DEP_ID, POSI_NM
+      )
+    values (#{posiId,jdbcType=VARCHAR}, #{depId,jdbcType=VARCHAR}, #{posiNm,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.PositionDefaultVO">
+    update POSITION
+    set DEP_ID = #{depId,jdbcType=VARCHAR},
+      POSI_NM = #{posiNm,jdbcType=VARCHAR}
+    where POSI_ID = #{posiId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select POSI_ID, DEP_ID, POSI_NM
+    from POSITION
+    where POSI_ID = #{posiId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select POSI_ID, DEP_ID, POSI_NM
+    from POSITION
+  </select>
+</mapper>

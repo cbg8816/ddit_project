@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.hotelrev.dao.HotelRevDAO">
+
+	<resultMap type="HotelRevVO" id="hotelRevMap" autoMapping="true">
+		<id property="htrevId" column="HTREV_ID"/>
+<!-- 		<association property="totalRev" javaType="TotalRevDefaultVO" autoMapping="true"/> -->
+<!-- 		<association property="member" javaType="MemberVO" autoMapping="true" /> -->
+<!-- 		<association property="roomType" javaType="RoomtypeDefaultVO" autoMapping="true"/> -->
+<!-- 		<association property="revRoom" javaType="RevRoomDefaultVO" autoMapping="true"/> -->
+<!-- 		<association property="codeType" javaType="CodetypeDefaultVO" autoMapping="true"/> -->
+		<collection property="revRoomList" ofType="RevRoomVO" autoMapping="true"/>
+<!-- 		<collection property="dateslotList" ofType="DateslotDefaultVO" autoMapping="true"/> -->
+	</resultMap>
+
+<!-- 	<select id="selectHotelRevList" resultType="HotelRevVO"> -->
+<!-- 		SELECT * -->
+<!-- 		FROM HOTEL_REV H -->
+<!-- 			INNER JOIN TOTAL_REV T ON H.HTREV_ID = T.TREV_ID -->
+<!-- 			INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID -->
+<!-- 			LEFT OUTER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID -->
+<!-- 			LEFT OUTER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID -->
+<!-- 			INNER JOIN CODETYPE C ON TREV_ST = C.CDTYPE_ID -->
+<!-- 	</select> -->
+	<select id="selectHotelRevList" resultMap="hotelRevMap">
+		WITH HTREVVIEW AS(
+		    SELECT *
+		    FROM HOTEL_REV H
+		        INNER JOIN TOTAL_REV T ON H.HTREV_ID = T.TREV_ID
+		        INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+		        LEFT OUTER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+		        LEFT OUTER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+		        INNER JOIN CODETYPE C ON TREV_ST = C.CDTYPE_ID
+		        <include refid="searchFrag" />
+<!-- 		        ORDER BY H.HTREV_ID DESC -->
+		        ORDER BY H.HTREV_CHKIN DESC
+
+		)
+		    SELECT A.*
+		    FROM(
+		        SELECT HTREVVIEW.*, ROWNUM RNUM
+		        FROM HTREVVIEW
+		    ) A
+			<![CDATA[
+				WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+			]]>
+	</select>
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM HOTEL_REV H
+			INNER JOIN TOTAL_REV T ON (H.HTREV_ID = T.TREV_ID)
+			INNER JOIN MEMBER M ON (T.MEM_ID = M.MEM_ID)
+			LEFT OUTER JOIN REV_ROOM R ON (H.HTREV_ID = R.HTREV_ID)
+		<include refid="searchFrag" />
+	</select>
+
+	<select id="selectArriveYNList" resultMap="hotelRevMap">
+		WITH HTREVVIEW AS(
+			SELECT *
+		    FROM HOTEL_REV H
+		        INNER JOIN TOTAL_REV T ON H.HTREV_ID = T.TREV_ID
+		        INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+		        LEFT OUTER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+		        LEFT OUTER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+		        INNER JOIN CODETYPE C ON TREV_ST = C.CDTYPE_ID
+		    WHERE HTREV_ARRIVE = 'N'
+		    AND HTREV_CHKIN = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.revNum)">
+                AND INSTR(H.HTREV_ID, #{hotelCondition.revNum}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.memName)">
+                AND INSTR(M.MEM_NAME, #{hotelCondition.memName}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.roomType)">
+                AND INSTR(R.ROOMTYPE_ID, #{hotelCondition.roomType}) > 0
+            </if>
+
+		    ORDER BY H.HTREV_ID DESC
+		    )
+			    SELECT A.*
+			    FROM(
+			        SELECT HTREVVIEW.*, ROWNUM RNUM
+			        FROM HTREVVIEW
+			    ) A
+				<![CDATA[
+					WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+				]]>
+	</select>
+	<select id="selectArriveTotalRecord" resultType="int">
+	    SELECT COUNT(*)
+	    FROM HOTEL_REV H
+	        INNER JOIN TOTAL_REV T ON H.HTREV_ID = T.TREV_ID
+	        INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+	        LEFT OUTER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+	        LEFT OUTER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+	        INNER JOIN CODETYPE C ON TREV_ST = C.CDTYPE_ID
+	    WHERE HTREV_ARRIVE = 'N'
+	    AND HTREV_CHKIN = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.revNum)">
+			AND INSTR(H.HTREV_ID, #{hotelCondition.revNum}) > 0
+		</if>
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.memName)">
+		    AND INSTR(M.MEM_NAME, #{hotelCondition.memName}) > 0
+		</if>
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.roomType)">
+		    AND INSTR(R.ROOMTYPE_ID, #{hotelCondition.roomType}) > 0
+		</if>
+	    ORDER BY H.HTREV_ID DESC
+	</select>
+
+<!-- 	검색조건 : 예약번호, 고객명, 투숙일, 퇴실일, 룸타입 -->
+
+<sql id="searchFrag">
+    <where>
+        <trim prefixOverrides="AND">
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.revNum)">
+                INSTR(H.HTREV_ID, #{hotelCondition.revNum}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.memName)">
+                AND INSTR(M.MEM_NAME, #{hotelCondition.memName}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.roomType)">
+                AND INSTR(R.ROOMTYPE_ID, #{hotelCondition.roomType}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.chkin)">
+                AND INSTR(H.HTREV_CHKIN, #{hotelCondition.chkin}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.chkout)">
+                AND INSTR(H.HTREV_CHKOUT, #{hotelCondition.chkout}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.status)">
+                AND INSTR(T.TREV_ST, #{hotelCondition.status}) > 0
+            </if>
+        </trim>
+    </where>
+</sql>
+
+
+	<select id="selectHotelRev" resultMap="hotelRevMap" parameterType="HotelRevVO">
+		SELECT *
+		FROM HOTEL_REV H INNER JOIN TOTAL_REV T ON (HTREV_ID = T.TREV_ID)
+		    INNER JOIN MEMBER M ON (T.MEM_ID = M.MEM_ID)
+		    LEFT OUTER JOIN REV_ROOM RR ON (H.HTREV_ID = RR.HTREV_ID)
+		    LEFT OUTER JOIN ROOMTYPE RT ON (RR.ROOMTYPE_ID = RT.ROOMTYPE_ID)
+		    INNER JOIN CODETYPE ON (T.TREV_ST = CDTYPE_ID)
+		WHERE H.HTREV_ID = #{htrevId}
+<!-- 			AND RR.REVROOM_ID = #{revroomId} -->
+	</select>
+
+	<select id="selectOneHtrev">
+		SELECT *
+		FROM HOTEL_REV H
+		    INNER JOIN TOTAL_REV T ON H.HTREV_ID = T.TREV_ID
+		    INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+		    INNER JOIN CODETYPE C ON TREV_ST = C.CDTYPE_ID
+		WHERE H.HTREV_ID = #{what}
+	</select>
+	<select id="selectRevroomList" resultType="RevRoomVO">
+		SELECT *
+		FROM REV_ROOM RR
+		    INNER JOIN HOTEL_REV H ON (H.HTREV_ID = RR.HTREV_ID)
+		    INNER JOIN ROOM R ON (R.ROOM_ID = RR.ROOM_ID)
+		    INNER JOIN ROOMTYPE RT ON (RT.ROOMTYPE_ID = R.ROOMTYPE_ID)
+		WHERE H.HTREV_ID = #{what}
+	</select>
+	<select id="selectExtrachargeList" resultType="ExtrachargesVO">
+		SELECT *
+		FROM HOTEL_REV H
+		    INNER JOIN TOTAL_REV T ON (H.HTREV_ID = T.TREV_ID)
+		    INNER JOIN PAY P ON (P.TREV_ID = T.TREV_ID)
+		    LEFT OUTER JOIN EXTRACHARGES E ON (E.PAY_ID = P.PAY_ID)
+		    INNER JOIN EXTCRG_TYPE ET ON (ET.ET_ID = E.ET_ID)
+		WHERE T.TREV_ID = #{what}
+	</select>
+	<select id="selectTotalExtra" resultType="int">
+		SELECT NVL(SUM(ET_SUM), 0) "etTotal"
+		FROM
+		(
+			SELECT
+				E.EXTCRG_NO EXTCRG_NO
+				, E.ET_ID ET_ID
+				, EXTCRG_QTY
+				, ET_NM
+				, ET_PRICE
+	            , (EXTCRG_QTY  * ET_PRICE) ET_SUM
+			FROM
+			EXTRACHARGES E
+                INNER JOIN EXTCRG_TYPE EX ON E.ET_ID = EX.ET_ID
+                INNER JOIN PAY P ON E.PAY_ID = P.PAY_ID
+                INNER JOIN TOTAL_REV T ON T.TREV_ID = P.TREV_ID
+            WHERE T.TREV_ID = #{what}
+	        )
+	</select>
+
+	<update id="updateRevSt">
+		UPDATE TOTAL_REV
+		SET
+		    TREV_ST = #{trevSt,jdbcType=VARCHAR}
+		WHERE TREV_ID = #{trevId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateRoomSt">
+		UPDATE
+		    ROOMSTATUS
+		SET ROOM_ST = '1'
+		WHERE ROOM_ID IN (
+		    SELECT RR.ROOM_ID
+		    FROM REV_ROOM RR
+		        INNER JOIN HOTEL_REV H ON (H.HTREV_ID = RR.HTREV_ID)
+		    WHERE H.HTREV_ID = #{htrevId}
+		)
+	</update>
+
+
+
+	<update id="updateArriveComplete" parameterType="string">
+		UPDATE HOTEL_REV
+		SET
+		    HTREV_ARRIVE = 'Y'
+		WHERE HTREV_ID = #{htrevArrive, jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateHotelRev" parameterType="HotelRevVO">
+		UPDATE HOTEL_REV
+		SET
+			HTREV_CN = #{htrevCn,jdbcType=VARCHAR}
+			, HTREV_CHKIN = #{htrevChkin,jdbcType=VARCHAR}
+			, HTREV_CHKOUT = #{htrevChkout,jdbcType=VARCHAR}
+			, HTREV_STAY = #{htrevStay,jdbcType=NUMERIC}
+			, HTREV_PLATFORM = #{htrevPlatform,jdbcType=VARCHAR}
+			, HTREV_PAKYN = #{htrevPakyn,jdbcType=VARCHAR}
+			, HTREV_TPRICE = #{htrevTprice,jdbcType=NUMERIC}
+			, HTREV_SLOT = #{htrevSlot,jdbcType=VARCHAR}
+		WHERE HTREV_ID = #{htrevId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateRevRoom" parameterType="HotelRevVO">
+		UPDATE REV_ROOM
+		SET
+			ROOM_ID = #{roomId,jdbcType=VARCHAR}
+			, ROOMTYPE_ID = #{roomtypeId,jdbcType=VARCHAR}
+		WHERE REVROOM_ID = #{revroomId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateTotalRev" parameterType="HotelRevVO">
+		UPDATE TOTAL_REV
+		SET
+		    TREV_ADULT = #{trevAdult,jdbcType=NUMERIC}
+		    , TREV_CHILD = #{trevChild,jdbcType=NUMERIC}
+		    , TREV_PAYOPT = #{trevPayopt,jdbcType=VARCHAR}
+		    , TREV_RTYPE = #{trevRtype,jdbcType=VARCHAR}
+		    , TREV_CARNO = #{trevCarno,jdbcType=VARCHAR}
+		    , TREV_ST = #{trevSt,jdbcType=VARCHAR}
+		    , TREV_DATE = #{trevDate,jdbcType=DATE}
+		WHERE TREV_ID = #{trevId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateRoomStatus" parameterType="HotelRevVO">
+		UPDATE ROOMSTATUS
+		SET ROOM_ST = #{roomSt,jdbcType=VARCHAR}
+		WHERE ROOM_ID = #{roomId,jdbcType=VARCHAR}
+<!-- 		UPDATE ROOMSTATUS -->
+<!-- 		SET ROOM_ST = #{roomSt,jdbcType=VARCHAR} -->
+<!-- 		WHERE ROOM_ID = (SELECT RS.ROOM_ID -->
+<!-- 		                FROM ROOMSTATUS RS -->
+<!-- 		                    LEFT OUTER JOIN REV_ROOM RR ON (RS.ROOM_ID = RR.ROOM_ID) -->
+<!-- 		                WHERE RR.REVROOM_ID = #{revroomId,jdbcType=VARCHAR} ) -->
+	</update>
+
+	<insert id="insertMember" parameterType="HotelRevVO">
+		<selectKey order="BEFORE" resultType="string" keyProperty="memId">
+			SELECT 'MEM' || LPAD(NVL(TO_NUMBER(SUBSTR(MAX(MEM_ID), 4)), 0) + 1, 5, '0')
+			FROM MEMBER
+		</selectKey>
+	    INSERT INTO MEMBER (
+	    	MEM_ID
+	        , MEM_NAME
+	        , MEM_EMAIL
+	        , MEM_TEL
+	    ) VALUES (
+	    	#{memId,jdbcType=VARCHAR}
+	        , #{memName,jdbcType=VARCHAR}
+	        , #{memEmail,jdbcType=VARCHAR}
+	        , #{memTel,jdbcType=VARCHAR}
+	    )
+	</insert>
+
+	<insert id="insertTotalRev" parameterType="HotelRevVO">
+		<selectKey order="BEFORE" resultType="string" keyProperty="trevId">
+		SELECT 'REV' || LPAD(NVL(TO_NUMBER(SUBSTR(MAX(TREV_ID), 4)), 0) + 1, 5, '0')
+		FROM TOTAL_REV
+		</selectKey>
+		INSERT INTO TOTAL_REV (
+			TREV_ID
+		    , MEM_ID
+		    , TREV_ADULT
+		    , TREV_CHILD
+		    , TREV_PAYOPT
+		    , TREV_RTYPE
+		    , TREV_CARNO
+		    , TREV_ST
+		) VALUES (
+		    #{trevId,jdbcType=VARCHAR}
+		    , (SELECT MEM_ID FROM (
+		         SELECT MEM_ID FROM MEMBER
+		         ORDER BY MEM_ID DESC
+		     ) WHERE ROWNUM = 1)
+		    ,#{trevAdult,jdbcType=NUMERIC}
+		    ,#{trevChild,jdbcType=NUMERIC}
+		    ,#{trevPayopt,jdbcType=VARCHAR}
+		    , '01'
+		    ,#{trevCarno,jdbcType=VARCHAR}
+		    ,#{trevSt,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<insert id="insertHotelRev" parameterType="HotelRevVO">
+		INSERT INTO HOTEL_REV (
+		    HTREV_ID
+		    , HTREV_CN
+		    , HTREV_CHKIN
+		    , HTREV_CHKOUT
+		    , HTREV_STAY
+		    , HTREV_PLATFORM
+		    , HTREV_PAKYN
+		    , HTREV_TPRICE
+		    , HTREV_SLOT
+		) VALUES (
+		        (SELECT TREV_ID FROM (
+		         SELECT TREV_ID FROM TOTAL_REV
+		         ORDER BY TREV_ID DESC
+		     ) WHERE ROWNUM = 1)
+			, #{htrevCn,jdbcType=VARCHAR}
+			, #{htrevChkin,jdbcType=VARCHAR}
+			, #{htrevChkout,jdbcType=VARCHAR}
+			, #{htrevStay,jdbcType=NUMERIC}
+			, #{htrevPlatform,jdbcType=VARCHAR}
+			, #{htrevPakyn,jdbcType=VARCHAR}
+			, #{htrevTprice,jdbcType=NUMERIC}
+			, #{htrevSlot,jdbcType=VARCHAR}
+		)
+	</insert>
+
+<!-- 	<insert id="insertRevRoom" parameterType="HotelRevVO"> -->
+<!-- 		<selectKey order="BEFORE" resultType="string" keyProperty="revroomId"> -->
+<!-- 			SELECT 'RR' || LPAD(NVL(TO_NUMBER(SUBSTR(MAX(REVROOM_ID), 3)), 0) + 1, 5, '0') -->
+<!-- 			FROM REV_ROOM -->
+<!-- 		</selectKey> -->
+<!-- 		INSERT INTO REV_ROOM ( -->
+<!-- 			REVROOM_ID -->
+<!-- 		    , HTREV_ID -->
+<!-- 		    , ROOM_ID -->
+<!-- 		    , ROOMTYPE_ID -->
+<!-- 		    , REVROOM_PRICE -->
+<!-- 		) VALUES ( -->
+<!-- 			#{revroomId,jdbcType=VARCHAR} -->
+<!-- 		    , (SELECT HTREV_ID FROM ( -->
+<!-- 		         SELECT HTREV_ID FROM HOTEL_REV -->
+<!-- 		         ORDER BY HTREV_ID DESC -->
+<!-- 		     ) WHERE ROWNUM = 1) -->
+<!-- 			, #{roomId,jdbcType=VARCHAR} -->
+<!-- 			, #{roomtypeId,jdbcType=VARCHAR} -->
+<!-- 		    , #{revroomPrice,jdbcType=NUMERIC} -->
+<!-- 		) -->
+<!-- 	</insert> -->
+
+	<insert id="insertRevRoom">
+		<selectKey order="BEFORE" resultType="string" keyProperty="revroomId">
+			SELECT 'RR' || LPAD(NVL(TO_NUMBER(SUBSTR(MAX(REVROOM_ID), 3)), 0) + 1, 5, '0')
+			FROM REV_ROOM
+		</selectKey>
+		<if test="hotelRev.revRoomList neq null">
+		INSERT ALL
+			<foreach collection="hotelRev.revRoomList" item="revroom" index="idx">
+				INTO REV_ROOM (
+					REVROOM_ID
+				    , HTREV_ID
+				    , ROOM_ID
+				    , ROOMTYPE_ID
+				    , REVROOM_PRICE
+				) VALUES (
+<!-- 					#{idstrt} + #{idx} -->
+					(SELECT
+	               'RR' || LPAD(SUBSTR(#{revroomId}, 3) +#{idx}, 5, '0') "revroomId"
+	                 FROM DUAL)
+				    , (SELECT HTREV_ID FROM (
+				         SELECT HTREV_ID FROM HOTEL_REV
+				         ORDER BY HTREV_ID DESC
+				     ) WHERE ROWNUM = 1)
+					, #{revroom.roomId,jdbcType=VARCHAR}
+					, #{revroom.roomtypeId,jdbcType=VARCHAR}
+				    , #{revroom.revroomPrice,jdbcType=NUMERIC}
+				)
+		</foreach>
+	</if>
+	SELECT * FROM DUAL
+	</insert>
+
+	<insert id="insertDateSlot">
+		<selectKey keyProperty="dateslotId" resultType="int" order="BEFORE">
+			SELECT DATESLOT_SEQ.NEXTVAL
+			FROM DUAL
+		</selectKey>
+		INSERT ALL
+		<foreach collection="dateslot" item="item" index="idx">
+			 INTO DATESLOT (
+			    DATESLOT_ID
+			    ,REVROOM_ID
+			    ,DATESLOT_NM
+			)
+				VALUES (
+					#{dateslotId} + #{idx}
+					, #{item.revroomId, jdbcType=VARCHAR}
+<!-- 				    , (SELECT  'RR' || LPAD(SUBSTR((SELECT REVROOM_ID FROM ( -->
+<!-- 						         SELECT REVROOM_ID FROM REV_ROOM -->
+<!-- 						         ORDER BY REVROOM_ID DESC -->
+<!-- 						     ) WHERE ROWNUM = 1), 3)+1, 5, '0') FROM DUAL) -->
+					, #{item.dateslotNm, jdbcType=VARCHAR}
+				)
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+
+<!-- 		<insert id="insertDateSlot"> -->
+<!-- 			<selectKey keyProperty="dateslotId" resultType="int" order="BEFORE"> -->
+<!-- 				SELECT DATESLOT_ID +1 "dateslotId" -->
+<!-- 				FROM ( -->
+<!-- 				    SELECT DATESLOT_ID -->
+<!-- 				    FROM DATESLOT -->
+<!-- 				    ORDER BY DATESLOT_ID DESC -->
+<!-- 				) -->
+<!-- 				WHERE ROWNUM = 1 -->
+<!-- 		</selectKey> -->
+<!-- 			INSERT INTO DATESLOT ( -->
+<!-- 			    DATESLOT_ID -->
+<!-- 			    ,REVROOM_ID -->
+<!-- 			    ,DATESLOT_NM -->
+<!-- 			) -->
+<!-- 			VALUES ( -->
+<!-- 				#{dateslotId} -->
+<!-- 				, #revroomId, jdbcType=VARCHAR} -->
+<!-- 				, #{dateslotNm, jdbcType=VARCHAR} -->
+<!-- 			) -->
+<!-- 		</insert> -->
+
+
+	<!-- 	회원 마이페이지 예약 조회 -->
+	<select id="selectHotelRevListMember" resultMap="hotelRevMap">
+
+			WITH HTREVVIEW AS(
+		    SELECT *
+		    FROM HOTEL_REV H
+		        INNER JOIN TOTAL_REV T ON H.HTREV_ID = T.TREV_ID
+		        INNER JOIN MEMBER M ON T.MEM_ID = M.MEM_ID
+		        LEFT OUTER JOIN REV_ROOM R ON H.HTREV_ID = R.HTREV_ID
+		        LEFT OUTER JOIN ROOMTYPE RT ON R.ROOMTYPE_ID = RT.ROOMTYPE_ID
+		        INNER JOIN CODETYPE C ON TREV_ST = C.CDTYPE_ID
+                WHERE M.MEM_ID = #{memId, jdbcType=VARCHAR}
+		        ORDER BY H.HTREV_ID DESC
+
+			)
+		    SELECT A.*
+		    FROM(
+		        SELECT HTREVVIEW.*, ROWNUM RNUM
+		        FROM HTREVVIEW
+		    ) A
+		    <![CDATA[
+		      WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		 ]]>
+
+	</select>
+
+	<!-- 	회원별 총 예약 수 조회 -->
+	<select id="selectTotalRecordMember" resultType="int">
+		SELECT COUNT(*)
+		FROM HOTEL_REV H
+			INNER JOIN TOTAL_REV T ON (H.HTREV_ID = T.TREV_ID)
+			INNER JOIN MEMBER M ON (T.MEM_ID = M.MEM_ID)
+			LEFT OUTER JOIN REV_ROOM R ON (H.HTREV_ID = R.HTREV_ID)
+		WHERE M.MEM_ID = #{memId, jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>

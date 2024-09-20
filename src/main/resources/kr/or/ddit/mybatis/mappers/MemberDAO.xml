@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.member.dao.MemberDAO">
+
+<resultMap type="MemberVO" id="memberMap" autoMapping="true">
+
+	<id property="memId" column="MEM_ID"/>
+
+</resultMap>
+
+<insert id="insertMember" parameterType="MemberVO">
+	INSERT INTO MEMBER (
+				    MEM_ID
+				    , RANK_CODE
+				    , MEM_NAME
+				    , MEM_LOGIN_ID
+				    , MEM_LOGIN_PW
+				    , MEM_EMAIL
+				    , MEM_TEL
+				    , MEM_YN
+				    , MEM_ROLE
+				) VALUES (
+				  	'AB' || MEM_SEQ.NEXTVAL
+					, 'B'
+					, #{memName, jdbcType=VARCHAR}
+					, #{memLoginId, jdbcType=VARCHAR}
+					, #{memLoginPw, jdbcType=VARCHAR}
+					, #{memEmail, jdbcType=VARCHAR}
+					, #{memTel, jdbcType=VARCHAR}
+					, 'N'
+					, 'USER'
+				)
+</insert>
+
+<select id="selectMemberList" resultMap="memberMap">
+
+			SELECT MEM_ID
+				   , RANK_CODE
+				   , MEM_NAME
+				   , MEM_LOGIN_ID
+				   , MEM_LOGIN_PW
+				   , MEM_EMAIL
+				   , MEM_TEL
+				   , MEM_YN
+				   , MEM_ROLE
+			FROM MEMBER
+
+</select>
+
+<select id="selectMember" resultMap="memberMap" parameterType="string">
+
+	SELECT MEM_ID
+		   , RANK_CODE
+		   , MEM_NAME
+		   , MEM_LOGIN_ID
+		   , MEM_LOGIN_PW
+		   , MEM_EMAIL
+		   , MEM_TEL
+		   , MEM_YN
+		   , MEM_ROLE
+	FROM MEMBER
+	WHERE MEM_LOGIN_ID = #{memLoginId, jdbcType=VARCHAR}
+	AND MEM_YN = 'N'
+
+</select>
+
+<select id="selectMemberId" resultMap="memberMap" parameterType="MemberVO">
+
+	SELECT MEM_ID
+		   , RANK_CODE
+		   , MEM_NAME
+		   , MEM_LOGIN_ID
+		   , MEM_LOGIN_PW
+		   , MEM_EMAIL
+		   , MEM_TEL
+		   , MEM_YN
+		   , MEM_ROLE
+	FROM MEMBER
+	WHERE MEM_NAME = #{memName, jdbcType=VARCHAR}
+	AND MEM_TEL = #{memTel, jdbcType=VARCHAR}
+	AND MEM_YN = 'N'
+	AND MEM_ROLE = 'USER'
+
+</select>
+
+<select id="selectMemberPw" resultMap="memberMap" parameterType="MemberVO">
+
+	SELECT MEM_ID
+		   , RANK_CODE
+		   , MEM_NAME
+		   , MEM_LOGIN_ID
+		   , MEM_LOGIN_PW
+		   , MEM_EMAIL
+		   , MEM_TEL
+		   , MEM_YN
+		   , MEM_ROLE
+	FROM MEMBER
+	WHERE MEM_LOGIN_ID = #{memLoginId, jdbcType=VARCHAR}
+	AND MEM_NAME = #{memName, jdbcType=VARCHAR}
+	AND MEM_TEL = #{memTel, jdbcType=VARCHAR}
+	AND MEM_YN = 'N'
+	AND MEM_ROLE = 'USER'
+
+</select>
+
+<update id="updateMember" parameterType="MemberVO">
+
+	UPDATE MEMBER
+	SET MEM_NAME = #{memName, jdbcType=VARCHAR}
+        , MEM_EMAIL = #{memEmail, jdbcType=VARCHAR}
+        , MEM_TEL = #{memTel, jdbcType=VARCHAR}
+	WHERE MEM_LOGIN_ID = #{memLoginId, jdbcType=VARCHAR}
+
+</update>
+
+<update id="updateMemberPw" parameterType="MemberVO">
+
+	UPDATE MEMBER
+	SET MEM_LOGIN_PW = #{memLoginPw, jdbcType=VARCHAR}
+	WHERE MEM_LOGIN_ID = #{memLoginId, jdbcType=VARCHAR}
+
+</update>
+
+<update id="deleteMember" parameterType="string">
+
+	UPDATE MEMBER
+	SET MEM_YN = 'Y'
+	WHERE MEM_LOGIN_ID = #{memLoginId, jdbcType=VARCHAR}
+
+</update>
+
+</mapper>

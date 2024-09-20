@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.PaystubDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.PaystubDefaultVO">
+    <id column="PAYSTUB_YM" jdbcType="VARCHAR" property="paystubYm" />
+    <id column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="SPE_ID" jdbcType="VARCHAR" property="speId" />
+    <result column="PAYSTUB_STDATE" jdbcType="TIMESTAMP" property="paystubStdate" />
+    <result column="PAYSTUB_ENDDATE" jdbcType="TIMESTAMP" property="paystubEnddate" />
+    <result column="Field4" jdbcType="TIMESTAMP" property="field4" />
+    <result column="PAYSTUB_NOMAL" jdbcType="NUMERIC" property="paystubNomal" />
+    <result column="PAYSTUB_BONUS" jdbcType="NUMERIC" property="paystubBonus" />
+    <result column="PAYSTUB_OVERTIME" jdbcType="NUMERIC" property="paystubOvertime" />
+    <result column="PAYSTUB_TOTAL" jdbcType="NUMERIC" property="paystubTotal" />
+    <result column="DEDUCTIBLE" jdbcType="NUMERIC" property="deductible" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from PAYSTUB
+    where PAYSTUB_YM = #{paystubYm,jdbcType=VARCHAR}
+      and EMP_ID = #{empId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.PaystubDefaultVO">
+    insert into PAYSTUB (PAYSTUB_YM, EMP_ID, SPE_ID, 
+      PAYSTUB_STDATE, PAYSTUB_ENDDATE, Field4, 
+      PAYSTUB_NOMAL, PAYSTUB_BONUS, PAYSTUB_OVERTIME, 
+      PAYSTUB_TOTAL, DEDUCTIBLE)
+    values (#{paystubYm,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, #{speId,jdbcType=VARCHAR}, 
+      #{paystubStdate,jdbcType=TIMESTAMP}, #{paystubEnddate,jdbcType=TIMESTAMP}, #{field4,jdbcType=TIMESTAMP}, 
+      #{paystubNomal,jdbcType=NUMERIC}, #{paystubBonus,jdbcType=NUMERIC}, #{paystubOvertime,jdbcType=NUMERIC}, 
+      #{paystubTotal,jdbcType=NUMERIC}, #{deductible,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.PaystubDefaultVO">
+    update PAYSTUB
+    set SPE_ID = #{speId,jdbcType=VARCHAR},
+      PAYSTUB_STDATE = #{paystubStdate,jdbcType=TIMESTAMP},
+      PAYSTUB_ENDDATE = #{paystubEnddate,jdbcType=TIMESTAMP},
+      Field4 = #{field4,jdbcType=TIMESTAMP},
+      PAYSTUB_NOMAL = #{paystubNomal,jdbcType=NUMERIC},
+      PAYSTUB_BONUS = #{paystubBonus,jdbcType=NUMERIC},
+      PAYSTUB_OVERTIME = #{paystubOvertime,jdbcType=NUMERIC},
+      PAYSTUB_TOTAL = #{paystubTotal,jdbcType=NUMERIC},
+      DEDUCTIBLE = #{deductible,jdbcType=NUMERIC}
+    where PAYSTUB_YM = #{paystubYm,jdbcType=VARCHAR}
+      and EMP_ID = #{empId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select PAYSTUB_YM, EMP_ID, SPE_ID, PAYSTUB_STDATE, PAYSTUB_ENDDATE, Field4, PAYSTUB_NOMAL, 
+    PAYSTUB_BONUS, PAYSTUB_OVERTIME, PAYSTUB_TOTAL, DEDUCTIBLE
+    from PAYSTUB
+    where PAYSTUB_YM = #{paystubYm,jdbcType=VARCHAR}
+      and EMP_ID = #{empId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select PAYSTUB_YM, EMP_ID, SPE_ID, PAYSTUB_STDATE, PAYSTUB_ENDDATE, Field4, PAYSTUB_NOMAL, 
+    PAYSTUB_BONUS, PAYSTUB_OVERTIME, PAYSTUB_TOTAL, DEDUCTIBLE
+    from PAYSTUB
+  </select>
+</mapper>

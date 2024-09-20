@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.LprodDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.LprodDefaultVO">
+    <id column="LPROD_GU" jdbcType="CHAR" property="lprodGu" />
+    <result column="LPRDO_ID" jdbcType="VARCHAR" property="lprdoId" />
+    <result column="LPROD_NM" jdbcType="VARCHAR" property="lprodNm" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from LPROD
+    where LPROD_GU = #{lprodGu,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.LprodDefaultVO">
+    insert into LPROD (LPROD_GU, LPRDO_ID, LPROD_NM
+      )
+    values (#{lprodGu,jdbcType=CHAR}, #{lprdoId,jdbcType=VARCHAR}, #{lprodNm,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.LprodDefaultVO">
+    update LPROD
+    set LPRDO_ID = #{lprdoId,jdbcType=VARCHAR},
+      LPROD_NM = #{lprodNm,jdbcType=VARCHAR}
+    where LPROD_GU = #{lprodGu,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select LPROD_GU, LPRDO_ID, LPROD_NM
+    from LPROD
+    where LPROD_GU = #{lprodGu,jdbcType=CHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select LPROD_GU, LPRDO_ID, LPROD_NM
+    from LPROD
+  </select>
+</mapper>

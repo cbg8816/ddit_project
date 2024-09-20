@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.FavoritesDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.FavoritesDefaultVO">
+    <id column="FAV_ID" jdbcType="VARCHAR" property="favId" />
+    <result column="FAV_MEMID" jdbcType="VARCHAR" property="favMemid" />
+    <result column="ROOMTYPE_ID" jdbcType="VARCHAR" property="roomtypeId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from FAVORITES
+    where FAV_ID = #{favId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.FavoritesDefaultVO">
+    insert into FAVORITES (FAV_ID, FAV_MEMID, ROOMTYPE_ID
+      )
+    values (#{favId,jdbcType=VARCHAR}, #{favMemid,jdbcType=VARCHAR}, #{roomtypeId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.FavoritesDefaultVO">
+    update FAVORITES
+    set FAV_MEMID = #{favMemid,jdbcType=VARCHAR},
+      ROOMTYPE_ID = #{roomtypeId,jdbcType=VARCHAR}
+    where FAV_ID = #{favId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select FAV_ID, FAV_MEMID, ROOMTYPE_ID
+    from FAVORITES
+    where FAV_ID = #{favId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select FAV_ID, FAV_MEMID, ROOMTYPE_ID
+    from FAVORITES
+  </select>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.PackageDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.PackageDefaultVO">
+    <id column="PACKAGE_ID" jdbcType="VARCHAR" property="packageId" />
+    <result column="HT_REV_ID" jdbcType="VARCHAR" property="htRevId" />
+    <result column="PACKAGE_NAME" jdbcType="VARCHAR" property="packageName" />
+    <result column="PACKAGE_PERIOD" jdbcType="TIMESTAMP" property="packagePeriod" />
+    <result column="PACKAGE_REGDATE" jdbcType="TIMESTAMP" property="packageRegdate" />
+    <result column="PACKAGE_PRICE" jdbcType="NUMERIC" property="packagePrice" />
+    <result column="PACKAGE_PLATFORM" jdbcType="VARCHAR" property="packagePlatform" />
+    <result column="PACKAGE_CONTENT" jdbcType="CLOB" property="packageContent" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PACKAGE
+    where PACKAGE_ID = #{packageId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.PackageDefaultVO">
+    insert into PACKAGE (PACKAGE_ID, HT_REV_ID, PACKAGE_NAME, 
+      PACKAGE_PERIOD, PACKAGE_REGDATE, PACKAGE_PRICE, 
+      PACKAGE_PLATFORM, PACKAGE_CONTENT)
+    values (#{packageId,jdbcType=VARCHAR}, #{htRevId,jdbcType=VARCHAR}, #{packageName,jdbcType=VARCHAR}, 
+      #{packagePeriod,jdbcType=TIMESTAMP}, #{packageRegdate,jdbcType=TIMESTAMP}, #{packagePrice,jdbcType=NUMERIC}, 
+      #{packagePlatform,jdbcType=VARCHAR}, #{packageContent,jdbcType=CLOB})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.PackageDefaultVO">
+    update PACKAGE
+    set HT_REV_ID = #{htRevId,jdbcType=VARCHAR},
+      PACKAGE_NAME = #{packageName,jdbcType=VARCHAR},
+      PACKAGE_PERIOD = #{packagePeriod,jdbcType=TIMESTAMP},
+      PACKAGE_REGDATE = #{packageRegdate,jdbcType=TIMESTAMP},
+      PACKAGE_PRICE = #{packagePrice,jdbcType=NUMERIC},
+      PACKAGE_PLATFORM = #{packagePlatform,jdbcType=VARCHAR},
+      PACKAGE_CONTENT = #{packageContent,jdbcType=CLOB}
+    where PACKAGE_ID = #{packageId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select PACKAGE_ID, HT_REV_ID, PACKAGE_NAME, PACKAGE_PERIOD, PACKAGE_REGDATE, PACKAGE_PRICE, 
+    PACKAGE_PLATFORM, PACKAGE_CONTENT
+    from PACKAGE
+    where PACKAGE_ID = #{packageId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select PACKAGE_ID, HT_REV_ID, PACKAGE_NAME, PACKAGE_PERIOD, PACKAGE_REGDATE, PACKAGE_PRICE, 
+    PACKAGE_PLATFORM, PACKAGE_CONTENT
+    from PACKAGE
+  </select>
+</mapper>

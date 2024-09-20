@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.revroom.dao.RevRoomDAO">
+
+
+	<resultMap type="RevRoomVO" id="revRoomMap">
+		<association property="hotelRev" javaType="HotelRevVO" autoMapping="true"/>
+		<association property="roomStatus" javaType="RoomStatusVO" autoMapping="true"/>
+	</resultMap>
+
+	<select id="selectUseRoomList" resultType="RevRoomVO">
+		WITH USEROOMVIEW AS(
+		    SELECT *
+		    FROM REV_ROOM RR
+		        INNER JOIN HOTEL_REV H ON (H.HTREV_ID = RR.HTREV_ID)
+		        INNER JOIN TOTAL_REV T ON (T.TREV_ID = H.HTREV_ID)
+		        INNER JOIN MEMBER M ON (M.MEM_ID = T.MEM_ID)
+		        INNER JOIN ROOMTYPE RT ON (RT.ROOMTYPE_ID = RR.ROOMTYPE_ID)
+		        INNER JOIN ROOMSTATUS RS ON (RS.ROOM_ID = RR.ROOM_ID)
+		        INNER JOIN CODETYPE C ON TREV_ST = C.CDTYPE_ID
+		        WHERE RS.USEYN = 'Y'
+		        <include refid="searchFrag" />
+		        ORDER BY RR.ROOM_ID
+		)
+		    SELECT A.*
+		    FROM(
+		        SELECT USEROOMVIEW.*, ROWNUM RNUM
+		        FROM USEROOMVIEW
+		    ) A
+	    	<![CDATA[
+				WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+			]]>
+	</select>
+
+	<!-- 	검색조건 : 예약번호, 고객명, 투숙일, 퇴실일, 룸타입 -->
+	<sql id="searchFrag">
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.revNum)">
+               AND INSTR(H.HTREV_ID, #{hotelCondition.revNum}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.memName)">
+                AND INSTR(M.MEM_NAME, #{hotelCondition.memName}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.roomType)">
+                AND INSTR(RR.ROOMTYPE_ID, #{hotelCondition.roomType}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.chkin)">
+                AND INSTR(H.HTREV_CHKIN, #{hotelCondition.chkin}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.chkout)">
+                AND INSTR(H.HTREV_CHKOUT, #{hotelCondition.chkout}) > 0
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(hotelCondition.roomNo)">
+                AND INSTR(RR.ROOM_ID, #{hotelCondition.roomNo}) > 0
+            </if>
+	</sql>
+
+
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM REV_ROOM RR
+	        INNER JOIN HOTEL_REV H ON (H.HTREV_ID = RR.HTREV_ID)
+	        INNER JOIN TOTAL_REV T ON (T.TREV_ID = H.HTREV_ID)
+	        INNER JOIN MEMBER M ON (M.MEM_ID = T.MEM_ID)
+	        INNER JOIN ROOMSTATUS RS ON (RS.ROOM_ID = RR.ROOM_ID)
+	        WHERE RS.USEYN = 'Y'
+	    <include refid="searchFrag" />
+	</select>
+
+
+
+	<select id="selectRevRoomList">
+<!-- 		SELECT * -->
+<!-- 		FROM REV_ROOM RR -->
+<!-- 		    INNER JOIN HOTEL_REV H ON (RR.HTREV_ID = H.HTREV_ID) -->
+<!-- 		    INNER JOIN ROOM R ON (RR.ROOM_ID = R.ROOM_ID) -->
+<!-- 		    INNER JOIN ROOMTYPE RT ON (RR.ROOMTYPE_ID = RT.ROOMTYPE_ID) -->
+		SELECT*
+		FROM REV_ROOM
+		WHERE HTREV_ID = #{htrevId}
+	</select>
+
+	<select id="selectRevRoom" resultMap="revRoomMap">
+		SELECT *
+		FROM REV_ROOM
+		WHERE REVROOM_ID = #{revroomId,jdbcType=VARCHAR}
+	</select>
+
+
+<!-- 	<update id="updateRevRoom" parameterType="RevRoomDefaultVO"> -->
+<!-- 		UPDATE REV_ROOM -->
+<!-- 		SET -->
+<!-- 			ROOM_ID = #{roomId,jdbcType=VARCHAR} -->
+<!-- 			, ROOMTYPE_ID = #{roomtypeId,jdbcType=VARCHAR} -->
+<!-- 		WHERE REVROOM_ID = #{revroomId,jdbcType=VARCHAR} -->
+<!-- 	</update> -->
+
+
+
+
+
+</mapper>

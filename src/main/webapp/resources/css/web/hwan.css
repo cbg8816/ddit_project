@@ -1,0 +1,112 @@
+/* 고양이 색상 */
+.svg {
+	filter: invert(100%) sepia(0%) saturate(7444%) hue-rotate(173deg)
+		brightness(118%) contrast(90%);
+}
+
+#hotelName {
+	color: white;
+}
+
+#memLoginId {
+	width: calc(100% - 108px);
+}
+
+.login-div span {
+	display: block;
+	text-align: left;
+}
+
+#msg {
+	text-align: left;
+}
+
+#menu {
+	top: 100px;
+	/* 주로 메뉴바에 거의 쓰임 */
+	position: fixed; /* static, relative, absolute */
+	background-color: black;
+	color: yellow;
+}
+/* modal 기본 속성 */
+#myModalIdChk { /* 전체 막는 레이어 */
+	position: fixed;
+	width: 100%;
+	height: 100%; /* fixed인 경우 height는 %가 먹힌다 */
+	left: 0px;
+	top: 0px;
+	background-color: rgba(0, 0, 0, 0.7); /* 살짝 투명하게 예의 */
+	z-index: 1000; /* 큰값이 무조건 맨 앞 레이어 */
+	display: none; /* 안보이면서 자리도 안 차지하깅 */
+	/* display: block; */
+}
+
+#myContIdChk { /* 보여줄 내용 부분 */
+	width: 40%;
+/* 	height: 39vh; */
+	margin: 30px auto; /* 가운데 정렬 */
+	background-color: var(--login-background);
+}
+
+#myModalPwChk { /* 전체 막는 레이어 */
+	position: fixed;
+	width: 100%;
+	height: 100%; /* fixed인 경우 height는 %가 먹힌다 */
+	left: 0px;
+	top: 0px;
+	background-color: rgba(0, 0, 0, 0.7); /* 살짝 투명하게 예의 */
+	z-index: 1000; /* 큰값이 무조건 맨 앞 레이어 */
+	display: none; /* 안보이면서 자리도 안 차지하깅 */
+	/* display: block; */
+}
+
+#myContPwChk { /* 보여줄 내용 부분 */
+	width: 40%;
+/* 	height: 39vh; */
+	margin: 30px auto; /* 가운데 정렬 */
+	background-color: var(--login-background);
+}
+
+#inquire-page {
+	color: #555;
+	border-top: 2px solid var(--font-primary);
+}
+
+#inquire-btn {
+	/* 	height: 50px; */
+	width: 120px;
+}
+
+#inquire-btn-de {
+	width: auto;
+    padding: 10px 20px;
+}
+
+#inquire-detail {
+	text-align: right;
+}
+
+/* VOC */
+#vocMOpen {
+	display: none;
+}
+
+#vocBox {
+	height: 44px;
+}
+
+/* 퇴실정산 */
+#modalPaging {
+	display: flex;
+	justify-content: center;
+	margin-top: 2rem;
+}
+
+/* 관리자 */
+#adminBtn {
+	display: none;
+}
+
+textarea {
+	resize: none;
+}

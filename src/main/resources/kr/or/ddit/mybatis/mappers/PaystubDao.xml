@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.paystub.dao.PaystubMapper">
+
+	<resultMap type="PaystubVO" id="paystubMap" autoMapping="true">
+		<id property="paystubId" column="PAYSTUB_ID" />
+		<collection property="speList" ofType="SpecificationVO" autoMapping="true" />
+	</resultMap>
+
+	<insert id="insertPaystubList" parameterType="java.util.List">
+		INSERT ALL
+		INTO PAYSTUB (
+		    PAYSTUB_ID
+		    , EMP_ID
+		    , SPE_ID
+		    , PAYSTUB_STDATE
+		    , PAYSTUB_ENDDATE
+		    , PAYSTUB_NOMAL
+		    , PAYSTUB_BONUS
+		    , PAYSTUB_OVERTIME
+		    , PAYSTUB_TOTAL
+		    , DEDUCTIBLE
+		    , PAYSTUB_PAYDATE
+		    , PAYSTUB_NA_PEN
+			, PAYSTUB_HE_INS
+			, PAYSTUB_EMP_INS
+			, PAYSTUB_LONG_INS
+			, PAYSTUB_INCOME_TAX
+			, PAYSTUB_LO_INCOME_TAX
+			, PAYSTUB_REALTOTAL
+			)
+		<foreach collection="list" item="item" index="idx" separator="INTO PAYSTUB">
+		VALUES (
+		    PAYSTUB_SEQ.NEXTVAL+#{idx}
+		    , #{item.empId ,jdbcType=VARCHAR}
+		    , '1'
+		    , #{item.paystubStdate ,jdbcType=TIMESTAMP}
+		    , #{item.paystubEnddate ,jdbcType=TIMESTAMP}
+		    , #{item.paystubNomal ,jdbcType=NUMERIC}
+		    , #{item.paystubBonus ,jdbcType=NUMERIC}
+		    , #{item.paystubOvertime ,jdbcType=NUMERIC}
+		    , #{item.paystubTotal ,jdbcType=NUMERIC}
+		    , #{item.deductible ,jdbcType=NUMERIC}
+		    , #{item.paystubPaydate ,jdbcType=TIMESTAMP}
+		    , #{item.paystubNaPen ,jdbcType=NUMERIC}
+		    , #{item.paystubHeIns ,jdbcType=NUMERIC}
+		    , #{item.paystubEmpIns ,jdbcType=NUMERIC}
+		    , #{item.paystubLongIns ,jdbcType=NUMERIC}
+		    , #{item.paystubIncomeTax ,jdbcType=NUMERIC}
+		    , #{item.paystubLoIncomeTax ,jdbcType=NUMERIC}
+		    , #{item.paystubRealtotal ,jdbcType=NUMERIC}
+ 		)
+		    </foreach>
+		    SELECT 1 FROM DUAL
+	</insert>
+
+	<select id="selectPaystub" resultMap="paystubMap">
+		 SELECT
+	        PAYSTUB_ID
+	        , EMP.EMP_ID "emp.empId"
+	        , EMP_NAME "emp.empName"
+	        , SPECIFICATION.SPE_ID
+	        , PAYSTUB_STDATE
+	        , PAYSTUB_ENDDATE
+	        , PAYSTUB_NOMAL
+	        , PAYSTUB_BONUS
+	        , PAYSTUB_OVERTIME
+	        , PAYSTUB_TOTAL
+	        , DEDUCTIBLE
+	        , PAYSTUB_PAYDATE
+	        , PAYSTUB_NA_PEN
+			, PAYSTUB_HE_INS
+			, PAYSTUB_EMP_INS
+			, PAYSTUB_LONG_INS
+			, PAYSTUB_INCOME_TAX
+			, PAYSTUB_LO_INCOME_TAX
+			, PAYSTUB_REALTOTAL
+	        , SPE_NA_PEN
+	        , SPE_HE_INS
+	        , SPE_EMP_INS
+	        , SPE_LONG_INS
+	        , SPE_INCOME_TAX
+	        , SPE_LO_INCOME_TAX
+		FROM PAYSTUB INNER JOIN EMP ON(PAYSTUB.EMP_ID = EMP.EMP_ID)
+        LEFT OUTER JOIN SPECIFICATION ON(PAYSTUB.SPE_ID = SPECIFICATION.SPE_ID)
+		WHERE PAYSTUB_ID = #{paystubId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectTotalRecord" resultType="int" parameterType="kr.or.ddit.commons.paging.PaginationInfo" >
+		SELECT COUNT(PAYSTUB_ID)
+		FROM EMP INNER JOIN PAYSTUB ON (EMP.EMP_ID = PAYSTUB.EMP_ID)
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(empId)">
+			WHERE EMP.EMP_ID = #{empId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectPaystubList" resultMap="paystubMap">
+		SELECT B.*
+		FROM (
+			SELECT ROWNUM RNUM,  A.*
+			FROM (
+			    SELECT EMP.EMP_ID "emp.empId"
+			    	 , EMP_NAME "emp.empName"
+			    	 , DEP_ID "emp.depId"
+			    	 , POSI_ID "emp.posiId"
+				     , EMP_SAL "emp.empSal"
+                     , PAYSTUB_ID
+                     , PAYSTUB_STDATE
+                     , PAYSTUB_ENDDATE
+                     , PAYSTUB_NOMAL
+                     , PAYSTUB_BONUS
+                     , PAYSTUB_OVERTIME
+                     , PAYSTUB_TOTAL
+                     , DEDUCTIBLE
+                     , PAYSTUB_PAYDATE
+				FROM EMP INNER JOIN PAYSTUB ON (EMP.EMP_ID = PAYSTUB.EMP_ID)
+                            WHERE EMP_STA = 'Y'
+                            ORDER BY PAYSTUB_PAYDATE DESC, EMP_NAME ASC
+			) A
+		) B
+		<![CDATA[
+	        WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+	    ]]>
+	</select>
+
+	<select id="selectEmpPaystubList" parameterType="PaystubVO" resultType="PaystubVO">
+		SELECT B.*
+		FROM (
+			SELECT ROWNUM RNUM,  A.*
+			FROM (
+			    SELECT EMP.EMP_ID "emp.empId"
+			    	 , EMP_NAME "emp.empName"
+			    	 , DEP_ID "emp.depId"
+			    	 , POSI_ID "emp.posiId"
+				     , EMP_SAL "emp.empSal"
+                     , PAYSTUB_ID
+                     , PAYSTUB_STDATE
+                     , PAYSTUB_ENDDATE
+                     , PAYSTUB_NOMAL
+                     , PAYSTUB_BONUS
+                     , PAYSTUB_OVERTIME
+                     , PAYSTUB_TOTAL
+                     , DEDUCTIBLE
+                     , PAYSTUB_PAYDATE
+				FROM EMP INNER JOIN PAYSTUB ON (EMP.EMP_ID = PAYSTUB.EMP_ID)
+                            WHERE EMP.EMP_ID = #{empId,jdbcType=VARCHAR}
+			) A
+		) B
+		<![CDATA[
+	        WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+	    ]]>
+
+	</select>
+
+	<select id="selectPaystubListBasic" resultType="PaystubVO">
+		SELECT
+		    PAYSTUB_ID
+		    , EMP_ID
+		    , PAYSTUB_STDATE
+		    , PAYSTUB_ENDDATE
+		    , PAYSTUB_NOMAL
+		    , PAYSTUB_BONUS
+		    , PAYSTUB_OVERTIME
+		    , PAYSTUB_TOTAL
+		    , DEDUCTIBLE
+		    , PAYSTUB_PAYDATE
+		    , SPECIFICATION.SPE_ID "specification.speId"
+		    , SPE_NA_PEN "specification.speNaPen"
+		    , SPE_HE_INS "specification.speHeIns"
+		    , SPE_EMP_INS "specification.speEmpIns"
+		    , SPE_LONG_INS "specification.speLongIns"
+		    , SPE_INCOME_TAX "specification.speIncomeTax"
+		    , SPE_LO_INCOME_TAX "specification.speLoIncomeTax"
+		FROM PAYSTUB INNER JOIN SPECIFICATION ON(PAYSTUB.SPE_ID = SPECIFICATION.SPE_ID)
+	</select>
+
+</mapper>
